@@ -11,7 +11,10 @@ import {
   renderRoulette
 } from "./renderRoulette.js";
 
-export function spinRoulette(){
+// =========================
+// SPIN
+// =========================
+export async function spinAll(){
 
   const state =
     getState();
