@@ -1,4 +1,4 @@
-import { getState, setState } from "../../state/state.js";
+import { getState } from "../../state/state.js";
 import { bindDrag } from "./drag.js";
 
 export function renderCoverflow(){
@@ -32,39 +32,4 @@ function renderType(type, items){
       </div>
     </div>
   `).join("");
-
-  bindClick();
-}
-
-function bindClick(){
-
-  document.querySelectorAll(".cover-card").forEach(card => {
-
-    card.onclick = () => {
-
-      const type = card.dataset.type;
-      const id = card.dataset.id;
-
-      const state = getState();
-
-      if(type === "cap"){
-        setState({
-          selection: {
-            capId: id,
-            swimId: state.selection.swimId
-          }
-        });
-      }
-
-      if(type === "swim"){
-        setState({
-          selection: {
-            capId: state.selection.capId,
-            swimId: id
-          }
-        });
-      }
-    };
-
-  });
 }
