@@ -17,23 +17,32 @@ export const defaultState = {
 };
 
 let state = structuredClone(defaultState);
+
 const listeners = new Set();
 
-export function getState(){
+// =========================
+// GET
+// =========================
+export function getState() {
   return state;
 }
 
-export function subscribe(fn){
+// =========================
+// SUBSCRIBE
+// =========================
+export function subscribe(fn) {
   listeners.add(fn);
   return () => listeners.delete(fn);
 }
 
-function emit(){
+function emit() {
   listeners.forEach(fn => fn(state));
 }
 
-// 🔥 핵심: 항상 새로운 reference 보장
-export function setState(partial){
+// =========================
+// SET (🔥 핵심)
+// =========================
+export function setState(partial) {
 
   state = {
     ...state,
@@ -52,13 +61,4 @@ export function setState(partial){
   };
 
   emit();
-}
-
-// helpers
-export function setActiveCapId(id){
-  setState({ selection: { capId: id } });
-}
-
-export function setActiveSwimId(id){
-  setState({ selection: { swimId: id } });
 }
