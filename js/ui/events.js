@@ -1,34 +1,27 @@
 import { getState, setState } from "../state/state.js";
 import { spinAll } from "../features/roulette/roulette.js";
-import { addCap, addSwim } from "../state/actions.js";
+import { addCap, addSwim, removeCap, removeSwim } from "../state/actions.js";
 
 export function bindGlobal(){
 
   document.addEventListener("click", async (e) => {
 
+    const action = e.target.dataset.action;
+
     // =========================
     // SPIN
     // =========================
-    const spinBtn = e.target.closest("[data-action='spin']");
-    if(spinBtn){
+    if(action === "spin"){
 
       await spinAll();
-
-      setState({
-        ui: {
-          ...getState().ui,
-          isSpinning: false
-        }
-      });
 
       return;
     }
 
     // =========================
-    // ADD
+    // ADD ITEM
     // =========================
-    const addBtn = e.target.closest("[data-action='add']");
-    if(addBtn){
+    if(action === "add"){
 
       const type = document.getElementById("itemType")?.value;
       const text = document.getElementById("itemText")?.value?.trim();
@@ -37,7 +30,8 @@ export function bindGlobal(){
 
       const item = {
         id: crypto.randomUUID(),
-        name: text
+        name: text,
+        image: null
       };
 
       if(type === "cap"){
@@ -46,47 +40,41 @@ export function bindGlobal(){
         addSwim(item);
       }
 
-      // 🔥 state trigger (UI 자동 갱신)
-      setState({});
+      setState({
+        ui: { ...getState().ui }
+      });
 
       return;
     }
 
     // =========================
-    // DELETE
+    // DELETE (🔥 핵심 추가)
     // =========================
-    const del = e.target.closest(".delete-btn");
-    if(del){
+    const delBtn = e.target.closest(".delete-btn");
 
-      e.stopPropagation();
+    if(delBtn){
 
-      const { type, id } = del.dataset;
-
-      const state = getState();
+      const type = delBtn.dataset.type;
+      const id = delBtn.dataset.id;
 
       if(type === "cap"){
-        setState({
-          data: {
-            caps: state.data.caps.filter(v => v.id !== id)
-          }
-        });
+        removeCap(id);
+      } else {
+        removeSwim(id);
       }
 
-      if(type === "swim"){
-        setState({
-          data: {
-            swimsuits: state.data.swimsuits.filter(v => v.id !== id)
-          }
-        });
-      }
+      setState({
+        ui: { ...getState().ui }
+      });
 
       return;
     }
 
     // =========================
-    // COVER CLICK
+    // COVER CLICK (센터 변경)
     // =========================
     const card = e.target.closest(".cover-card");
+
     if(card){
 
       const type = card.dataset.type;
@@ -101,7 +89,9 @@ export function bindGlobal(){
             swimId: state.selection.swimId
           }
         });
-      } else {
+      }
+
+      if(type === "swim"){
         setState({
           selection: {
             capId: state.selection.capId,
@@ -109,9 +99,6 @@ export function bindGlobal(){
           }
         });
       }
-
-      return;
     }
-
   });
 }
