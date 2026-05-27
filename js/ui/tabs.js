@@ -32,53 +32,62 @@ export function initTabs(){
 
   };
 
+  function activateTab(type){
+
+    tabs.forEach(tab => {
+
+      tab.classList.toggle(
+
+        "active",
+
+        tab.dataset.tab === type
+      );
+
+    });
+
+    Object.entries(
+      sections
+    ).forEach(
+      ([key,section])=>{
+
+        if(!section) return;
+
+        section.style.display =
+
+          key === type
+            ? "block"
+            : "none";
+
+      }
+    );
+
+    if(type === "roulette"){
+
+      renderRoulette();
+
+    }
+
+    if(type === "inventory"){
+
+      renderLists();
+
+    }
+
+  }
+
   tabs.forEach(tab => {
 
     tab.addEventListener(
       "click",
-      ()=>{
+      e=>{
 
-        tabs.forEach(v=>{
+        e.preventDefault();
 
-          v.classList.remove(
-            "active"
-          );
+        e.stopPropagation();
 
-        });
-
-        tab.classList.add(
-          "active"
+        activateTab(
+          tab.dataset.tab
         );
-
-        const type =
-          tab.dataset.tab;
-
-        Object.entries(
-          sections
-        ).forEach(
-          ([key,section])=>{
-
-            if(!section) return;
-
-            section.style.display =
-              key === type
-              ? "block"
-              : "none";
-
-          }
-        );
-
-        if(type === "roulette"){
-
-          renderRoulette();
-
-        }
-
-        if(type === "inventory"){
-
-          renderLists();
-
-        }
 
       }
     );
