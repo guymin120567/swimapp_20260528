@@ -11,9 +11,6 @@ import {
   renderRoulette
 } from "./renderRoulette.js";
 
-// =========================
-// SPIN
-// =========================
 export async function spinAll(){
 
   const state =
@@ -28,6 +25,15 @@ export async function spinAll(){
   if(!caps.length) return;
 
   if(!swims.length) return;
+
+  const root =
+    document.body;
+
+  root.classList.add(
+    "shuffle"
+  );
+
+  await delay(700);
 
   const randomCap =
     caps[
@@ -55,4 +61,68 @@ export async function spinAll(){
 
   renderRoulette();
 
+  root.classList.remove(
+    "shuffle"
+  );
+
+  createConfetti();
+}
+
+function delay(ms){
+
+  return new Promise(
+    resolve=>{
+
+      setTimeout(
+        resolve,
+        ms
+      );
+
+    }
+  );
+}
+
+function createConfetti(){
+
+  for(
+    let i = 0;
+    i < 42;
+    i++
+  ){
+
+    const confetti =
+      document.createElement(
+        "div"
+      );
+
+    confetti.className =
+      "confetti";
+
+    confetti.style.left =
+      Math.random() * 100 +
+      "vw";
+
+    confetti.style.background =
+      `hsl(${
+        Math.random() * 360
+      } 90% 70%)`;
+
+    confetti.style.setProperty(
+      "--driftX",
+      `${
+        (Math.random() - .5)
+        * 220
+      }px`
+    );
+
+    document.body.appendChild(
+      confetti
+    );
+
+    setTimeout(()=>{
+
+      confetti.remove();
+
+    },2400);
+  }
 }
