@@ -20,18 +20,10 @@ export function renderLayout(){
       <div class="splash-inner">
 
         <img
-          class="splash-dolphin"
-          src="./assets/dolphin.png"
-          alt="dolphin"
+          class="splash-image"
+          src="./assets/splash.png"
+          alt="splash"
         />
-
-        <div class="splash-title">
-          Swim Roulette
-        </div>
-
-        <div class="splash-sub">
-          RANDOM SWIM STYLE
-        </div>
 
       </div>
 
@@ -51,8 +43,15 @@ export function renderLayout(){
 
         <section
           id="rouletteSection"
-          class="section"
+          class="
+            section
+            roulette-page
+          "
         >
+
+          <div
+            class="roulette-bg"
+          ></div>
 
           <div
             id="rouletteContent"
@@ -69,8 +68,6 @@ export function renderLayout(){
           class="section"
           style="display:none"
         >
-
-          <!-- INPUT -->
 
           <div class="block">
 
@@ -115,8 +112,6 @@ export function renderLayout(){
 
           </div>
 
-          <!-- LIST -->
-
           <div
             id="listsContent"
           ></div>
@@ -146,7 +141,7 @@ export function renderLayout(){
       </main>
 
       <!-- ========================= -->
-      <!-- BOTTOM TAB -->
+      <!-- TAB -->
       <!-- ========================= -->
 
       <nav class="bottom-tabs">
@@ -181,10 +176,6 @@ export function renderLayout(){
 
   `;
 
-  // =========================
-  // SPLASH SHOW
-  // =========================
-
   requestAnimationFrame(()=>{
 
     app.classList.add(
@@ -192,10 +183,6 @@ export function renderLayout(){
     );
 
   });
-
-  // =========================
-  // SPLASH HIDE
-  // =========================
 
   const splash =
     document.getElementById(
