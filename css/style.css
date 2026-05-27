@@ -719,15 +719,12 @@ select{
   opacity:0;
   visibility:hidden;
   pointer-events:none;
-
-  /* 🔥 완전 차단 */
   z-index:-1;
 }
 
 .splash-bg{
 
   position:absolute;
-
   inset:0;
 
   background:
@@ -737,91 +734,70 @@ select{
       transparent 70%
     );
 
-  filter:
-    blur(20px);
+  filter: blur(20px);
 }
 
+/* 🔥 핵심 수정: stacking context 명확화 */
 .splash-inner{
 
   position:relative;
-
-  z-index:2;
+  z-index:10;
 
   display:flex;
-
+  flex-direction:column;
   align-items:center;
-
   justify-content:center;
 
-  animation:
-    splashFade 1.2s ease;
+  gap:14px;
+
+  animation: splashFade 1.2s ease;
 }
 
+/* 이미지 */
 .splash-image{
 
   width:320px;
-
   max-width:82vw;
 
   object-fit:contain;
 
   user-select:none;
-
   -webkit-user-drag:none;
 
-  filter:
-    drop-shadow(
-      0 16px 40px
-      rgba(80,170,255,.22)
-    );
+  filter: drop-shadow(0 16px 40px rgba(80,170,255,.22));
 
-  animation:
-    splashFloat 3s ease-in-out infinite;
+  animation: splashFloat 3s ease-in-out infinite;
+
+  position:relative;
+  z-index:2;
 }
 
+/* 🔥 로딩 텍스트 (무조건 위로) */
+.splash-loading{
+
+  position:relative;
+  z-index:20;
+
+  color:#b9d7ff;
+  font-size:13px;
+  font-weight:600;
+
+  letter-spacing:0.5px;
+
+  text-shadow:0 2px 10px rgba(0,0,0,.35);
+}
+
+/* animations 그대로 */
 @keyframes splashFloat{
-
-  0%{
-
-    transform:
-      translateY(0px)
-      scale(1);
-  }
-
-  50%{
-
-    transform:
-      translateY(-14px)
-      scale(1.02);
-  }
-
-  100%{
-
-    transform:
-      translateY(0px)
-      scale(1);
-  }
+  0%{ transform: translateY(0px) scale(1); }
+  50%{ transform: translateY(-14px) scale(1.02); }
+  100%{ transform: translateY(0px) scale(1); }
 }
 
 @keyframes splashFade{
-
-  from{
-
-    opacity:0;
-
-    transform:
-      scale(.96);
-  }
-
-  to{
-
-    opacity:1;
-
-    transform:
-      scale(1);
-  }
+  from{ opacity:0; transform:scale(.96); }
+  to{ opacity:1; transform:scale(1); }
 }
-
 /* =========================
    MOBILE
 ========================= */
