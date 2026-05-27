@@ -46,10 +46,6 @@ import {
   spinAll
 } from "../features/roulette/roulette.js";
 
-import {
-  bindDrag
-} from "../features/coverflow/drag.js";
-
 // =========================
 // INIT
 // =========================
@@ -65,8 +61,8 @@ export function initController(){
     if(saved){
 
       setState(saved);
-    }
-    else{
+
+    }else{
 
       setState(
         structuredClone(
@@ -86,8 +82,6 @@ export function initController(){
     initTabs();
 
     bindGlobal();
-
-    bindDrag();
   }
 
   // =========================
@@ -127,23 +121,27 @@ export function initController(){
       selection:{
 
         capId:
-          state.selection?.capId || null,
+          state.selection?.capId
+          || null,
 
         swimId:
-          state.selection?.swimId || null
+          state.selection?.swimId
+          || null
       },
 
       ui:{
 
         activeTab:
-          state.ui?.activeTab ||
-          "roulette",
+          state.ui?.activeTab
+          || "roulette",
 
         activeCapId:
-          state.ui?.activeCapId || null,
+          state.ui?.activeCapId
+          || null,
 
         activeSwimId:
-          state.ui?.activeSwimId || null,
+          state.ui?.activeSwimId
+          || null,
 
         isSpinning:false
       }
@@ -169,7 +167,6 @@ export function initController(){
 
     renderLists();
 
-    bindDrag();
   }
 
   // =========================
@@ -302,7 +299,7 @@ export function initController(){
       setActiveSwim(id);
     }
 
-    renderRoulette();
+    renderLists();
   }
 
   // =========================
