@@ -7,6 +7,7 @@ import { bindGlobal } from "../ui/events.js";
 
 import { renderLists } from "../features/lists/renderLists.js";
 import { renderRoulette } from "../features/roulette/renderRoulette.js";
+import { renderCoverflow } from "../features/coverflow/coverflow.js";
 
 export function initController(){
 
@@ -23,15 +24,15 @@ export function initController(){
     initTabs();
     bindGlobal();
 
-    // 🔥 UI subscribe (핵심만)
     subscribe(() => {
       renderLists();
       renderRoulette();
+      renderCoverflow(); // 🔥 여기만 유지
     });
 
-    // 최초 렌더
     renderLists();
     renderRoulette();
+    renderCoverflow();
 
     console.log("BOOT DONE");
   }
