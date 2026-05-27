@@ -34,6 +34,7 @@ export function renderSwimsList(){
                 }
               "
               data-id="${item.id}"
+              data-type="swim"
             >
 
               <img
