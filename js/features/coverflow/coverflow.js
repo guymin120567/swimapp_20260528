@@ -1,86 +1,71 @@
-import {
-  getState
-} from "../../state/state.js";
+import { getState, setState } from "../../state/state.js";
+import { bindDrag } from "./drag.js";
 
-import {
-  renderCoverflow
-} from "./renderCoverflow.js";
+export function renderCoverflow(){
 
-import {
-  bindDrag
-} from "./drag.js";
+  const state = getState();
 
-// =========================
-// REFRESH ALL
-// =========================
-export function refreshCoverflow(){
+  render("cap", state.data.caps);
+  render("swim", state.data.swimsuits);
 
-  const state =
-    getState();
-
-  renderCoverflow({
-
-    type:"cap",
-
-    targetId:"capCoverflow",
-
-    items:
-      state.data.caps
-  });
-
-  renderCoverflow({
-
-    type:"swim",
-
-    targetId:"swimCoverflow",
-
-    items:
-      state.data.swimsuits
-  });
-
-  requestAnimationFrame(()=>{
-
-    bindDrag();
-  });
+  requestAnimationFrame(bindDrag);
 }
 
-// =========================
-// REFRESH SINGLE
-// =========================
-export function refreshSingleCoverflow(
-  type
-){
+function render(type, items){
 
-  const state =
-    getState();
+  const target = document.getElementById(`${type}Coverflow`);
+  if(!target) return;
 
-  if(type === "cap"){
+  target.innerHTML = items.map(item => `
+    <div class="cover-card" data-type="${type}" data-id="${item.id}">
+      <div class="card-inner">
 
-    renderCoverflow({
+        ${
+          item.image
+          ? `<img class="card-image" src="${item.image}" />`
+          : `<div class="card-placeholder">?</div>`
+        }
 
-      type:"cap",
+        <div class="card-overlay">
+          <div class="card-title">${item.name}</div>
+        </div>
 
-      targetId:"capCoverflow",
+      </div>
+    </div>
+  `).join("");
 
-      items:
-        state.data.caps
-    });
+  bindClick();
+}
 
-  }else{
+// 🔥 핵심: 클릭 → setState
+function bindClick(){
 
-    renderCoverflow({
+  document.querySelectorAll(".cover-card").forEach(card => {
 
-      type:"swim",
+    card.onclick = () => {
 
-      targetId:"swimCoverflow",
+      const type = card.dataset.type;
+      const id = card.dataset.id;
 
-      items:
-        state.data.swimsuits
-    });
-  }
+      const state = getState();
 
-  requestAnimationFrame(()=>{
+      if(type === "cap"){
+        setState({
+          selection: {
+            capId: id,
+            swimId: state.selection.swimId
+          }
+        });
+      }
 
-    bindDrag();
+      if(type === "swim"){
+        setState({
+          selection: {
+            capId: state.selection.capId,
+            swimId: id
+          }
+        });
+      }
+    };
   });
 }
