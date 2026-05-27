@@ -2,124 +2,57 @@ import {
   getState
 } from "../state/state.js";
 
-import {
-  refreshCoverflow
-} from "../components/coverflow/index.js";
-
-export function renderLists(){
-
-  const target =
-    document.getElementById(
-      "listsSection"
-    );
-
-  if(!target) return;
+export function renderCapsList(){
 
   const state =
     getState();
 
-  target.innerHTML = `
+  return `
 
-    <div class="lists-wrap">
+    <section class="list-block">
 
-      <section class="list-block">
+      <div class="list-title">
+        CAPS
+      </div>
 
-        <div class="list-title">
-          CAPS
-        </div>
+      <div
+        id="capCoverflow"
+        class="coverflow"
+      >
 
-        <div
-          id="capCoverflow"
-          class="coverflow"
-        >
+        ${
+          state.data.caps.map(item => `
 
-          ${
-            state.data.caps.map(item => `
+            <div
+              class="
+                cover-card
+                ${
+                  item.id ===
+                  state.ui.activeCapId
+                  ? "active"
+                  : ""
+                }
+              "
+              data-id="${item.id}"
+            >
 
-              <div
-                class="
-                  cover-card
-                  ${
-                    item.id ===
-                    state.ui.activeCapId
-                    ? "active"
-                    : ""
-                  }
-                "
-                data-id="${item.id}"
-              >
+              <img
+                src="${item.image}"
+                alt="${item.name}"
+              />
 
-                <img
-                  src="${item.image}"
-                  alt="${item.name}"
-                />
-
-                <div class="cover-name">
-                  ${item.name}
-                </div>
-
+              <div class="cover-name">
+                ${item.name}
               </div>
 
-            `).join("")
-          }
+            </div>
 
-        </div>
+          `).join("")
+        }
 
-      </section>
+      </div>
 
-      <section class="list-block">
-
-        <div class="list-title">
-          SWIMSUITS
-        </div>
-
-        <div
-          id="swimCoverflow"
-          class="coverflow"
-        >
-
-          ${
-            state.data.swimsuits.map(item => `
-
-              <div
-                class="
-                  cover-card
-                  ${
-                    item.id ===
-                    state.ui.activeSwimId
-                    ? "active"
-                    : ""
-                  }
-                "
-                data-id="${item.id}"
-              >
-
-                <img
-                  src="${item.image}"
-                  alt="${item.name}"
-                />
-
-                <div class="cover-name">
-                  ${item.name}
-                </div>
-
-              </div>
-
-            `).join("")
-          }
-
-        </div>
-
-      </section>
-
-    </div>
+    </section>
 
   `;
-
-  requestAnimationFrame(()=>{
-
-    refreshCoverflow();
-
-  });
-
 }
