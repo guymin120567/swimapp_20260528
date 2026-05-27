@@ -24,10 +24,11 @@ export function initController(){
     initTabs();
     bindGlobal();
 
+    // 🔥 단일 렌더 루프
     subscribe(() => {
       renderLists();
       renderRoulette();
-      renderCoverflow(); // 🔥 여기만 유지
+      renderCoverflow();
     });
 
     renderLists();
