@@ -1,7 +1,7 @@
 import { getState, setState } from "../../state/state.js";
 import { bindDrag } from "./drag.js";
 
-export function renderCoverflow(){
+export function renderCoverflow() {
 
   const state = getState();
 
@@ -13,10 +13,10 @@ export function renderCoverflow(){
   });
 }
 
-function renderType(type, items){
+function renderType(type, items) {
 
   const target = document.querySelector(`.coverflow[data-type="${type}"]`);
-  if(!target) return;
+  if (!target) return;
 
   target.innerHTML = items.map(item => `
     <div class="cover-card" data-type="${type}" data-id="${item.id}">
@@ -31,7 +31,10 @@ function renderType(type, items){
           <div class="card-title">${item.name}</div>
         </div>
 
-        <button class="delete-btn" data-type="${type}" data-id="${item.id}">
+        <button class="delete-btn"
+          data-action="delete"
+          data-type="${type}"
+          data-id="${item.id}">
           ×
         </button>
 
@@ -42,34 +45,34 @@ function renderType(type, items){
   bindClick();
 }
 
-function bindClick(){
+// =========================
+// 클릭 안정화 (event delegation)
+// =========================
+function bindClick() {
 
-  document.querySelectorAll(".cover-card").forEach(card => {
+  const wraps = document.querySelectorAll(".coverflow");
 
-    card.onclick = () => {
+  wraps.forEach(wrap => {
+
+    if (wrap.dataset.bound) return;
+    wrap.dataset.bound = "true";
+
+    wrap.addEventListener("click", (e) => {
+
+      const card = e.target.closest(".cover-card");
+      if (!card) return;
 
       const type = card.dataset.type;
       const id = card.dataset.id;
 
       const state = getState();
 
-      if(type === "cap"){
-        setState({
-          selection: {
-            capId: id,
-            swimId: state.selection.swimId
-          }
-        });
-      }
-
-      if(type === "swim"){
-        setState({
-          selection: {
-            capId: state.selection.capId,
-            swimId: id
-          }
-        });
-      }
-    };
+      setState({
+        selection: {
+          capId: type === "cap" ? id : state.selection.capId,
+          swimId: type === "swim" ? id : state.selection.swimId
+        }
+      });
+    });
   });
 }
