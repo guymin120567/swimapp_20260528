@@ -1,141 +1,62 @@
-import {
-  getState
-} from "../../state/state.js";
+import { getState } from "../../state/state.js";
 
 export function renderRoulette(){
 
-  const target =
-    document.getElementById(
-      "rouletteContent"
-    );
-
+  const target = document.getElementById("rouletteContent");
   if(!target) return;
 
-  const state =
-    getState();
+  const state = getState();
 
-  const cap =
-    state.data.caps.find(
-      v =>
-        v.id ===
-        state.selection.capId
-    );
-
-  const swim =
-    state.data.swimsuits.find(
-      v =>
-        v.id ===
-        state.selection.swimId
-    );
+  const cap = state.data.caps.find(v => v.id === state.selection.capId);
+  const swim = state.data.swimsuits.find(v => v.id === state.selection.swimId);
 
   target.innerHTML = `
-
     <div class="block">
 
-      <div class="section-title">
-        룰렛 결과
-      </div>
+      <div class="section-title">룰렛 결과</div>
 
       <div class="roulette-wrap">
 
-        <!-- CAP -->
-
         <div class="roulette-slot">
-
-          <div class="roulette-label">
-            CAP
-          </div>
+          <div class="roulette-label">CAP</div>
 
           <div class="roulette-card">
-
             ${
               cap
               ? `
-
-                <img
-                  class="card-image"
-                  src="${cap.image}"
-                  alt="${cap.name}"
-                />
-
+                <img class="card-image" src="${cap.image}" />
                 <div class="card-overlay">
-
-                  <div class="roulette-name">
-                    ${cap.name}
-                  </div>
-
+                  <div class="roulette-name">${cap.name}</div>
                 </div>
-
               `
-              : `
-
-                <div class="card-placeholder">
-                  🧢
-                </div>
-
-              `
+              : `<div class="card-placeholder">🧢</div>`
             }
-
           </div>
-
         </div>
 
-        <!-- SWIM -->
-
         <div class="roulette-slot">
-
-          <div class="roulette-label">
-            SWIMSUIT
-          </div>
+          <div class="roulette-label">SWIMSUIT</div>
 
           <div class="roulette-card">
-
             ${
               swim
               ? `
-
-                <img
-                  class="card-image"
-                  src="${swim.image}"
-                  alt="${swim.name}"
-                />
-
+                <img class="card-image" src="${swim.image}" />
                 <div class="card-overlay">
-
-                  <div class="roulette-name">
-                    ${swim.name}
-                  </div>
-
+                  <div class="roulette-name">${swim.name}</div>
                 </div>
-
               `
-              : `
-
-                <div class="card-placeholder">
-                  🏊
-                </div>
-
-              `
+              : `<div class="card-placeholder">🏊</div>`
             }
-
           </div>
-
         </div>
 
       </div>
 
       <div class="spin-row">
-
-        <button
-          class="spin-btn"
-          data-action="spin"
-        >
-          돌리기
-        </button>
-
+        <button class="spin-btn" data-action="spin">돌리기</button>
       </div>
 
     </div>
-
   `;
 }
