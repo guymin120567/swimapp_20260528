@@ -16,12 +16,16 @@ export function renderRoulette(){
 
   const cap =
     state.data.caps.find(
-      v => v.id === state.selection.capId
+      v =>
+        v.id ===
+        state.selection.capId
     );
 
   const swim =
     state.data.swimsuits.find(
-      v => v.id === state.selection.swimId
+      v =>
+        v.id ===
+        state.selection.swimId
     );
 
   target.innerHTML = `
