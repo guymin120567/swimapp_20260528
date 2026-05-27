@@ -7,43 +7,65 @@ export function renderSwimsList(){
   const state =
     getState();
 
+  const items =
+    state.data.swimsuits;
+
   return `
 
-    <section class="list-block">
+    <section class="coverflow-section">
 
-      <div class="list-title">
-        SWIMSUITS
+      <div class="coverflow-title">
+        수영복
       </div>
 
       <div
-        id="swimCoverflow"
         class="coverflow"
+        data-type="swim"
       >
 
         ${
-          state.data.swimsuits.map(item => `
+          items.map(item=>`
 
             <div
-              class="
-                cover-card
-                ${
-                  item.id ===
-                  state.ui.activeSwimId
-                  ? "active"
-                  : ""
-                }
-              "
-              data-id="${item.id}"
+              class="cover-card"
               data-type="swim"
+              data-id="${item.id}"
             >
 
-              <img
-                src="${item.image}"
-                alt="${item.name}"
-              />
+              <div class="card-inner">
 
-              <div class="cover-name">
-                ${item.name}
+                ${
+                  item.image
+                  ? `
+                    <img
+                      class="card-image"
+                      src="${item.image}"
+                      alt="${item.name}"
+                    />
+                  `
+                  : `
+                    <div class="card-placeholder">
+                      🏊
+                    </div>
+                  `
+                }
+
+                <button
+                  class="delete-btn"
+                  data-type="swim"
+                  data-id="${item.id}"
+                >
+                  ×
+                </button>
+
+                <div class="card-overlay">
+
+                  <div class="card-title">
+                    ${item.name}
+                  </div>
+
+                </div>
+
               </div>
 
             </div>

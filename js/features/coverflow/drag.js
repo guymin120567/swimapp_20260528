@@ -1,128 +1,118 @@
 import {
-  getState
-} from "../../state/state.js";
-
-import {
-  setActiveCap,
-  setActiveSwim
-} from "../../state/actions.js";
+  renderCoverflow
+} from "./renderCoverflow.js";
 
 export function bindDrag(){
 
-  bindCoverflow(
-    "capCoverflow",
-    "cap"
-  );
-
-  bindCoverflow(
-    "swimCoverflow",
-    "swim"
-  );
-
-}
-
-function bindCoverflow(
-  id,
-  type
-){
-
-  const container =
-    document.getElementById(id);
-
-  if(!container) return;
-
-  if(
-    container.offsetParent === null
-  ) return;
-
-  const cards =
-    [
-      ...container.querySelectorAll(
-        ".cover-card"
-      )
-    ];
-
-  if(!cards.length) return;
-
-  updateDepth();
-
-  function updateDepth(){
-
-    let closest = null;
-
-    let closestDistance =
-      Infinity;
-
-    cards.forEach(card => {
-
-      const rect =
-        card.getBoundingClientRect();
-
-      const center =
-        rect.left +
-        rect.width / 2;
-
-      const distance =
-        Math.abs(
-          window.innerWidth / 2
-          - center
-        );
-
-      if(
-        distance <
-        closestDistance
-      ){
-
-        closestDistance =
-          distance;
-
-        closest =
-          card;
-
-      }
-
-    });
-
-    cards.forEach(card => {
-
-      card.classList.remove(
-        "active"
-      );
-
-    });
-
-    if(!closest) return;
-
-    closest.classList.add(
-      "active"
+  const wraps =
+    document.querySelectorAll(
+      ".coverflow"
     );
 
-    const id =
-      closest.dataset.id;
+  wraps.forEach(
+    wrap=>{
 
-    if(type === "cap"){
+      if(
+        wrap.dataset.dragBound
+      ){
+        return;
+      }
 
-      setActiveCap(id);
+      wrap.dataset.dragBound =
+        "true";
 
-    }
+      let isDown =
+        false;
 
-    if(type === "swim"){
+      let startX =
+        0;
 
-      setActiveSwim(id);
+      let scrollLeft =
+        0;
 
-    }
+      wrap.addEventListener(
+        "mousedown",
+        e=>{
 
-  }
+          isDown = true;
 
-  container.addEventListener(
-    "scroll",
-    ()=>{
+          wrap.classList.add(
+            "dragging"
+          );
 
-      requestAnimationFrame(
-        updateDepth
+          startX =
+            e.pageX -
+            wrap.offsetLeft;
+
+          scrollLeft =
+            wrap.scrollLeft;
+        }
       );
 
+      window.addEventListener(
+        "mouseup",
+        ()=>{
+
+          isDown = false;
+
+          wrap.classList.remove(
+            "dragging"
+          );
+        }
+      );
+
+      wrap.addEventListener(
+        "mousemove",
+        e=>{
+
+          if(!isDown) return;
+
+          e.preventDefault();
+
+          const x =
+            e.pageX -
+            wrap.offsetLeft;
+
+          const walk =
+            (x - startX) * 1.3;
+
+          wrap.scrollLeft =
+            scrollLeft - walk;
+
+          renderCoverflow();
+        }
+      );
+
+      wrap.addEventListener(
+        "scroll",
+        ()=>{
+
+          requestAnimationFrame(
+            ()=>{
+
+              renderCoverflow();
+
+            }
+          );
+        }
+      );
+
+      wrap.addEventListener(
+        "touchmove",
+        ()=>{
+
+          requestAnimationFrame(
+            ()=>{
+
+              renderCoverflow();
+
+            }
+          );
+        },
+        {
+          passive:true
+        }
+      );
     }
   );
-
 }
