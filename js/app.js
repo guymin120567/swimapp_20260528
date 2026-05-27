@@ -6,25 +6,49 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   await startApp();
 
+  // 🔥 브라우저가 실제로 그릴 시간 확보
   requestAnimationFrame(() => {
+
+    // 한 프레임 더 안정화
     requestAnimationFrame(() => {
-      hideSplash();
+
+      // 🔥 idle 타이밍으로 넘김 (핵심)
+      if (window.requestIdleCallback) {
+
+        requestIdleCallback(() => {
+          hideSplash();
+        });
+
+      } else {
+
+        setTimeout(() => {
+          hideSplash();
+        }, 150);
+      }
     });
   });
-
 });
 
-function showSplash(){
+// =========================
+// SPLASH CONTROL
+// =========================
+
+function showSplash() {
   const el = document.getElementById("splash");
   if (!el) return;
+
   el.classList.remove("hide");
+  el.style.opacity = "1";
 }
 
-function hideSplash(){
+function hideSplash() {
   const el = document.getElementById("splash");
   if (!el) return;
 
   el.classList.add("hide");
 
-  setTimeout(() => el.remove(), 400);
+  // transition 고려해서 제거
+  setTimeout(() => {
+    el.remove();
+  }, 600);
 }
