@@ -1,5 +1,5 @@
 import {
-  refreshCoverflow
+  renderCoverflow
 } from "../coverflow/renderCoverflow.js";
 
 import {
@@ -33,7 +33,7 @@ export function renderLists(){
 
   requestAnimationFrame(()=>{
 
-    refreshCoverflow();
+    renderCoverflow();
 
   });
 
