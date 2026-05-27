@@ -1,58 +1,40 @@
 import {
-  getState
-} from "../state/state.js";
+  refreshCoverflow
+} from "../components/coverflow/index.js";
 
-export function renderCapsList(){
+import {
+  renderCapsList
+} from "./renderCapsList.js";
 
-  const state =
-    getState();
+import {
+  renderSwimsList
+} from "./renderSwimsList.js";
 
-  return `
+export function renderLists(){
 
-    <section class="list-block">
+  const target =
+    document.getElementById(
+      "listsSection"
+    );
 
-      <div class="list-title">
-        CAPS
-      </div>
+  if(!target) return;
 
-      <div
-        id="capCoverflow"
-        class="coverflow"
-      >
+  target.innerHTML = `
 
-        ${
-          state.data.caps.map(item => `
+    <div class="lists-wrap">
 
-            <div
-              class="
-                cover-card
-                ${
-                  item.id ===
-                  state.ui.activeCapId
-                  ? "active"
-                  : ""
-                }
-              "
-              data-id="${item.id}"
-            >
+      ${renderCapsList()}
 
-              <img
-                src="${item.image}"
-                alt="${item.name}"
-              />
+      ${renderSwimsList()}
 
-              <div class="cover-name">
-                ${item.name}
-              </div>
-
-            </div>
-
-          `).join("")
-        }
-
-      </div>
-
-    </section>
+    </div>
 
   `;
+
+  requestAnimationFrame(()=>{
+
+    refreshCoverflow();
+
+  });
+
 }
