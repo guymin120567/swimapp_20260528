@@ -1,8 +1,10 @@
 import { startApp } from "./controller/appController.js";
 
-// =========================
-// INIT
-// =========================
+const loadingText = (text) => {
+  const el = document.getElementById("loadingText");
+  if (el) el.textContent = text;
+};
+
 window.addEventListener("DOMContentLoaded", async () => {
 
   console.log("APP INIT");
@@ -11,9 +13,12 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     showSplash();
 
+    loadingText("데이터 불러오는 중...");
+
     await startApp();
 
-    // 🔥 렌더 이후 확실히 한 프레임 뒤 제거
+    loadingText("UI 생성 중...");
+
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         hideSplash();
@@ -21,15 +26,11 @@ window.addEventListener("DOMContentLoaded", async () => {
     });
 
   } catch (err) {
-
     console.error(err);
     forceStart(err);
   }
 });
 
-// =========================
-// SHOW SPLASH
-// =========================
 function showSplash() {
 
   const splash = document.getElementById("splash");
@@ -40,15 +41,11 @@ function showSplash() {
   splash.style.visibility = "visible";
 }
 
-// =========================
-// HIDE SPLASH (핵심 안정화)
-// =========================
 function hideSplash() {
 
   const splash = document.getElementById("splash");
   const app = document.getElementById("app");
 
-  // 🔥 app 강제 표시
   if (app) {
     app.style.opacity = "1";
   }
@@ -57,15 +54,11 @@ function hideSplash() {
 
   splash.classList.add("hide");
 
-  // 🔥 DOM 완전 제거 (잔상 방지)
   setTimeout(() => {
     splash.remove();
   }, 400);
 }
 
-// =========================
-// ERROR
-// =========================
 function forceStart(err) {
 
   document.getElementById("splash")?.remove();
