@@ -17,52 +17,38 @@
 
   <title>Swim App</title>
 
-  <link rel="icon" type="image/png" href="favicon.png" />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-  <link rel="stylesheet"
-    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
-  />
-
-  <link rel="stylesheet" href="./css/style.css?v=4" />
+  <link rel="stylesheet" href="./css/style.css?v=5" />
 
 </head>
 
 <body>
 
-  <!-- =========================
-       SPLASH
-  ========================== -->
-
+  <!-- SPLASH -->
   <div id="splash" class="splash">
 
     <div class="splash-bg"></div>
 
     <div class="splash-inner">
 
-      <img
-        class="splash-image"
-        src="./assets/splash.png"
-        alt="splash"
-      />
+      <img class="splash-image" src="./assets/splash.png" />
+
+      <div id="loadingText" style="
+        margin-top:20px;
+        color:#b9d7ff;
+        font-size:12px;
+        opacity:0.8;
+      ">
+        로딩중...
+      </div>
 
     </div>
 
   </div>
 
-  <!-- =========================
-       APP ROOT
-  ========================== -->
-
+  <!-- APP -->
   <main id="app"></main>
 
-  <!-- =========================
-       SCRIPT
-  ========================== -->
-
-  <script type="module" src="./js/app.js?v=4"></script>
+  <script type="module" src="./js/app.js?v=5"></script>
 
 </body>
 
