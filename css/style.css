@@ -88,7 +88,40 @@ select{
   margin:0 auto;
 
   padding:
-    22px 16px 120px;
+    22px 16px 130px;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+
+.main-content{
+
+  position:relative;
+
+  z-index:1;
+
+  width:100%;
+}
+
+.section{
+
+  position:relative;
+
+  width:100%;
+
+  min-height:40vh;
+
+  z-index:1;
+}
+
+#rouletteSection,
+#listsSection,
+#recordsSection{
+
+  position:relative;
+
+  z-index:1;
 }
 
 .block{
@@ -104,60 +137,68 @@ select{
 }
 
 /* =========================
-   TAB
+   BOTTOM TAB
 ========================= */
 
-.tab-bar{
+.bottom-tabs{
 
-  position:sticky;
+  position:fixed;
 
-  top:0;
+  left:0;
+  right:0;
+  bottom:0;
 
-  z-index:100;
+  z-index:9999;
 
   display:flex;
 
-  gap:10px;
+  gap:12px;
 
-  margin-bottom:22px;
+  padding:
+    14px 16px calc(14px + env(safe-area-inset-bottom));
 
-  padding:8px 0;
+  background:
+    rgba(255,255,255,.72);
 
   backdrop-filter:
-    blur(12px);
+    blur(18px);
+
+  box-shadow:
+    0 -8px 24px rgba(80,140,180,.12);
 }
 
-.tab-btn{
+.bottom-tab{
 
   flex:1;
 
+  height:56px;
+
   border:none;
 
-  border-radius:16px;
-
-  padding:14px;
+  border-radius:20px;
 
   background:
-    rgba(255,255,255,.58);
+    rgba(255,255,255,.82);
 
   color:var(--text);
 
   font-size:15px;
 
-  font-weight:700;
+  font-weight:800;
 
   cursor:pointer;
 
-  box-shadow:
-    0 6px 18px rgba(80,140,180,.08);
-
   transition:
-    transform .2s ease,
-    background .2s ease,
-    color .2s ease;
+    transform .18s ease,
+    background .18s ease,
+    color .18s ease,
+    box-shadow .18s ease;
+
+  box-shadow:
+    0 4px 12px rgba(80,140,180,.08);
 }
 
-.tab-btn.active{
+.bottom-tab.active{
 
   background:
     linear-gradient(
@@ -167,21 +208,15 @@ select{
     );
 
   color:#174569;
+
+  box-shadow:
+    0 10px 24px rgba(125,211,252,.28);
 }
 
-.tab-btn:active{
+.bottom-tab:active{
 
-  transform:scale(.98);
-}
-
-.tab-page{
-
-  display:none;
-}
-
-.tab-page.active{
-
-  display:block;
+  transform:
+    scale(.98);
 }
 
 /* =========================
@@ -299,17 +334,6 @@ select{
     scale(.985);
 }
 
-.spin-btn:disabled{
-
-  opacity:.45;
-
-  cursor:not-allowed;
-
-  transform:none !important;
-
-  box-shadow:none;
-}
-
 /* =========================
    COVERFLOW
 ========================= */
@@ -331,7 +355,7 @@ select{
   min-height:320px;
 
   padding:
-    18px 34px 34px;
+    18px 34px 52px;
 
   scroll-behavior:smooth;
 
@@ -340,6 +364,8 @@ select{
   scrollbar-width:none;
 
   perspective:1400px;
+
+  scroll-snap-type:x mandatory;
 }
 
 .coverflow::-webkit-scrollbar{
@@ -369,6 +395,8 @@ select{
     preserve-3d;
 
   backface-visibility:hidden;
+
+  scroll-snap-align:center;
 }
 
 .cover-card.ready{
@@ -458,35 +486,6 @@ select{
 }
 
 /* =========================
-   PLACEHOLDER
-========================= */
-
-.card-placeholder{
-
-  position:absolute;
-
-  inset:0;
-
-  width:100%;
-  height:100%;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-  font-size:52px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #e0f2fe,
-      #bae6fd
-    );
-}
-
-/* =========================
    OVERLAY
 ========================= */
 
@@ -556,18 +555,6 @@ select{
   font-weight:700;
 
   cursor:pointer;
-
-  transition:
-    transform .18s ease,
-    background .18s ease;
-}
-
-.delete-btn:hover{
-
-  transform:
-    scale(1.08);
-
-  background:#ffffff;
 }
 
 /* =========================
@@ -609,98 +596,6 @@ select{
     0 6px 18px rgba(80,140,180,.08);
 }
 
-.input-area input[type="file"]{
-
-  padding:12px 14px;
-
-  height:auto;
-}
-
-/* =========================
-   LIST
-========================= */
-
-.item-list{
-
-  display:flex;
-
-  flex-direction:column;
-
-  gap:14px;
-}
-
-.item-row{
-
-  display:flex;
-
-  align-items:center;
-
-  gap:14px;
-
-  padding:12px;
-
-  border-radius:22px;
-
-  background:
-    rgba(255,255,255,.68);
-
-  box-shadow:
-    0 8px 24px rgba(80,140,180,.08);
-
-  backdrop-filter:
-    blur(12px);
-}
-
-.item-thumb{
-
-  position:relative;
-
-  width:82px;
-
-  height:110px;
-
-  overflow:hidden;
-
-  border-radius:16px;
-
-  background:white;
-
-  flex-shrink:0;
-}
-
-.item-name{
-
-  flex:1;
-
-  font-size:15px;
-
-  font-weight:700;
-
-  word-break:break-word;
-}
-
-/* =========================
-   EMPTY
-========================= */
-
-.empty-card{
-
-  opacity:.5;
-
-  padding:20px 0;
-}
-
-.empty-records{
-
-  padding:40px 20px;
-
-  text-align:center;
-
-  opacity:0.6;
-
-  font-size:14px;
-}
-
 /* =========================
    MOBILE
 ========================= */
@@ -710,10 +605,12 @@ select{
   .container{
 
     padding:
-      18px 12px 110px;
+      18px 12px 120px;
   }
 
   .roulette-wrap{
+
+    grid-template-columns:1fr;
 
     gap:12px;
   }
@@ -723,383 +620,8 @@ select{
     width:150px;
   }
 
-  .roulette-card{
-
-    max-width:none;
-  }
-
-  .section-title{
-
-    font-size:20px;
-  }
-
-  .spin-btn{
-
-    height:54px;
-  }
-
   .coverflow{
 
     min-height:280px;
   }
-
-  .item-thumb{
-
-    width:72px;
-
-    height:96px;
-  }
-}
-
-/* =========================
-   SHUFFLE
-========================= */
-
-.shuffle{
-
-  animation:
-    shuffleAnim .22s ease;
-}
-
-@keyframes shuffleAnim{
-
-  0%{
-
-    transform:
-      rotate(-0.8deg)
-      scale(.992);
-  }
-
-  50%{
-
-    transform:
-      rotate(0.8deg)
-      scale(1.012);
-  }
-
-  100%{
-
-    transform:
-      rotate(0deg)
-      scale(1);
-  }
-}
-
-/* =========================
-   WINNER
-========================= */
-
-.winner,
-.winner-pulse{
-
-  animation:
-    winnerPulse .9s ease;
-}
-
-@keyframes winnerPulse{
-
-  0%{
-    transform:scale(1);
-  }
-
-  40%{
-    transform:scale(1.06);
-  }
-
-  100%{
-    transform:scale(1);
-  }
-}
-
-/* =========================
-   CONFETTI
-========================= */
-
-.confetti{
-
-  position:fixed;
-
-  top:-20px;
-
-  width:12px;
-  height:18px;
-
-  border-radius:3px;
-
-  pointer-events:none;
-
-  z-index:9999;
-
-  opacity:1;
-
-  will-change:
-    transform,
-    opacity;
-
-  animation:
-    confettiFall 2.4s linear forwards;
-}
-
-@keyframes confettiFall{
-
-  0%{
-
-    transform:
-      translate3d(0,0,0)
-      rotate(0deg)
-      scale(1);
-
-    opacity:1;
-  }
-
-  100%{
-
-    transform:
-      translate3d(
-        var(--driftX),
-        110vh,
-        0
-      )
-      rotate(720deg)
-      scale(.92);
-
-    opacity:0;
-  }
-}
-
-/* =========================
-   SPLASH
-========================= */
-
-#splash{
-
-  position:fixed;
-
-  inset:0;
-
-  z-index:99999;
-
-  overflow:hidden;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-  background:
-    linear-gradient(
-      180deg,
-      #07111d 0%,
-      #0d2034 100%
-    );
-
-  transition:
-    opacity .8s ease,
-    visibility .8s ease;
-}
-
-#splash.hide{
-
-  opacity:0;
-
-  visibility:hidden;
-
-  pointer-events:none;
-}
-
-.splash-bg{
-
-  position:absolute;
-
-  inset:0;
-
-  background:
-    radial-gradient(
-      circle at center,
-      rgba(120,180,255,.18),
-      transparent 70%
-    );
-
-  filter:
-    blur(20px);
-}
-
-.splash-inner{
-
-  position:relative;
-
-  z-index:2;
-
-  display:flex;
-
-  flex-direction:column;
-
-  align-items:center;
-
-  justify-content:center;
-
-  animation:
-    splashFade 1.2s ease;
-}
-
-.splash-dolphin{
-
-  width:240px;
-
-  max-width:70vw;
-
-  object-fit:contain;
-
-  user-select:none;
-
-  -webkit-user-drag:none;
-
-  filter:
-    drop-shadow(
-      0 10px 30px
-      rgba(80,170,255,.25)
-    );
-
-  animation:
-    dolphinFloat 2.8s ease-in-out infinite;
-}
-
-.splash-title{
-
-  margin-top:22px;
-
-  font-size:34px;
-
-  font-weight:800;
-
-  letter-spacing:-1px;
-
-  color:white;
-
-  text-shadow:
-    0 6px 18px
-    rgba(0,0,0,.28);
-
-  opacity:0;
-
-  animation:
-    textFade .8s ease forwards;
-
-  animation-delay:.25s;
-}
-
-.splash-sub{
-
-  margin-top:10px;
-
-  font-size:12px;
-
-  letter-spacing:4px;
-
-  color:
-    rgba(255,255,255,.68);
-
-  opacity:0;
-
-  animation:
-    textFade .8s ease forwards;
-
-  animation-delay:.45s;
-}
-
-/* =========================
-   SPLASH ANIMATION
-========================= */
-
-@keyframes dolphinFloat{
-
-  0%{
-
-    transform:
-      translateY(0px)
-      scale(1);
-  }
-
-  50%{
-
-    transform:
-      translateY(-14px)
-      scale(1.02);
-  }
-
-  100%{
-
-    transform:
-      translateY(0px)
-      scale(1);
-  }
-}
-
-@keyframes splashFade{
-
-  from{
-
-    opacity:0;
-
-    transform:
-      scale(.96);
-  }
-
-  to{
-
-    opacity:1;
-
-    transform:
-      scale(1);
-  }
-}
-
-@keyframes textFade{
-
-  from{
-
-    opacity:0;
-
-    transform:
-      translateY(12px);
-  }
-
-  to{
-
-    opacity:1;
-
-    transform:
-      translateY(0);
-  }
-}
-
-/* =========================
-   COVERFLOW SECTION
-========================= */
-
-.coverflow-section{
-
-  margin-bottom:42px;
-}
-
-.coverflow-title{
-
-  margin-bottom:14px;
-
-  padding-left:6px;
-
-  font-size:18px;
-
-  font-weight:800;
-}
-
-.coverflow{
-
-  scroll-snap-type:x mandatory;
-}
-
-.cover-card{
-
-  scroll-snap-align:center;
 }
