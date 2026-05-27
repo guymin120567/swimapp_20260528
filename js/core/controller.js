@@ -9,7 +9,6 @@ import { loadState, saveState } from "../../db/database.js";
 import { compressImage } from "../utils/image.js";
 import { spinAll } from "../features/roulette/roulette.js";
 
-// =========================
 export function initController(){
 
   async function boot(){
@@ -21,20 +20,20 @@ export function initController(){
     try {
       saved = await loadState();
     } catch (e) {
-      console.warn(e);
+      console.warn("LOAD FAIL", e);
     }
 
     setState(saved || structuredClone(defaultState));
 
     normalizeState();
 
-    // 🔥 UI 먼저
+    // UI 먼저 생성
     renderLayout();
 
-    // 🔥 DOM 캐싱
+    // DOM 캐싱
     initDOM();
 
-    // 🔥 렌더
+    // 렌더
     renderRoulette();
     renderLists();
     initTabs();
@@ -65,6 +64,14 @@ export function initController(){
     });
   }
 
+  function rerender(){
+
+    requestAnimationFrame(() => {
+      renderRoulette();
+      renderLists();
+    });
+  }
+
   function bindGlobal(){
 
     document.addEventListener("click", async (e) => {
@@ -78,10 +85,26 @@ export function initController(){
       }
 
       if(action === "add"){
-        // 그대로 유지
+        // 기존 로직 유지
       }
 
+      const card = e.target.closest(".cover-card");
+
+      if(card){
+        setActiveItem(card.dataset.type, card.dataset.id);
+      }
     });
+  }
+
+  function setActiveItem(type, id){
+
+    if(type === "cap"){
+      setActiveCap(id);
+    } else {
+      setActiveSwim(id);
+    }
+
+    renderLists();
   }
 
   return { boot };
