@@ -1,83 +1,49 @@
-import {
-  dom,
-  cacheDOM
-} from "./dom.js";
+<div class="container">
 
-export function renderLayout(){
-
-  if(!dom.app){
-
-    cacheDOM();
-  }
-
-  if(dom.initialized){
-
-    return;
-  }
-
-  dom.app.innerHTML = `
-
-  <div class="container">
-
-    <div class="tab-bar">
-
-      <button
-        class="tab-btn active"
-        data-tab="roulette"
-      >
-        🎲 룰렛
-      </button>
-
-      <button
-        class="tab-btn"
-        data-tab="inventory"
-      >
-        📦 리스트
-      </button>
-
-      <button
-        class="tab-btn"
-        data-tab="records"
-      >
-        📋 기록
-      </button>
-
-    </div>
+  <main class="main-content">
 
     <section
-      id="rouletteTab"
-      class="tab-page active"
-    >
-
-      <div id="rouletteSection"></div>
-
-    </section>
+      id="rouletteSection"
+      class="section"
+    ></section>
 
     <section
-      id="inventoryTab"
-      class="tab-page"
-    >
-
-      <div id="listsSection"></div>
-
-    </section>
+      id="listsSection"
+      class="section"
+      style="display:none"
+    ></section>
 
     <section
-      id="recordsTab"
-      class="tab-page"
+      id="recordsSection"
+      class="section"
+      style="display:none"
+    ></section>
+
+  </main>
+
+  <nav class="bottom-tabs">
+
+    <button
+      class="bottom-tab active"
+      data-tab="roulette"
     >
+      룰렛
+    </button>
 
-      <div class="empty-records">
-        기록 기능 준비중
-      </div>
+    <button
+      class="bottom-tab"
+      data-tab="inventory"
+    >
+      리스트
+    </button>
 
-    </section>
+    <button
+      class="bottom-tab"
+      data-tab="records"
+    >
+      기록
+    </button>
 
-  </div>
+  </nav>
 
-  `;
-
-  dom.initialized = true;
-
-  cacheDOM();
-}
+</div>
