@@ -15,9 +15,6 @@ export const dom = {
   spinButton: null
 };
 
-// =========================
-// CACHE DOM
-// =========================
 export function cacheDOM(){
 
   dom.app = document.getElementById("app");
@@ -33,9 +30,6 @@ export function cacheDOM(){
   dom.spinButton = document.querySelector('[data-action="spin"]');
 }
 
-// =========================
-// INIT DOM
-// =========================
 export function initDOM(){
 
   cacheDOM();
