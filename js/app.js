@@ -13,9 +13,11 @@ window.addEventListener("DOMContentLoaded", async () => {
 
     await startApp();
 
-    // render 완료 기준으로 바로 종료
+    // 🔥 렌더 이후 확실히 한 프레임 뒤 제거
     requestAnimationFrame(() => {
-      hideSplash();
+      requestAnimationFrame(() => {
+        hideSplash();
+      });
     });
 
   } catch (err) {
@@ -26,7 +28,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 });
 
 // =========================
-// SHOW
+// SHOW SPLASH
 // =========================
 function showSplash() {
 
@@ -39,14 +41,26 @@ function showSplash() {
 }
 
 // =========================
-// HIDE
+// HIDE SPLASH (핵심 안정화)
 // =========================
 function hideSplash() {
 
   const splash = document.getElementById("splash");
+  const app = document.getElementById("app");
+
+  // 🔥 app 강제 표시
+  if (app) {
+    app.style.opacity = "1";
+  }
+
   if (!splash) return;
 
   splash.classList.add("hide");
+
+  // 🔥 DOM 완전 제거 (잔상 방지)
+  setTimeout(() => {
+    splash.remove();
+  }, 400);
 }
 
 // =========================
@@ -59,7 +73,6 @@ function forceStart(err) {
   const app = document.getElementById("app");
 
   if (app) {
-
     app.innerHTML = `
       <div style="padding:40px;text-align:center;">
         <h2>앱 시작 오류</h2>
