@@ -1,136 +1,91 @@
-import {
-  startApp
-} from "./controller/appController.js";
+import { startApp } from "./controller/appController.js";
 
 // =========================
-// APP
+// APP INIT
 // =========================
-window.addEventListener(
-  "DOMContentLoaded",
-  async ()=>{
+window.addEventListener("DOMContentLoaded", async () => {
 
-    try{
+  console.log("APP INIT");
 
-      showSplash();
+  try {
 
-      await startApp();
+    showSplash();
 
-      hideSplash();
+    await startApp();
 
-    }catch(err){
+    hideSplash();
 
-      console.error(
-        "APP INIT ERROR",
-        err
-      );
+  } catch (err) {
 
-      forceStart(err);
-    }
+    console.error("APP INIT ERROR", err);
+
+    forceStart(err);
   }
-);
+});
 
 // =========================
-// SPLASH
+// SHOW SPLASH
 // =========================
-function showSplash(){
+function showSplash() {
 
-  const splash =
-    document.getElementById(
-      "splash"
-    );
+  const splash = document.getElementById("splash");
 
-  if(!splash) return;
+  if (!splash) return;
 
-  splash.style.opacity =
-    "1";
+  splash.classList.remove("hide");
 
-  splash.style.visibility =
-    "visible";
+  splash.style.opacity = "1";
+  splash.style.visibility = "visible";
 }
 
 // =========================
-// HIDE
+// HIDE SPLASH
 // =========================
-function hideSplash(){
+function hideSplash() {
 
-  const splash =
-    document.getElementById(
-      "splash"
-    );
+  const splash = document.getElementById("splash");
 
-  const app =
-    document.getElementById(
-      "app"
-    );
+  const app = document.getElementById("app");
 
-  if(app){
-
-    app.style.opacity =
-      "1";
+  if (app) {
+    app.style.opacity = "1";
   }
 
-  if(splash){
+  if (!splash) return;
 
-    splash.classList.add(
-      "hide"
-    );
+  splash.classList.add("hide");
 
-    setTimeout(()=>{
-
-      splash.remove();
-
-    },800);
-  }
+  // ❌ remove 하지 않는다 (중요)
+  // DOM 재사용 안정성 확보
 }
 
 // =========================
-// FORCE START
+// FORCE START (ERROR)
 // =========================
-function forceStart(err){
+function forceStart(err) {
 
-  const splash =
-    document.getElementById(
-      "splash"
-    );
+  const splash = document.getElementById("splash");
+  splash?.remove();
 
-  if(splash){
+  const app = document.getElementById("app");
 
-    splash.remove();
-  }
-
-  const app =
-    document.getElementById(
-      "app"
-    );
-
-  if(app){
+  if (app) {
 
     app.innerHTML = `
+      <div style="padding:40px;text-align:center;">
 
-    <div
-      style="
-        padding:40px;
-        text-align:center;
-      "
-    >
+        <h2>앱 시작 오류</h2>
 
-      <h2>
-        앱 시작 오류
-      </h2>
-
-      <pre
-        style="
+        <pre style="
           margin-top:20px;
           white-space:pre-wrap;
           font-size:12px;
           opacity:0.7;
-        "
-      >
+        ">
 ${err}
-      </pre>
+        </pre>
 
-    </div>
-
+      </div>
     `;
   }
 }
