@@ -4,69 +4,52 @@ import {
 
 import {
   setSelectedCap,
-  setSelectedSwim,
-  setActiveCap,
-  setActiveSwim
+  setSelectedSwim
 } from "../../state/actions.js";
 
-// =========================
-// RANDOM
-// =========================
-function randomItem(arr){
+import {
+  renderRoulette
+} from "./renderRoulette.js";
 
-  if(!arr?.length){
-
-    return null;
-  }
-
-  const index =
-    Math.floor(
-      Math.random() * arr.length
-    );
-
-  return arr[index];
-}
-
-// =========================
-// SPIN
-// =========================
-export async function spinAll(){
+export function spinRoulette(){
 
   const state =
     getState();
 
-  const cap =
-    randomItem(
-      state.data.caps
-    );
+  const caps =
+    state.data.caps;
 
-  const swim =
-    randomItem(
-      state.data.swimsuits
-    );
+  const swims =
+    state.data.swimsuits;
+
+  if(!caps.length) return;
+
+  if(!swims.length) return;
+
+  const randomCap =
+    caps[
+      Math.floor(
+        Math.random() *
+        caps.length
+      )
+    ];
+
+  const randomSwim =
+    swims[
+      Math.floor(
+        Math.random() *
+        swims.length
+      )
+    ];
 
   setSelectedCap(
-    cap?.id || null
+    randomCap.id
   );
 
   setSelectedSwim(
-    swim?.id || null
+    randomSwim.id
   );
 
-  // =========================
-  // ACTIVE SYNC
-  // =========================
-  setActiveCap(
-    cap?.id || null
-  );
+  renderRoulette();
 
-  setActiveSwim(
-    swim?.id || null
-  );
-
-  return {
-
-    cap,
-    swim
-  };
 }
