@@ -1,16 +1,13 @@
 export const defaultState = {
-
   data: {
     caps: [],
     swimsuits: [],
     records: []
   },
-
   selection: {
     capId: null,
     swimId: null
   },
-
   ui: {
     activeTab: "roulette",
     activeCapId: null,
@@ -20,37 +17,22 @@ export const defaultState = {
 };
 
 let state = structuredClone(defaultState);
-
-// =========================
-// SUBSCRIBERS (🔥 핵심 추가)
-// =========================
 const listeners = new Set();
 
-// =========================
-// GET
-// =========================
 export function getState(){
   return state;
 }
 
-// =========================
-// SUBSCRIBE (🔥 핵심)
-// =========================
 export function subscribe(fn){
   listeners.add(fn);
   return () => listeners.delete(fn);
 }
 
-// =========================
-// EMIT
-// =========================
 function emit(){
   listeners.forEach(fn => fn(state));
 }
 
-// =========================
-// SET (🔥 완전 교체 핵심)
-// =========================
+// 🔥 핵심: 항상 새로운 reference 보장
 export function setState(partial){
 
   state = {
@@ -69,35 +51,14 @@ export function setState(partial){
     }
   };
 
-  emit(); // 🔥 자동 UI 트리거
+  emit();
 }
 
-// =========================
-// HELPERS (선택 상태)
-// =========================
-export function setActiveTab(tab){
-
-  setState({
-    ui: {
-      activeTab: tab
-    }
-  });
-}
-
+// helpers
 export function setActiveCapId(id){
-
-  setState({
-    ui: {
-      activeCapId: id
-    }
-  });
+  setState({ selection: { capId: id } });
 }
 
 export function setActiveSwimId(id){
-
-  setState({
-    ui: {
-      activeSwimId: id
-    }
-  });
+  setState({ selection: { swimId: id } });
 }
