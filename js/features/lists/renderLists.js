@@ -14,7 +14,7 @@ export function renderLists(){
 
   const target =
     document.getElementById(
-      "listsSection"
+      "listsContent"
     );
 
   if(!target) return;
