@@ -1,49 +1,66 @@
-<div class="container">
+export function renderLayout(){
 
-  <main class="main-content">
+  const app =
+    document.getElementById(
+      "app"
+    );
 
-    <section
-      id="rouletteSection"
-      class="section"
-    ></section>
+  if(!app) return;
 
-    <section
-      id="listsSection"
-      class="section"
-      style="display:none"
-    ></section>
+  app.innerHTML = `
 
-    <section
-      id="recordsSection"
-      class="section"
-      style="display:none"
-    ></section>
+    <div class="container">
 
-  </main>
+      <main class="main-content">
 
-  <nav class="bottom-tabs">
+        <section
+          id="rouletteSection"
+          class="section"
+        ></section>
 
-    <button
-      class="bottom-tab active"
-      data-tab="roulette"
-    >
-      룰렛
-    </button>
+        <section
+          id="listsSection"
+          class="section"
+          style="display:none"
+        ></section>
 
-    <button
-      class="bottom-tab"
-      data-tab="inventory"
-    >
-      리스트
-    </button>
+        <section
+          id="recordsSection"
+          class="section"
+          style="display:none"
+        ></section>
 
-    <button
-      class="bottom-tab"
-      data-tab="records"
-    >
-      기록
-    </button>
+      </main>
 
-  </nav>
+      <nav class="bottom-tabs">
 
-</div>
+        <button
+          class="
+            bottom-tab
+            active
+          "
+          data-tab="roulette"
+        >
+          룰렛
+        </button>
+
+        <button
+          class="bottom-tab"
+          data-tab="inventory"
+        >
+          리스트
+        </button>
+
+        <button
+          class="bottom-tab"
+          data-tab="records"
+        >
+          기록
+        </button>
+
+      </nav>
+
+    </div>
+
+  `;
+}
