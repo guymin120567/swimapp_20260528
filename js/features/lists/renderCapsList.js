@@ -7,43 +7,65 @@ export function renderCapsList(){
   const state =
     getState();
 
+  const items =
+    state.data.caps;
+
   return `
 
-    <section class="list-block">
+    <section class="coverflow-section">
 
-      <div class="list-title">
-        CAPS
+      <div class="coverflow-title">
+        수모
       </div>
 
       <div
-        id="capCoverflow"
         class="coverflow"
+        data-type="cap"
       >
 
         ${
-          state.data.caps.map(item => `
+          items.map(item=>`
 
             <div
-              class="
-                cover-card
-                ${
-                  item.id ===
-                  state.ui.activeCapId
-                  ? "active"
-                  : ""
-                }
-              "
-              data-id="${item.id}"
+              class="cover-card"
               data-type="cap"
+              data-id="${item.id}"
             >
 
-              <img
-                src="${item.image}"
-                alt="${item.name}"
-              />
+              <div class="card-inner">
 
-              <div class="cover-name">
-                ${item.name}
+                ${
+                  item.image
+                  ? `
+                    <img
+                      class="card-image"
+                      src="${item.image}"
+                      alt="${item.name}"
+                    />
+                  `
+                  : `
+                    <div class="card-placeholder">
+                      🏊
+                    </div>
+                  `
+                }
+
+                <button
+                  class="delete-btn"
+                  data-type="cap"
+                  data-id="${item.id}"
+                >
+                  ×
+                </button>
+
+                <div class="card-overlay">
+
+                  <div class="card-title">
+                    ${item.name}
+                  </div>
+
+                </div>
+
               </div>
 
             </div>
