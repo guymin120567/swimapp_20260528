@@ -1,74 +1,97 @@
 import {
-  getState,
-  setActiveTab
-} from "../state/state.js";
+  renderRoulette
+} from "../features/roulette/renderRoulette.js";
+
+import {
+  renderLists
+} from "../features/lists/renderLists.js";
 
 export function initTabs(){
 
-  const buttons =
+  const tabs =
     document.querySelectorAll(
-      ".tab-btn"
+      ".bottom-tab"
     );
 
-  const pages =
-    document.querySelectorAll(
-      ".tab-page"
-    );
+  const sections = {
 
-  const state =
-    getState();
+    roulette:
+      document.getElementById(
+        "rouletteSection"
+      ),
 
-  buttons.forEach((button)=>{
+    inventory:
+      document.getElementById(
+        "listsSection"
+      ),
 
-    button.addEventListener(
-      "click",
-      ()=>{
+    records:
+      document.getElementById(
+        "recordsSection"
+      )
 
-        const tab =
-          button.dataset.tab;
+  };
 
-        setActiveTab(tab);
+  function activateTab(type){
 
-        buttons.forEach((btn)=>{
+    tabs.forEach(tab => {
 
-          btn.classList.remove(
-            "active"
-          );
-        });
+      tab.classList.toggle(
 
-        pages.forEach((page)=>{
+        "active",
 
-          page.classList.remove(
-            "active"
-          );
-        });
+        tab.dataset.tab === type
+      );
 
-        button.classList.add(
-          "active"
-        );
+    });
 
-        const target =
-          document.getElementById(
-            `${tab}Tab`
-          );
+    Object.entries(
+      sections
+    ).forEach(
+      ([key,section])=>{
 
-        if(target){
+        if(!section) return;
 
-          target.classList.add(
-            "active"
-          );
-        }
+        section.style.display =
+
+          key === type
+            ? "block"
+            : "none";
+
       }
     );
-  });
 
-  const initialButton =
-    document.querySelector(
-      `.tab-btn[data-tab="${state.ui.activeTab}"]`
+    if(type === "roulette"){
+
+      renderRoulette();
+
+    }
+
+    if(type === "inventory"){
+
+      renderLists();
+
+    }
+
+  }
+
+  tabs.forEach(tab => {
+
+    tab.addEventListener(
+      "click",
+      e=>{
+
+        e.preventDefault();
+
+        e.stopPropagation();
+
+        activateTab(
+          tab.dataset.tab
+        );
+
+      }
     );
 
-  if(initialButton){
+  });
 
-    initialButton.click();
-  }
 }

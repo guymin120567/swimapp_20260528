@@ -2,14 +2,11 @@ import {
   getState
 } from "../../state/state.js";
 
-// =========================
-// RENDER
-// =========================
 export function renderRoulette(){
 
   const target =
     document.getElementById(
-      "rouletteSection"
+      "rouletteContent"
     );
 
   if(!target) return;
@@ -19,112 +16,126 @@ export function renderRoulette(){
 
   const cap =
     state.data.caps.find(
-      item =>
-        item.id ===
+      v =>
+        v.id ===
         state.selection.capId
     );
 
   const swim =
     state.data.swimsuits.find(
-      item =>
-        item.id ===
+      v =>
+        v.id ===
         state.selection.swimId
     );
 
   target.innerHTML = `
 
-  <div class="roulette-wrap">
+    <div class="block">
 
-    <div class="roulette-slot">
-
-      <div class="roulette-label">
-        🧢 수모
+      <div class="section-title">
+        룰렛 결과
       </div>
 
-      <div class="roulette-card">
+      <div class="roulette-wrap">
 
-        ${
-          cap?.image
-          ? `
-          <img
-            src="${cap.image}"
-            class="card-image"
-            draggable="false"
-          />
-          `
-          : `
-          <div class="card-placeholder">
-            🌊
+        <!-- CAP -->
+
+        <div class="roulette-slot">
+
+          <div class="roulette-label">
+            CAP
           </div>
-          `
-        }
 
-        <div class="card-overlay">
+          <div class="roulette-card">
 
-          <div class="roulette-name">
             ${
-              cap?.name || "없음"
+              cap
+              ? `
+
+                <img
+                  class="card-image"
+                  src="${cap.image}"
+                  alt="${cap.name}"
+                />
+
+                <div class="card-overlay">
+
+                  <div class="roulette-name">
+                    ${cap.name}
+                  </div>
+
+                </div>
+
+              `
+              : `
+
+                <div class="card-placeholder">
+                  🧢
+                </div>
+
+              `
             }
+
+          </div>
+
+        </div>
+
+        <!-- SWIM -->
+
+        <div class="roulette-slot">
+
+          <div class="roulette-label">
+            SWIMSUIT
+          </div>
+
+          <div class="roulette-card">
+
+            ${
+              swim
+              ? `
+
+                <img
+                  class="card-image"
+                  src="${swim.image}"
+                  alt="${swim.name}"
+                />
+
+                <div class="card-overlay">
+
+                  <div class="roulette-name">
+                    ${swim.name}
+                  </div>
+
+                </div>
+
+              `
+              : `
+
+                <div class="card-placeholder">
+                  🏊
+                </div>
+
+              `
+            }
+
           </div>
 
         </div>
 
       </div>
 
-    </div>
+      <div class="spin-row">
 
-    <div class="roulette-slot">
-
-      <div class="roulette-label">
-        🩲 수영복
-      </div>
-
-      <div class="roulette-card">
-
-        ${
-          swim?.image
-          ? `
-          <img
-            src="${swim.image}"
-            class="card-image"
-            draggable="false"
-          />
-          `
-          : `
-          <div class="card-placeholder">
-            🌊
-          </div>
-          `
-        }
-
-        <div class="card-overlay">
-
-          <div class="roulette-name">
-            ${
-              swim?.name || "없음"
-            }
-          </div>
-
-        </div>
+        <button
+          class="spin-btn"
+          data-action="spin"
+        >
+          돌리기
+        </button>
 
       </div>
 
     </div>
 
-  </div>
-
-  <div class="spin-row">
-
-    <button
-      id="spinButton"
-      class="spin-btn"
-      data-action="spin"
-    >
-      오늘의 코디 뽑기
-    </button>
-
-  </div>
-`;
-
-  refreshCoverflow();
+  `;
 }

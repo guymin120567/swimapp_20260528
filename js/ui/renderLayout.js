@@ -1,83 +1,215 @@
-import {
-  dom,
-  cacheDOM
-} from "./dom.js";
-
 export function renderLayout(){
 
-  if(!dom.app){
+  const app =
+    document.getElementById(
+      "app"
+    );
 
-    cacheDOM();
-  }
+  if(!app) return;
 
-  if(dom.initialized){
+  app.innerHTML = `
 
-    return;
-  }
+    <!-- ========================= -->
+    <!-- SPLASH -->
+    <!-- ========================= -->
 
-  dom.app.innerHTML = `
+    <div id="splash">
 
-  <div class="container">
+      <div class="splash-bg"></div>
 
-    <div class="tab-bar">
+      <div class="splash-inner">
 
-      <button
-        class="tab-btn active"
-        data-tab="roulette"
-      >
-        🎲 룰렛
-      </button>
+        <img
+          class="splash-dolphin"
+          src="./assets/dolphin.png"
+          alt="dolphin"
+        />
 
-      <button
-        class="tab-btn"
-        data-tab="inventory"
-      >
-        📦 리스트
-      </button>
+        <div class="splash-title">
+          Swim Roulette
+        </div>
 
-      <button
-        class="tab-btn"
-        data-tab="records"
-      >
-        📋 기록
-      </button>
+        <div class="splash-sub">
+          RANDOM SWIM STYLE
+        </div>
+
+      </div>
 
     </div>
 
-    <section
-      id="rouletteTab"
-      class="tab-page active"
-    >
+    <!-- ========================= -->
+    <!-- APP -->
+    <!-- ========================= -->
 
-      <div id="rouletteSection"></div>
+    <div class="container">
 
-    </section>
+      <main class="main-content">
 
-    <section
-      id="inventoryTab"
-      class="tab-page"
-    >
+        <!-- ========================= -->
+        <!-- ROULETTE -->
+        <!-- ========================= -->
 
-      <div id="listsSection"></div>
+        <section
+          id="rouletteSection"
+          class="section"
+        >
 
-    </section>
+          <div
+            id="rouletteContent"
+          ></div>
 
-    <section
-      id="recordsTab"
-      class="tab-page"
-    >
+        </section>
 
-      <div class="empty-records">
-        기록 기능 준비중
-      </div>
+        <!-- ========================= -->
+        <!-- LISTS -->
+        <!-- ========================= -->
 
-    </section>
+        <section
+          id="listsSection"
+          class="section"
+          style="display:none"
+        >
 
-  </div>
+          <!-- INPUT -->
+
+          <div class="block">
+
+            <div class="section-title">
+              아이템 추가
+            </div>
+
+            <div class="input-area">
+
+              <select id="itemType">
+
+                <option value="cap">
+                  수모
+                </option>
+
+                <option value="swim">
+                  수영복
+                </option>
+
+              </select>
+
+              <input
+                id="itemText"
+                type="text"
+                placeholder="이름 입력"
+              />
+
+              <input
+                id="itemImage"
+                type="file"
+                accept="image/*"
+              />
+
+              <button
+                class="spin-btn"
+                data-action="add"
+              >
+                추가하기
+              </button>
+
+            </div>
+
+          </div>
+
+          <!-- LIST -->
+
+          <div
+            id="listsContent"
+          ></div>
+
+        </section>
+
+        <!-- ========================= -->
+        <!-- RECORD -->
+        <!-- ========================= -->
+
+        <section
+          id="recordsSection"
+          class="section"
+          style="display:none"
+        >
+
+          <div class="section-title">
+            기록
+          </div>
+
+          <div class="empty-records">
+            아직 기록이 없습니다
+          </div>
+
+        </section>
+
+      </main>
+
+      <!-- ========================= -->
+      <!-- BOTTOM TAB -->
+      <!-- ========================= -->
+
+      <nav class="bottom-tabs">
+
+        <button
+          class="
+            bottom-tab
+            active
+          "
+          data-tab="roulette"
+        >
+          룰렛
+        </button>
+
+        <button
+          class="bottom-tab"
+          data-tab="inventory"
+        >
+          리스트
+        </button>
+
+        <button
+          class="bottom-tab"
+          data-tab="records"
+        >
+          기록
+        </button>
+
+      </nav>
+
+    </div>
 
   `;
 
-  dom.initialized = true;
+  // =========================
+  // SPLASH SHOW
+  // =========================
 
-  cacheDOM();
+  requestAnimationFrame(()=>{
+
+    app.classList.add(
+      "show"
+    );
+
+  });
+
+  // =========================
+  // SPLASH HIDE
+  // =========================
+
+  const splash =
+    document.getElementById(
+      "splash"
+    );
+
+  if(splash){
+
+    setTimeout(()=>{
+
+      splash.classList.add(
+        "hide"
+      );
+
+    }, 1800);
+  }
 }
