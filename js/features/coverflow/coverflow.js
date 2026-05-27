@@ -5,13 +5,13 @@ export function renderCoverflow(){
 
   const state = getState();
 
-  render("cap", state.data.caps);
-  render("swim", state.data.swimsuits);
+  renderType("cap", state.data.caps);
+  renderType("swim", state.data.swimsuits);
 
   requestAnimationFrame(bindDrag);
 }
 
-function render(type, items){
+function renderType(type, items){
 
   const target = document.getElementById(`${type}Coverflow`);
   if(!target) return;
@@ -20,8 +20,7 @@ function render(type, items){
     <div class="cover-card" data-type="${type}" data-id="${item.id}">
       <div class="card-inner">
 
-        ${
-          item.image
+        ${item.image
           ? `<img class="card-image" src="${item.image}" />`
           : `<div class="card-placeholder">?</div>`
         }
@@ -37,7 +36,6 @@ function render(type, items){
   bindClick();
 }
 
-// 🔥 핵심: 클릭 → setState
 function bindClick(){
 
   document.querySelectorAll(".cover-card").forEach(card => {
@@ -67,5 +65,6 @@ function bindClick(){
         });
       }
     };
+
   });
 }
