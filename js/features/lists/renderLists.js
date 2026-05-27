@@ -1,6 +1,6 @@
 import {
   refreshCoverflow
-} from "../components/coverflow/index.js";
+} from "../coverflow/renderCoverflow.js";
 
 import {
   renderCapsList
