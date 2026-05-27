@@ -7,11 +7,11 @@ import { bindGlobal } from "../ui/events.js";
 
 import { renderLists } from "../features/lists/renderLists.js";
 import { renderRoulette } from "../features/roulette/renderRoulette.js";
-import { renderCoverflow } from "../features/coverflow/coverflow.js";
+import { renderCoverflow } from "../features/coverflow/renderCoverflow.js";
 
-export function initController(){
+export function initController() {
 
-  async function boot(){
+  async function boot() {
 
     console.log("BOOT START");
 
@@ -24,13 +24,16 @@ export function initController(){
     initTabs();
     bindGlobal();
 
-    // 🔥 단일 렌더 루프
+    // =========================
+    // 🔥 UI 자동 반응
+    // =========================
     subscribe(() => {
       renderLists();
       renderRoulette();
       renderCoverflow();
     });
 
+    // 최초 1회
     renderLists();
     renderRoulette();
     renderCoverflow();
