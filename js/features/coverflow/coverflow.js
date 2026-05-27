@@ -1,4 +1,4 @@
-import { getState } from "../../state/state.js";
+import { getState, setState } from "../../state/state.js";
 import { bindDrag } from "./drag.js";
 
 export function renderCoverflow(){
@@ -8,12 +8,14 @@ export function renderCoverflow(){
   renderType("cap", state.data.caps);
   renderType("swim", state.data.swimsuits);
 
-  requestAnimationFrame(bindDrag);
+  requestAnimationFrame(() => {
+    bindDrag();
+  });
 }
 
 function renderType(type, items){
 
-  const target = document.getElementById(`${type}Coverflow`);
+  const target = document.querySelector(`.coverflow[data-type="${type}"]`);
   if(!target) return;
 
   target.innerHTML = items.map(item => `
@@ -29,7 +31,45 @@ function renderType(type, items){
           <div class="card-title">${item.name}</div>
         </div>
 
+        <button class="delete-btn" data-type="${type}" data-id="${item.id}">
+          ×
+        </button>
+
       </div>
     </div>
   `).join("");
+
+  bindClick();
+}
+
+function bindClick(){
+
+  document.querySelectorAll(".cover-card").forEach(card => {
+
+    card.onclick = () => {
+
+      const type = card.dataset.type;
+      const id = card.dataset.id;
+
+      const state = getState();
+
+      if(type === "cap"){
+        setState({
+          selection: {
+            capId: id,
+            swimId: state.selection.swimId
+          }
+        });
+      }
+
+      if(type === "swim"){
+        setState({
+          selection: {
+            capId: state.selection.capId,
+            swimId: id
+          }
+        });
+      }
+    };
+  });
 }
