@@ -9,6 +9,38 @@ export function renderLayout(){
 
   app.innerHTML = `
 
+    <!-- ========================= -->
+    <!-- SPLASH -->
+    <!-- ========================= -->
+
+    <div id="splash">
+
+      <div class="splash-bg"></div>
+
+      <div class="splash-inner">
+
+        <img
+          class="splash-dolphin"
+          src="./assets/dolphin.png"
+          alt="dolphin"
+        />
+
+        <div class="splash-title">
+          Swim Roulette
+        </div>
+
+        <div class="splash-sub">
+          RANDOM SWIM STYLE
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- APP -->
+    <!-- ========================= -->
+
     <div class="container">
 
       <main class="main-content">
@@ -83,7 +115,7 @@ export function renderLayout(){
 
           </div>
 
-          <!-- LIST RENDER -->
+          <!-- LIST -->
 
           <div
             id="listsContent"
@@ -92,7 +124,7 @@ export function renderLayout(){
         </section>
 
         <!-- ========================= -->
-        <!-- RECORDS -->
+        <!-- RECORD -->
         <!-- ========================= -->
 
         <section
@@ -105,9 +137,7 @@ export function renderLayout(){
             기록
           </div>
 
-          <div
-            class="empty-records"
-          >
+          <div class="empty-records">
             아직 기록이 없습니다
           </div>
 
@@ -150,4 +180,36 @@ export function renderLayout(){
     </div>
 
   `;
+
+  // =========================
+  // SPLASH SHOW
+  // =========================
+
+  requestAnimationFrame(()=>{
+
+    app.classList.add(
+      "show"
+    );
+
+  });
+
+  // =========================
+  // SPLASH HIDE
+  // =========================
+
+  const splash =
+    document.getElementById(
+      "splash"
+    );
+
+  if(splash){
+
+    setTimeout(()=>{
+
+      splash.classList.add(
+        "hide"
+      );
+
+    }, 1800);
+  }
 }
