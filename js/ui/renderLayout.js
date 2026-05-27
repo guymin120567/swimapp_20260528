@@ -21,7 +21,7 @@ export function renderLayout(){
 
         <img
           class="splash-image"
-          src="../../assets/splash.png"
+          src="./assets/splash.png"
           alt="splash"
         />
 
