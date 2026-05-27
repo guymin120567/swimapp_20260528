@@ -6,7 +6,7 @@ export function renderRoulette(){
 
   const target =
     document.getElementById(
-      "rouletteSection"
+      "rouletteContent"
     );
 
   if(!target) return;
@@ -30,61 +30,108 @@ export function renderRoulette(){
 
   target.innerHTML = `
 
-    <div class="result-area">
+    <div class="block">
 
-      <div class="result-card">
+      <div class="section-title">
+        룰렛 결과
+      </div>
 
-        <div class="result-label">
-          CAP
+      <div class="roulette-wrap">
+
+        <!-- CAP -->
+
+        <div class="roulette-slot">
+
+          <div class="roulette-label">
+            CAP
+          </div>
+
+          <div class="roulette-card">
+
+            ${
+              cap
+              ? `
+
+                <img
+                  class="card-image"
+                  src="${cap.image}"
+                  alt="${cap.name}"
+                />
+
+                <div class="card-overlay">
+
+                  <div class="roulette-name">
+                    ${cap.name}
+                  </div>
+
+                </div>
+
+              `
+              : `
+
+                <div class="card-placeholder">
+                  🧢
+                </div>
+
+              `
+            }
+
+          </div>
+
         </div>
 
-        ${
-          cap
-          ? `
-            <img
-              class="result-image"
-              src="${cap.image}"
-              alt="${cap.name}"
-            />
+        <!-- SWIM -->
 
-            <div class="result-name">
-              ${cap.name}
-            </div>
-          `
-          : `
-            <div class="result-empty">
-              없음
-            </div>
-          `
-        }
+        <div class="roulette-slot">
+
+          <div class="roulette-label">
+            SWIMSUIT
+          </div>
+
+          <div class="roulette-card">
+
+            ${
+              swim
+              ? `
+
+                <img
+                  class="card-image"
+                  src="${swim.image}"
+                  alt="${swim.name}"
+                />
+
+                <div class="card-overlay">
+
+                  <div class="roulette-name">
+                    ${swim.name}
+                  </div>
+
+                </div>
+
+              `
+              : `
+
+                <div class="card-placeholder">
+                  🏊
+                </div>
+
+              `
+            }
+
+          </div>
+
+        </div>
 
       </div>
 
-      <div class="result-card">
+      <div class="spin-row">
 
-        <div class="result-label">
-          SWIMSUIT
-        </div>
-
-        ${
-          swim
-          ? `
-            <img
-              class="result-image"
-              src="${swim.image}"
-              alt="${swim.name}"
-            />
-
-            <div class="result-name">
-              ${swim.name}
-            </div>
-          `
-          : `
-            <div class="result-empty">
-              없음
-            </div>
-          `
-        }
+        <button
+          class="spin-btn"
+          data-action="spin"
+        >
+          돌리기
+        </button>
 
       </div>
 
