@@ -34,6 +34,7 @@ export function renderCapsList(){
                 }
               "
               data-id="${item.id}"
+              data-type="cap"
             >
 
               <img
