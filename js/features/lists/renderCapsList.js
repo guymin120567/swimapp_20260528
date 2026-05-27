@@ -1,6 +1,6 @@
 import {
   getState
-} from "../state/state.js";
+} from "../../state/state.js";
 
 export function renderCapsList(){
 
