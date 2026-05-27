@@ -1,10 +1,10 @@
 import {
   renderRoulette
-} from "../render/renderRoulette.js";
+} from "../features/roulette/renderRoulette.js";
 
 import {
   renderLists
-} from "../render/renderLists.js";
+} from "../features/lists/renderLists.js";
 
 export function initTabs(){
 
