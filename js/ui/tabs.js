@@ -1,74 +1,88 @@
 import {
-  getState,
-  setActiveTab
-} from "../state/state.js";
+  renderRoulette
+} from "../render/renderRoulette.js";
+
+import {
+  renderLists
+} from "../render/renderLists.js";
 
 export function initTabs(){
 
-  const buttons =
+  const tabs =
     document.querySelectorAll(
-      ".tab-btn"
+      ".bottom-tab"
     );
 
-  const pages =
-    document.querySelectorAll(
-      ".tab-page"
-    );
+  const sections = {
 
-  const state =
-    getState();
+    roulette:
+      document.getElementById(
+        "rouletteSection"
+      ),
 
-  buttons.forEach((button)=>{
+    inventory:
+      document.getElementById(
+        "listsSection"
+      ),
 
-    button.addEventListener(
+    records:
+      document.getElementById(
+        "recordsSection"
+      )
+
+  };
+
+  tabs.forEach(tab => {
+
+    tab.addEventListener(
       "click",
       ()=>{
 
-        const tab =
-          button.dataset.tab;
+        tabs.forEach(v=>{
 
-        setActiveTab(tab);
-
-        buttons.forEach((btn)=>{
-
-          btn.classList.remove(
+          v.classList.remove(
             "active"
           );
+
         });
 
-        pages.forEach((page)=>{
-
-          page.classList.remove(
-            "active"
-          );
-        });
-
-        button.classList.add(
+        tab.classList.add(
           "active"
         );
 
-        const target =
-          document.getElementById(
-            `${tab}Tab`
-          );
+        const type =
+          tab.dataset.tab;
 
-        if(target){
+        Object.entries(
+          sections
+        ).forEach(
+          ([key,section])=>{
 
-          target.classList.add(
-            "active"
-          );
+            if(!section) return;
+
+            section.style.display =
+              key === type
+              ? "block"
+              : "none";
+
+          }
+        );
+
+        if(type === "roulette"){
+
+          renderRoulette();
+
         }
+
+        if(type === "inventory"){
+
+          renderLists();
+
+        }
+
       }
     );
+
   });
 
-  const initialButton =
-    document.querySelector(
-      `.tab-btn[data-tab="${state.ui.activeTab}"]`
-    );
-
-  if(initialButton){
-
-    initialButton.click();
-  }
 }
