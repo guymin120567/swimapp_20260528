@@ -4,8 +4,9 @@ import { initDOM } from "../ui/dom.js";
 import { loadState } from "../../db/database.js";
 import { initTabs } from "../ui/tabs.js";
 import { bindGlobal } from "../ui/events.js";
+
 import { renderLists } from "../features/lists/renderLists.js";
-import { renderCoverflow } from "../features/coverflow/renderCoverflow.js";
+import { renderRoulette } from "../features/roulette/renderRoulette.js";
 
 export function initController(){
 
@@ -14,7 +15,6 @@ export function initController(){
     console.log("BOOT START");
 
     const saved = await loadState();
-
     setState(saved || defaultState);
 
     renderLayout();
@@ -23,13 +23,15 @@ export function initController(){
     initTabs();
     bindGlobal();
 
-    // 🔥 핵심: subscribe 연결
-    subscribe(renderLists);
-    subscribe(renderCoverflow);
+    // 🔥 UI subscribe (핵심만)
+    subscribe(() => {
+      renderLists();
+      renderRoulette();
+    });
 
     // 최초 렌더
     renderLists();
-    renderCoverflow();
+    renderRoulette();
 
     console.log("BOOT DONE");
   }
