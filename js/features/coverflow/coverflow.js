@@ -124,45 +124,35 @@ function renderType(type){
 function bindSelect(){
 
   const wraps =
-    document.querySelectorAll(
-      ".coverflow"
-    );
+    document.querySelectorAll(".coverflow");
 
-  wraps.forEach(wrap=>{
+  wraps.forEach(wrap => {
 
     if(wrap.dataset.bound){
       return;
     }
 
-    wrap.dataset.bound =
-      "true";
+    wrap.dataset.bound = "true";
 
-    wrap.addEventListener(
-      "click",
-      e=>{
+    wrap.addEventListener("click", e => {
 
-        const card =
-          e.target.closest(
-            ".cover-card"
-          );
+      const card =
+        e.target.closest(".cover-card");
 
-        if(!card) return;
+      if(!card) return;
 
-        if(
-          e.target.closest(
-            ".delete-btn"
-          )
-        ){
-          return;
-        }
+      if(e.target.closest(".delete-btn")) return;
 
-        setSelected(
-          card.dataset.type,
-          card.dataset.id
-        );
+      const type = card.dataset.type;
+      const id = card.dataset.id;
 
-      }
-    );
+      // 1. 상태 저장
+      setSelected(type, id);
+
+      // 2. 중앙 이동
+      centerCard(wrap, card);
+
+    });
 
   });
 }
