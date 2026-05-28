@@ -61,36 +61,25 @@ img{
 button,
 input,
 select{
-
   font:inherit;
 }
 
 #app{
-
   min-height:100vh;
-
   opacity:0;
-
-  transition:
-    opacity .8s ease;
+  transition:opacity .8s ease;
 }
 
 #app.show{
-
   opacity:1;
 }
 
 .container{
-
   position:relative;
-
   width:100%;
   max-width:760px;
-
   margin:0 auto;
-
-  padding:
-    22px 16px 130px;
+  padding:22px 16px 130px;
 }
 
 /* =========================
@@ -98,31 +87,22 @@ select{
 ========================= */
 
 .main-content{
-
   position:relative;
-
   z-index:1;
-
   width:100%;
 }
 
 .section{
-
   position:relative;
-
   width:100%;
-
   min-height:40vh;
-
   z-index:1;
 }
 
 #rouletteSection,
 #listsSection,
 #recordsSection{
-
   position:relative;
-
   z-index:1;
 }
 
@@ -131,10 +111,8 @@ select{
 }
 
 .section-title{
-
   font-size:22px;
   font-weight:800;
-
   margin-bottom:16px;
 }
 
@@ -143,127 +121,74 @@ select{
 ========================= */
 
 .roulette-page{
-
   position:relative;
-
   overflow:hidden;
-
   border-radius:34px;
 }
 
 .roulette-bg{
-
   position:absolute;
-
   inset:0;
-
   z-index:0;
-
   pointer-events:none;
-
   opacity:.16;
-
-  background-image:
-    url("../assets/roulette-bg.png");
-
+  background-image:url("../assets/roulette-bg.png");
   background-size:cover;
-
   background-position:center;
-
   background-repeat:no-repeat;
-
-  filter:
-    blur(2px);
+  filter:blur(2px);
 }
 
 #rouletteContent{
-
   position:relative;
-
   z-index:1;
 }
 
 /* =========================
-   BOTTOM TAB
+   TAB
 ========================= */
 
 .bottom-tabs{
-
   position:fixed;
-
   left:0;
   right:0;
   bottom:0;
-
   z-index:9999;
 
   display:flex;
-
   gap:12px;
 
-  padding:
-    14px 16px calc(14px + env(safe-area-inset-bottom));
+  padding:14px 16px calc(14px + env(safe-area-inset-bottom));
 
-  background:
-    rgba(255,255,255,.72);
+  background:rgba(255,255,255,.72);
+  backdrop-filter:blur(18px);
 
-  backdrop-filter:
-    blur(18px);
-
-  box-shadow:
-    0 -8px 24px rgba(80,140,180,.12);
+  box-shadow:0 -8px 24px rgba(80,140,180,.12);
 }
 
 .bottom-tab{
-
   flex:1;
-
   height:56px;
-
   border:none;
-
   border-radius:20px;
 
-  background:
-    rgba(255,255,255,.82);
-
+  background:rgba(255,255,255,.82);
   color:var(--text);
 
   font-size:15px;
-
   font-weight:800;
 
   cursor:pointer;
 
-  transition:
-    transform .18s ease,
-    background .18s ease,
-    color .18s ease,
-    box-shadow .18s ease;
+  transition:.18s ease;
 
-  box-shadow:
-    0 4px 12px rgba(80,140,180,.08);
+  box-shadow:0 4px 12px rgba(80,140,180,.08);
 }
 
 .bottom-tab.active{
-
-  background:
-    linear-gradient(
-      135deg,
-      var(--accent),
-      var(--accent2)
-    );
-
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
   color:#174569;
-
-  box-shadow:
-    0 10px 24px rgba(125,211,252,.28);
-}
-
-.bottom-tab:active{
-
-  transform:
-    scale(.98);
+  box-shadow:0 10px 24px rgba(125,211,252,.28);
 }
 
 /* =========================
@@ -271,56 +196,38 @@ select{
 ========================= */
 
 .roulette-wrap{
-
   display:grid;
-
-  grid-template-columns:
-    1fr 1fr;
-
+  grid-template-columns:1fr 1fr;
   gap:18px;
-
   margin-bottom:24px;
 }
 
 .roulette-slot{
-
   display:flex;
-
   flex-direction:column;
-
   align-items:center;
-
   gap:10px;
 }
 
 .roulette-label{
-
   font-size:18px;
-
   font-weight:800;
 }
 
+/* 🔥 정사각형 통일 */
 .roulette-card{
-
   width:100%;
-
   max-width:220px;
-
-  aspect-ratio:3 / 4;
-
+  aspect-ratio:1 / 1;
   overflow:hidden;
 
   border-radius:28px;
-
   position:relative;
 
   background:var(--card);
-
   box-shadow:var(--shadow);
 
-  border:
-    1px solid rgba(255,255,255,.7);
-
+  border:1px solid rgba(255,255,255,.7);
   isolation:isolate;
 }
 
@@ -328,57 +235,21 @@ select{
    SPIN
 ========================= */
 
-.spin-row{
-
-  margin-bottom:34px;
-}
-
 .spin-btn{
-
   width:100%;
-
   height:58px;
-
   border:none;
-
   border-radius:22px;
 
-  background:
-    linear-gradient(
-      135deg,
-      var(--accent),
-      var(--accent2)
-    );
-
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
   color:#174569;
 
   font-size:17px;
-
   font-weight:800;
 
   cursor:pointer;
 
-  box-shadow:
-    0 10px 24px rgba(125,211,252,.28);
-
-  transition:
-    transform .2s ease,
-    opacity .2s ease,
-    box-shadow .2s ease;
-}
-
-.spin-btn:hover{
-
-  transform:
-    translateY(-2px);
-
-  opacity:.94;
-}
-
-.spin-btn:active{
-
-  transform:
-    scale(.985);
+  box-shadow:0 10px 24px rgba(125,211,252,.28);
 }
 
 /* =========================
@@ -386,119 +257,74 @@ select{
 ========================= */
 
 .coverflow{
-
   position:relative;
-
   display:flex;
-
   align-items:center;
 
   overflow-x:auto;
-
   overflow-y:hidden;
-
-  gap:0;
 
   min-height:320px;
 
-  padding:
-    18px 34px 52px;
-
-  scroll-behavior:smooth;
-
-  -webkit-overflow-scrolling:touch;
-
-  scrollbar-width:none;
-
-  perspective:1400px;
+  padding:18px 34px 52px;
 
   scroll-snap-type:x mandatory;
+  perspective:1400px;
+
+  scrollbar-width:none;
 }
 
 .coverflow::-webkit-scrollbar{
-
   display:none;
 }
 
-.coverflow.dragging{
-
-  cursor:grabbing;
-}
-
 .cover-card{
-
   flex:0 0 auto;
-
   margin-left:-34px;
-
-  will-change:
-    transform,
-    opacity,
-    filter;
 
   cursor:grab;
 
-  transform-style:
-    preserve-3d;
-
-  backface-visibility:hidden;
+  transform-style:preserve-3d;
 
   scroll-snap-align:center;
+
+  opacity:.55;
+  transform:scale(.86);
+
+  transition:.3s ease;
 }
 
-.cover-card.ready{
-
-  transition:
-    transform .34s cubic-bezier(.2,.8,.2,1),
-    opacity .28s ease,
-    filter .28s ease;
-}
-
-.cover-card:first-child{
-
-  margin-left:0;
-}
-
+/* 🔥 중심 카드 */
 .cover-card.active{
-
-  z-index:999 !important;
-}
-
-.card-inner{
-
-  position:relative;
-
-  isolation:isolate;
-
-  width:180px;
-
-  aspect-ratio:3 / 4;
-
-  overflow:hidden;
-
-  border-radius:28px;
-
-  background:white;
-
-  box-shadow:
-    0 14px 34px rgba(120,170,210,.16);
-
-  border:
-    1px solid rgba(255,255,255,.92);
-
-  transition:
-    transform .32s ease,
-    box-shadow .32s ease;
+  z-index:10;
+  opacity:1;
 }
 
 .cover-card.active .card-inner{
+  transform:translateY(-10px) scale(1.18);
+  box-shadow:0 24px 48px rgba(120,170,220,.28);
+}
 
-  transform:
-    translateY(-10px)
-    scale(1.12);
+.cover-card.ready{
+  transition:.34s cubic-bezier(.2,.8,.2,1);
+}
 
-  box-shadow:
-    0 24px 48px rgba(120,170,220,.28);
+/* 카드 */
+.card-inner{
+  position:relative;
+
+  width:180px;
+  aspect-ratio:1 / 1;
+
+  border-radius:28px;
+  overflow:hidden;
+
+  background:white;
+
+  box-shadow:0 14px 34px rgba(120,170,210,.16);
+  border:1px solid rgba(255,255,255,.92);
+
+  transition:transform .32s ease, box-shadow .32s ease;
 }
 
 /* =========================
@@ -507,58 +333,13 @@ select{
 
 .card-image,
 .item-thumb-image{
-
   position:absolute;
-
   inset:0;
-
   width:100%;
   height:100%;
 
   object-fit:cover;
-
   object-position:center;
-
-  display:block;
-
-  user-select:none;
-
-  -webkit-user-drag:none;
-
-  backface-visibility:hidden;
-
-  -webkit-backface-visibility:hidden;
-
-  transform:translateZ(0);
-}
-
-/* =========================
-   PLACEHOLDER
-========================= */
-
-.card-placeholder{
-
-  position:absolute;
-
-  inset:0;
-
-  width:100%;
-  height:100%;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-  font-size:52px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #e0f2fe,
-      #bae6fd
-    );
 }
 
 /* =========================
@@ -566,71 +347,22 @@ select{
 ========================= */
 
 .card-overlay{
-
   position:absolute;
-
   left:0;
   right:0;
   bottom:0;
 
-  z-index:2;
-
   padding:14px;
 
-  background:
-    linear-gradient(
-      transparent,
-      rgba(20,50,80,.78)
-    );
+  background:linear-gradient(transparent,rgba(20,50,80,.78));
 }
 
 .card-title,
 .roulette-name{
-
-  font-size:15px;
-
-  font-weight:700;
-
   color:white;
-
-  text-align:center;
-
-  text-shadow:
-    0 2px 10px rgba(0,0,0,.2);
-
-  word-break:break-word;
-}
-
-/* =========================
-   DELETE
-========================= */
-
-.delete-btn{
-
-  position:absolute;
-
-  top:10px;
-  right:10px;
-
-  z-index:3;
-
-  width:30px;
-  height:30px;
-
-  border:none;
-
-  border-radius:50%;
-
-  background:
-    rgba(255,255,255,.82);
-
-  color:#174569;
-
-  font-size:18px;
-
+  font-size:15px;
   font-weight:700;
-
-  cursor:pointer;
+  text-align:center;
 }
 
 /* =========================
@@ -638,45 +370,24 @@ select{
 ========================= */
 
 .input-area{
-
   display:flex;
-
   flex-direction:column;
-
   gap:12px;
-
   margin-bottom:30px;
 }
 
 .input-area input,
 .input-area select{
-
-  width:100%;
-
   height:50px;
-
   border:none;
-
   border-radius:18px;
 
   padding:0 14px;
 
-  background:
-    rgba(255,255,255,.72);
-
+  background:rgba(255,255,255,.72);
   color:var(--text);
 
-  font-size:15px;
-
-  box-shadow:
-    0 6px 18px rgba(80,140,180,.08);
-}
-
-.input-area input[type="file"]{
-
-  padding:12px 14px;
-
-  height:auto;
+  box-shadow:0 6px 18px rgba(80,140,180,.08);
 }
 
 /* =========================
@@ -684,14 +395,9 @@ select{
 ========================= */
 
 .empty-records{
-
   padding:40px 20px;
-
   text-align:center;
-
-  opacity:0.6;
-
-  font-size:14px;
+  opacity:.6;
 }
 
 /* =========================
@@ -699,160 +405,89 @@ select{
 ========================= */
 
 #splash{
-
   position:fixed;
   inset:0;
-
   z-index:99999;
 
   display:flex;
   align-items:center;
   justify-content:center;
 
-  background: linear-gradient(180deg,#07111d 0%,#0d2034 100%);
-
-  transition: opacity .6s ease, visibility .6s ease;
+  background:linear-gradient(180deg,#07111d,#0d2034);
 }
 
 #splash.hide{
-
   opacity:0;
   visibility:hidden;
   pointer-events:none;
-  z-index:-1;
 }
 
-.splash-bg{
-
-  position:absolute;
-  inset:0;
-
-  background:
-    radial-gradient(
-      circle at center,
-      rgba(120,180,255,.18),
-      transparent 70%
-    );
-
-  filter: blur(20px);
-}
-
-/* 🔥 핵심 수정: stacking context 명확화 */
-.splash-inner{
-
-  position:relative;
-  z-index:10;
-
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-
-  gap:14px;
-
-  animation: splashFade 1.2s ease;
-}
-
-/* 이미지 */
 .splash-image{
-
   width:320px;
   max-width:82vw;
-
-  object-fit:contain;
-
-  user-select:none;
-  -webkit-user-drag:none;
-
-  filter: drop-shadow(0 16px 40px rgba(80,170,255,.22));
-
-  animation: splashFloat 3s ease-in-out infinite;
-
-  position:relative;
-  z-index:2;
 }
 
-/* 🔥 로딩 텍스트 (무조건 위로) */
-.splash-loading{
-
-  position:relative;
-  z-index:20;
-
-  color:#b9d7ff;
-  font-size:13px;
-  font-weight:600;
-
-  letter-spacing:0.5px;
-
-  text-shadow:0 2px 10px rgba(0,0,0,.35);
-}
-
-/* animations 그대로 */
-@keyframes splashFloat{
-  0%{ transform: translateY(0px) scale(1); }
-  50%{ transform: translateY(-14px) scale(1.02); }
-  100%{ transform: translateY(0px) scale(1); }
-}
-
-@keyframes splashFade{
-  from{ opacity:0; transform:scale(.96); }
-  to{ opacity:1; transform:scale(1); }
-}
 /* =========================
-   MOBILE
+   MOBILE FIX
 ========================= */
 
 @media(max-width:640px){
 
   .container{
-
-    padding:
-      18px 12px 120px;
+    padding:18px 12px 120px;
   }
 
   .roulette-wrap{
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
   }
 
   .card-inner{
-    width: 140px;
+    width:140px;
   }
-}
 
   .coverflow{
-
     min-height:280px;
+    padding:10px 20px 40px;
   }
 
   .roulette-page{
-
     border-radius:24px;
   }
 
   .splash-image{
-
     width:260px;
   }
 }
 
-.confetti {
-  position: fixed;
-  width: 8px;
-  height: 10px;
-  border-radius: 2px;
-  z-index: 99999;
-  pointer-events: none;
-  animation: confetti-burst 2.4s ease-out forwards;
+/* =========================
+   CONFETTI
+========================= */
+
+.confetti{
+  position:fixed;
+  width:8px;
+  height:10px;
+  border-radius:2px;
+
+  z-index:99999;
+  pointer-events:none;
+
+  animation:confetti-burst 2.4s ease-out forwards;
 }
 
-@keyframes confetti-burst {
-  0% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 1;
+@keyframes confetti-burst{
+  0%{
+    transform:translate(0,0) rotate(0deg);
+    opacity:1;
   }
-  100% {
-    transform: translate(var(--driftX), var(--driftY)) translateY(120vh) rotate(720deg);
-    opacity: 0;
+
+  100%{
+    transform:
+      translate(var(--driftX), var(--driftY))
+      translateY(120vh)
+      rotate(720deg);
+
+    opacity:0;
   }
 }
