@@ -21,7 +21,7 @@ export function bindDrag(){
       isDown = true;
       wrap.classList.add("dragging");
 
-      startX = e.pageX - wrap.offsetLeft;
+      startX = e.pageX;
       scrollLeft = wrap.scrollLeft;
 
     });
@@ -31,8 +31,7 @@ export function bindDrag(){
       isDown = false;
       wrap.classList.remove("dragging");
 
-      // 🔥 드래그 끝나면 강제 중심 보정
-      requestAnimationFrame(()=> {
+      requestAnimationFrame(()=>{
         snapToCenter(wrap);
       });
 
@@ -44,31 +43,27 @@ export function bindDrag(){
 
       e.preventDefault();
 
-      const x = e.pageX - wrap.offsetLeft;
+      const x = e.pageX;
       const walk = (x - startX) * 1.2;
 
       wrap.scrollLeft = scrollLeft - walk;
 
-      requestAnimationFrame(()=> {
+      requestAnimationFrame(()=>{
         updateDepth(wrap);
       });
 
     });
 
     wrap.addEventListener("scroll", ()=>{
-
-      requestAnimationFrame(()=> {
+      requestAnimationFrame(()=>{
         updateDepth(wrap);
       });
-
     }, { passive:true });
 
     wrap.addEventListener("touchmove", ()=>{
-
-      requestAnimationFrame(()=> {
+      requestAnimationFrame(()=>{
         updateDepth(wrap);
       });
-
     }, { passive:true });
 
     updateDepth(wrap);
@@ -77,7 +72,7 @@ export function bindDrag(){
 }
 
 /* =========================
-   ACTIVE / DEPTH
+   ACTIVE FIX 핵심
 ========================= */
 
 function updateDepth(wrap){
@@ -88,15 +83,17 @@ function updateDepth(wrap){
   if(!cards.length) return;
 
   const center =
-    wrap.scrollLeft + wrap.clientWidth / 2;
+    wrap.getBoundingClientRect().left + wrap.clientWidth / 2;
 
   let closest = null;
   let closestDistance = Infinity;
 
   cards.forEach(card=>{
 
+    const rect = card.getBoundingClientRect();
+
     const cardCenter =
-      card.offsetLeft + card.clientWidth / 2;
+      rect.left + rect.width / 2;
 
     const distance =
       Math.abs(center - cardCenter);
@@ -112,16 +109,12 @@ function updateDepth(wrap){
 
     card.classList.toggle("active", card === closest);
 
-    requestAnimationFrame(()=> {
-      card.classList.add("ready");
-    });
-
   });
 
 }
 
 /* =========================
-   SNAP TO CENTER
+   SNAP FIX
 ========================= */
 
 function snapToCenter(wrap){
@@ -132,15 +125,17 @@ function snapToCenter(wrap){
   if(!cards.length) return;
 
   const center =
-    wrap.scrollLeft + wrap.clientWidth / 2;
+    wrap.getBoundingClientRect().left + wrap.clientWidth / 2;
 
   let closest = null;
   let closestDistance = Infinity;
 
   cards.forEach(card=>{
 
+    const rect = card.getBoundingClientRect();
+
     const cardCenter =
-      card.offsetLeft + card.clientWidth / 2;
+      rect.left + rect.width / 2;
 
     const distance =
       Math.abs(center - cardCenter);
