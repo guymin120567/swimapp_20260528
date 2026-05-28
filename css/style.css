@@ -195,11 +195,10 @@ select{
    ROULETTE
 ========================= */
 
-.roulette-wrap{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:18px;
-  margin-bottom:24px;
+.roulette-wrap {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
 }
 
 .roulette-slot{
