@@ -40,22 +40,29 @@ export function initController(){
 
     console.log("BOOT START");
 
-    const saved =
-      await loadState();
+    // =========================
+    // 1. LAYOUT 먼저
+    // =========================
+
+    renderLayout();
+
+    initDOM();
+
+    initTabs();
+
+    bindGlobal();
 
     // =========================
-    // MIGRATE OLD STRUCTURE
+    // 2. LOAD
     // =========================
+
+    const saved =
+      await loadState();
 
     let normalized =
       saved || defaultState;
 
-    // 이전 구조:
-    // data.caps
-    // data.swimsuits
-    // →
-    // items[]
-
+    // old migrate
     if(
       normalized?.data
     ){
@@ -92,23 +99,13 @@ export function initController(){
 
             capId:null,
             swimId:null
-
           },
 
-        ui: {
+        ui:
+          normalized.ui || {
 
-          activeTab:
-            normalized.ui?.activeTab
-            || "roulette",
-
-          activeItemId:
-            normalized.ui?.activeItemId
-            || null,
-
-          isSpinning:
-            normalized.ui?.isSpinning
-            || false
-        }
+            activeTab:"roulette"
+          }
       };
     }
 
@@ -121,26 +118,8 @@ export function initController(){
       normalized.items = [];
     }
 
-    setState(normalized);
-
-    renderLayout();
-
-    initDOM();
-
-    initTabs();
-
-    bindGlobal();
-
     // =========================
-    // FIRST RENDER
-    // =========================
-
-    renderRoulette();
-
-    renderCoverflow();
-
-    // =========================
-    // SUBSCRIBE
+    // 3. SUBSCRIBE 먼저
     // =========================
 
     subscribe(async ()=>{
@@ -154,6 +133,20 @@ export function initController(){
       );
 
     });
+
+    // =========================
+    // 4. STATE 적용
+    // =========================
+
+    setState(normalized);
+
+    // =========================
+    // 5. 최초 렌더
+    // =========================
+
+    renderRoulette();
+
+    renderCoverflow();
 
     console.log("BOOT DONE");
   }
