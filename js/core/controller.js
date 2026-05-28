@@ -5,16 +5,26 @@ import {
   getState
 } from "../state/state.js";
 
-import { renderLayout } from "../ui/renderLayout.js";
-import { initDOM } from "../ui/dom.js";
+import {
+  renderLayout
+} from "../ui/renderLayout.js";
+
+import {
+  initDOM
+} from "../ui/dom.js";
 
 import {
   loadState,
   saveState
 } from "../../db/database.js";
 
-import { initTabs } from "../ui/tabs.js";
-import { bindGlobal } from "../ui/events.js";
+import {
+  initTabs
+} from "../ui/tabs.js";
+
+import {
+  bindGlobal
+} from "../ui/events.js";
 
 import {
   renderRoulette
@@ -33,9 +43,85 @@ export function initController(){
     const saved =
       await loadState();
 
-    setState(
-      saved || defaultState
-    );
+    // =========================
+    // MIGRATE OLD STRUCTURE
+    // =========================
+
+    let normalized =
+      saved || defaultState;
+
+    // 이전 구조:
+    // data.caps
+    // data.swimsuits
+    // →
+    // items[]
+
+    if(
+      normalized?.data
+    ){
+
+      normalized = {
+
+        items: [
+
+          ...(normalized.data.caps || [])
+            .map(item=>({
+
+              ...item,
+
+              type:"cap"
+
+            })),
+
+          ...(normalized.data.swimsuits || [])
+            .map(item=>({
+
+              ...item,
+
+              type:"swim"
+
+            }))
+
+        ],
+
+        records:
+          normalized.data.records || [],
+
+        selection:
+          normalized.selection || {
+
+            capId:null,
+            swimId:null
+
+          },
+
+        ui: {
+
+          activeTab:
+            normalized.ui?.activeTab
+            || "roulette",
+
+          activeItemId:
+            normalized.ui?.activeItemId
+            || null,
+
+          isSpinning:
+            normalized.ui?.isSpinning
+            || false
+        }
+      };
+    }
+
+    // items 보호
+    if(
+      !Array.isArray(
+        normalized.items
+      )
+    ){
+      normalized.items = [];
+    }
+
+    setState(normalized);
 
     renderLayout();
 
@@ -45,12 +131,18 @@ export function initController(){
 
     bindGlobal();
 
-    // 최초 렌더
+    // =========================
+    // FIRST RENDER
+    // =========================
+
     renderRoulette();
 
     renderCoverflow();
 
-    // 상태 구독
+    // =========================
+    // SUBSCRIBE
+    // =========================
+
     subscribe(async ()=>{
 
       renderRoulette();
