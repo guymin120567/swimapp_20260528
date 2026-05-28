@@ -41,41 +41,60 @@ export function removeItem(id){
 
     items:
       items.filter(
-        item=>item.id !== id
+        item => item.id !== id
       )
 
   });
 }
 
 // =========================
-// SELECT
+// SELECTION (UI 선택)
 // =========================
 
-export function setSelected(type,id){
+export function setSelected(type, id){
 
   const state =
     getState();
 
   const selection = {
-
     ...(state.selection || {})
   };
 
   if(type === "cap"){
-
     selection.capId = id;
-
   }
 
   if(type === "swim"){
-
     selection.swimId = id;
-
   }
 
   setState({
-
     selection
+  });
+}
 
+// =========================
+// RESULT (룰렛 결과)
+// =========================
+
+export function setResult(type, id){
+
+  const state =
+    getState();
+
+  const result = {
+    ...(state.result || {})
+  };
+
+  if(type === "capId"){
+    result.capId = id;
+  }
+
+  if(type === "swimId"){
+    result.swimId = id;
+  }
+
+  setState({
+    result
   });
 }
