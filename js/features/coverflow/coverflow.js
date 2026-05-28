@@ -156,3 +156,23 @@ function bindSelect(){
 
   });
 }
+
+
+function centerCard(wrap, card){
+
+  const targetScroll =
+    card.offsetLeft +
+    card.clientWidth / 2 -
+    wrap.clientWidth / 2;
+
+  const maxScroll =
+    wrap.scrollWidth - wrap.clientWidth;
+
+  const clamped =
+    Math.max(0, Math.min(targetScroll, maxScroll));
+
+  wrap.scrollTo({
+    left: clamped,
+    behavior: "smooth"
+  });
+}
