@@ -14,7 +14,9 @@ export function renderCoverflow(){
   });
 }
 
-/* ========================= */
+/* =========================
+   RENDER
+========================= */
 
 function renderType(type){
 
@@ -39,11 +41,13 @@ function renderType(type){
   }
 
   target.innerHTML = items.map(item => `
+
     <div
       class="cover-card ${item.id === selectedId ? "active" : ""} ready"
       data-id="${item.id}"
       data-type="${type}"
     >
+
       <div class="card-inner">
 
         ${
@@ -52,19 +56,19 @@ function renderType(type){
             : `<div class="card-placeholder">🏊</div>`
         }
 
-        <button class="delete-btn" data-action="delete">×</button>
-
         <div class="card-overlay">
           <div class="card-title">${item.name}</div>
         </div>
 
       </div>
+
     </div>
+
   `).join("");
 }
 
 /* =========================
-   CLICK → SELECT + CENTER
+   CLICK CENTER FIX
 ========================= */
 
 function bindSelect(){
@@ -79,8 +83,11 @@ function bindSelect(){
 
     wrap.addEventListener("click", e => {
 
-      const card = e.target.closest(".cover-card");
+      const card =
+        e.target.closest(".cover-card");
+
       if(!card) return;
+
       if(e.target.closest(".delete-btn")) return;
 
       const type = card.dataset.type;
@@ -89,7 +96,9 @@ function bindSelect(){
       setSelected(type, id);
 
       requestAnimationFrame(() => {
-        centerCard(wrap, card);
+        requestAnimationFrame(() => {
+          centerCard(wrap, card);
+        });
       });
 
     });
@@ -97,25 +106,28 @@ function bindSelect(){
   });
 }
 
-/* ========================= */
+/* =========================
+   CENTER FIX
+========================= */
 
 function centerCard(wrap, card){
 
-  const wrapRect = wrap.getBoundingClientRect();
-  const cardRect = card.getBoundingClientRect();
-
-  const offset =
-    (cardRect.left - wrapRect.left) + wrap.scrollLeft;
-
   const target =
-    offset - (wrap.clientWidth / 2) + (cardRect.width / 2);
+    card.offsetLeft +
+    card.clientWidth / 2 -
+    wrap.clientWidth / 2;
 
   const max =
     wrap.scrollWidth - wrap.clientWidth;
+
+  wrap._isProgrammatic = true;
 
   wrap.scrollTo({
     left: Math.max(0, Math.min(target, max)),
     behavior: "smooth"
   });
 
+  setTimeout(() => {
+    wrap._isProgrammatic = false;
+  }, 450);
 }
