@@ -13,7 +13,10 @@ export async function spinAll(){
 
   if(!caps.length || !swims.length) return;
 
-  await delay(600);
+  window.dispatchEvent(new CustomEvent("spin-start"));
+
+  // 🔥 충분히 돌아가는 시간 확보
+  await delay(3200);
 
   const cap =
     caps[Math.floor(Math.random() * caps.length)];
@@ -21,11 +24,11 @@ export async function spinAll(){
   const swim =
     swims[Math.floor(Math.random() * swims.length)];
 
-  // 🔥 결과는 result에 저장 (selection과 분리)
   setResult("capId", cap.id);
   setResult("swimId", swim.id);
 
-  // FX 타이밍
+  window.dispatchEvent(new CustomEvent("spin-stop"));
+
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       burst("cap");
@@ -54,24 +57,15 @@ function burst(type){
     if(!slot) return;
 
     const rect = slot.getBoundingClientRect();
-
-    const fx =
-      document.getElementById("fx-layer");
-
+    const fx = document.getElementById("fx-layer");
     if(!fx) return;
 
     const x = rect.left + rect.width / 2;
     const y = rect.top + rect.height / 2;
 
-    const colors = [
-      "#a78bfa",
-      "#8b5cf6",
-      "#7c3aed",
-      "#c4b5fd",
-      "#6d28d9"
-    ];
+    const colors = ["#a78bfa","#8b5cf6","#7c3aed","#c4b5fd","#6d28d9"];
 
-    for(let i=0;i<40;i++){
+    for(let i=0;i<45;i++){
 
       const el = document.createElement("div");
       el.className = "confetti";
@@ -82,8 +76,8 @@ function burst(type){
       el.style.background =
         colors[Math.floor(Math.random() * colors.length)];
 
-      el.style.setProperty("--dx", (Math.random()-0.5)*300 + "px");
-      el.style.setProperty("--dy", (Math.random()-1.2)*240 + "px");
+      el.style.setProperty("--dx", (Math.random()-0.5)*320 + "px");
+      el.style.setProperty("--dy", (Math.random()-1.2)*260 + "px");
 
       fx.appendChild(el);
 
@@ -92,9 +86,7 @@ function burst(type){
 
     slot.classList.add("win");
 
-    setTimeout(() => {
-      slot.classList.remove("win");
-    }, 350);
+    setTimeout(() => slot.classList.remove("win"), 400);
 
   });
 }
