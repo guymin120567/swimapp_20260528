@@ -1,7 +1,10 @@
 import {
-  getState,
-  setState
+  getState
 } from "../../state/state.js";
+
+import {
+  setSelected
+} from "../../state/actions.js";
 
 import {
   bindDrag
@@ -9,27 +12,21 @@ import {
 
 export function renderCoverflow(){
 
-  console.log("COVERFLOW RUN");
-  
   const state =
     getState();
 
-  renderType(
-    "cap",
-    state.data.caps || []
-  );
+  renderType("cap");
 
-  renderType(
-    "swim",
-    state.data.swimsuits || []
-  );
+  renderType("swim");
 
   requestAnimationFrame(()=>{
+
     bindDrag();
+
   });
 }
 
-function renderType(type, items){
+function renderType(type){
 
   const target =
     document.querySelector(
@@ -38,13 +35,22 @@ function renderType(type, items){
 
   if(!target) return;
 
+  const state =
+    getState();
+
+  const items =
+    state.items.filter(
+      item=>item.type === type
+    );
+
   target.innerHTML =
+
     items.map(item=>`
 
       <div
         class="cover-card ready"
-        data-type="${type}"
         data-id="${item.id}"
+        data-type="${type}"
       >
 
         <div class="card-inner">
@@ -55,7 +61,6 @@ function renderType(type, items){
               <img
                 class="card-image"
                 src="${item.image}"
-                alt="${item.name}"
               />
             `
             : `
@@ -68,7 +73,6 @@ function renderType(type, items){
           <button
             class="delete-btn"
             data-action="delete"
-            data-type="${type}"
             data-id="${item.id}"
           >
             ×
@@ -88,10 +92,10 @@ function renderType(type, items){
 
     `).join("");
 
-  bindClick();
+  bindSelect();
 }
 
-function bindClick(){
+function bindSelect(){
 
   const wraps =
     document.querySelectorAll(
@@ -104,7 +108,8 @@ function bindClick(){
       return;
     }
 
-    wrap.dataset.bound = "true";
+    wrap.dataset.bound =
+      "true";
 
     wrap.addEventListener(
       "click",
@@ -125,30 +130,13 @@ function bindClick(){
           return;
         }
 
-        const type =
-          card.dataset.type;
-
-        const id =
-          card.dataset.id;
-
-        const state =
-          getState();
-
-        setState({
-          selection: {
-            capId:
-              type === "cap"
-                ? id
-                : state.selection.capId,
-
-            swimId:
-              type === "swim"
-                ? id
-                : state.selection.swimId
-          }
-        });
+        setSelected(
+          card.dataset.type,
+          card.dataset.id
+        );
 
       }
     );
+
   });
 }
