@@ -1,61 +1,89 @@
 export const defaultState = {
-  data: {
-    caps: [],
-    swimsuits: [],
-    records: []
-  },
+
+  items: [],
+
+  records: [],
+
   selection: {
     capId: null,
     swimId: null
   },
+
   ui: {
     activeTab: "roulette",
-    activeCapId: null,
-    activeSwimId: null,
+    activeItemId: null,
     isSpinning: false
   }
 };
 
-let state = structuredClone(defaultState);
+let state =
+  structuredClone(
+    defaultState
+  );
 
-const listeners = new Set();
+const listeners =
+  new Set();
 
 // =========================
 // GET
 // =========================
-export function getState() {
+
+export function getState(){
+
   return state;
 }
 
 // =========================
 // SUBSCRIBE
 // =========================
-export function subscribe(fn) {
+
+export function subscribe(fn){
+
   listeners.add(fn);
-  return () => listeners.delete(fn);
+
+  return ()=>{
+
+    listeners.delete(fn);
+
+  };
 }
 
-function emit() {
-  listeners.forEach(fn => fn(state));
+function emit(){
+
+  listeners.forEach(
+    fn=>fn(state)
+  );
 }
 
 // =========================
-// SET (🔥 핵심)
+// SET
 // =========================
-export function setState(partial) {
+
+export function setState(partial){
 
   state = {
+
     ...state,
-    data: {
-      ...state.data,
-      ...(partial.data || {})
-    },
+
+    items:
+      partial.items ||
+      state.items,
+
+    records:
+      partial.records ||
+      state.records,
+
     selection: {
+
       ...state.selection,
+
       ...(partial.selection || {})
     },
+
     ui: {
+
       ...state.ui,
+
       ...(partial.ui || {})
     }
   };
