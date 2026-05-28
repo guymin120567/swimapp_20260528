@@ -7,20 +7,16 @@ import {
   setSelectedSwim
 } from "../../state/actions.js";
 
-import {
-  renderRoulette
-} from "./renderRoulette.js";
-
 export async function spinAll(){
 
   const state =
     getState();
 
   const caps =
-    state.data.caps;
+    state.data.caps || [];
 
   const swims =
-    state.data.swimsuits;
+    state.data.swimsuits || [];
 
   if(!caps.length) return;
 
@@ -58,8 +54,6 @@ export async function spinAll(){
   setSelectedSwim(
     randomSwim.id
   );
-
-  renderRoulette();
 
   root.classList.remove(
     "shuffle"
