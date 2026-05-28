@@ -12,10 +12,15 @@ export function addItem(item){
   const state =
     getState();
 
+  const items =
+    Array.isArray(state.items)
+      ? state.items
+      : [];
+
   setState({
 
     items: [
-      ...state.items,
+      ...items,
       item
     ]
 
@@ -27,10 +32,15 @@ export function removeItem(id){
   const state =
     getState();
 
+  const items =
+    Array.isArray(state.items)
+      ? state.items
+      : [];
+
   setState({
 
     items:
-      state.items.filter(
+      items.filter(
         item=>item.id !== id
       )
 
@@ -43,24 +53,29 @@ export function removeItem(id){
 
 export function setSelected(type,id){
 
+  const state =
+    getState();
+
+  const selection = {
+
+    ...(state.selection || {})
+  };
+
   if(type === "cap"){
 
-    setState({
-      selection: {
-        capId:id
-      }
-    });
+    selection.capId = id;
 
-    return;
   }
 
   if(type === "swim"){
 
-    setState({
-      selection: {
-        swimId:id
-      }
-    });
+    selection.swimId = id;
 
   }
+
+  setState({
+
+    selection
+
+  });
 }
