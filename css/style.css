@@ -459,44 +459,6 @@ select{
     width:260px;
   }
 }
-
-/* =========================
-   CONFETTI
-========================= */
-
-.confetti{
-  position:fixed;
-  left:0;
-  top:0;
-
-  width:8px;
-  height:10px;
-  border-radius:2px;
-
-  z-index:99999;
-  pointer-events:none;
-
-  animation:confetti-burst 2.4s ease-out forwards;
-  will-change: transform, opacity;
-}
-
-@keyframes confetti-burst{
-
-  0%{
-    transform:translate(0,0) rotate(0deg);
-    opacity:1;
-  }
-
-  100%{
-    transform:
-      translate(var(--driftX), var(--driftY))
-      translateY(120vh)
-      rotate(720deg);
-
-    opacity:0;
-  }
-}
-
 /* =========================
    WIN EFFECT (GLow + Shake)
 ========================= */
