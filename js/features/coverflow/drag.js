@@ -1,8 +1,11 @@
 export function bindDrag(){
 
-  const wraps = document.querySelectorAll(".coverflow");
+  const wraps =
+    document.querySelectorAll(
+      ".coverflow"
+    );
 
-  wraps.forEach(wrap => {
+  wraps.forEach(wrap=>{
 
     if(wrap.dataset.dragBound){
       return;
@@ -14,46 +17,120 @@ export function bindDrag(){
     let startX = 0;
     let scrollLeft = 0;
 
-    wrap.addEventListener("mousedown", e => {
+    function updateDepth(){
+
+      const cards =
+        wrap.querySelectorAll(
+          ".cover-card"
+        );
+
+      const center =
+        wrap.scrollLeft +
+        wrap.clientWidth / 2;
+
+      let closest = null;
+      let closestDistance = Infinity;
+
+      cards.forEach(card=>{
+
+        const cardCenter =
+          card.offsetLeft +
+          card.clientWidth / 2;
+
+        const distance =
+          Math.abs(center - cardCenter);
+
+        if(distance < closestDistance){
+          closestDistance = distance;
+          closest = card;
+        }
+      });
+
+      cards.forEach(card=>{
+
+        const active =
+          card === closest;
+
+        card.classList.toggle(
+          "active",
+          active
+        );
+
+        requestAnimationFrame(()=>{
+          card.classList.add("ready");
+        });
+      });
+    }
+
+    updateDepth();
+
+    wrap.addEventListener("mousedown", e=>{
 
       isDown = true;
-      wrap.classList.add("dragging");
 
-      startX = e.pageX - wrap.offsetLeft;
-      scrollLeft = wrap.scrollLeft;
+      wrap.classList.add(
+        "dragging"
+      );
+
+      startX =
+        e.pageX - wrap.offsetLeft;
+
+      scrollLeft =
+        wrap.scrollLeft;
     });
 
-    window.addEventListener("mouseup", () => {
+    window.addEventListener("mouseup", ()=>{
+
       isDown = false;
-      wrap.classList.remove("dragging");
+
+      wrap.classList.remove(
+        "dragging"
+      );
     });
 
-    wrap.addEventListener("mousemove", e => {
+    wrap.addEventListener("mousemove", e=>{
 
       if(!isDown) return;
 
       e.preventDefault();
 
-      const x = e.pageX - wrap.offsetLeft;
-      const walk = (x - startX) * 1.3;
+      const x =
+        e.pageX - wrap.offsetLeft;
 
-      wrap.scrollLeft = scrollLeft - walk;
+      const walk =
+        (x - startX) * 1.2;
+
+      wrap.scrollLeft =
+        scrollLeft - walk;
+
+      requestAnimationFrame(
+        updateDepth
+      );
     });
 
-    // ❌ 여기서 renderCoverflow 호출 제거 (중요)
-    wrap.addEventListener("scroll", () => {
-      requestAnimationFrame(() => {
-        // renderCoverflow 제거됨
-      });
-    });
+    wrap.addEventListener(
+      "scroll",
+      ()=>{
+        requestAnimationFrame(
+          updateDepth
+        );
+      },
+      {
+        passive:true
+      }
+    );
 
-    wrap.addEventListener("touchmove", () => {
-      requestAnimationFrame(() => {
-        // renderCoverflow 제거됨
-      });
-    }, {
-      passive: true
-    });
+    wrap.addEventListener(
+      "touchmove",
+      ()=>{
+        requestAnimationFrame(
+          updateDepth
+        );
+      },
+      {
+        passive:true
+      }
+    );
 
   });
 }
