@@ -4,113 +4,63 @@ import {
 } from "./state.js";
 
 // =========================
-// ADD
+// ITEMS
 // =========================
 
-export function addCap(item){
+export function addItem(item){
 
   const state =
     getState();
 
   setState({
-    data: {
-      caps: [
-        ...state.data.caps,
-        item
-      ]
-    }
+
+    items: [
+      ...state.items,
+      item
+    ]
+
   });
 }
 
-export function addSwim(item){
+export function removeItem(id){
 
   const state =
     getState();
 
   setState({
-    data: {
-      swimsuits: [
-        ...state.data.swimsuits,
-        item
-      ]
-    }
+
+    items:
+      state.items.filter(
+        item=>item.id !== id
+      )
+
   });
 }
 
 // =========================
-// REMOVE
+// SELECT
 // =========================
 
-export function removeCap(id){
+export function setSelected(type,id){
 
-  const state =
-    getState();
+  if(type === "cap"){
 
-  setState({
-    data: {
-      caps:
-        state.data.caps.filter(
-          v => v.id !== id
-        )
-    }
-  });
-}
+    setState({
+      selection: {
+        capId:id
+      }
+    });
 
-export function removeSwim(id){
+    return;
+  }
 
-  const state =
-    getState();
+  if(type === "swim"){
 
-  setState({
-    data: {
-      swimsuits:
-        state.data.swimsuits.filter(
-          v => v.id !== id
-        )
-    }
-  });
-}
+    setState({
+      selection: {
+        swimId:id
+      }
+    });
 
-// =========================
-// SELECTION
-// =========================
-
-export function setSelectedCap(id){
-
-  setState({
-    selection: {
-      capId: id
-    }
-  });
-}
-
-export function setSelectedSwim(id){
-
-  setState({
-    selection: {
-      swimId: id
-    }
-  });
-}
-
-// =========================
-// ACTIVE
-// =========================
-
-export function setActiveCap(id){
-
-  setState({
-    ui: {
-      activeCapId: id
-    }
-  });
-}
-
-export function setActiveSwim(id){
-
-  setState({
-    ui: {
-      activeSwimId: id
-    }
-  });
+  }
 }
