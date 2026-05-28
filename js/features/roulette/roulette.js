@@ -1,81 +1,36 @@
-import {
-  getState
-} from "../../state/state.js";
-
-import {
-  setSelected
-} from "../../state/actions.js";
+import { getState } from "../../state/state.js";
+import { setSelected } from "../../state/actions.js";
 
 export async function spinAll(){
 
-  const state =
-    getState();
+  const state = getState();
 
-  const caps =
-    state.items.filter(
-      item => item.type === "cap"
-    );
+  const caps = state.items.filter(i => i.type === "cap");
+  const swims = state.items.filter(i => i.type === "swim");
 
-  const swims =
-    state.items.filter(
-      item => item.type === "swim"
-    );
-
-  if(!caps.length) return;
-  if(!swims.length) return;
+  if(!caps.length || !swims.length) return;
 
   document.body.classList.add("shuffle");
 
   await delay(700);
 
-  const randomCap =
-    caps[Math.floor(Math.random() * caps.length)];
+  const cap = caps[Math.floor(Math.random() * caps.length)];
+  const swim = swims[Math.floor(Math.random() * swims.length)];
 
-  const randomSwim =
-    swims[Math.floor(Math.random() * swims.length)];
-
-  setSelected("cap", randomCap.id);
-  setSelected("swim", randomSwim.id);
+  setSelected("cap", cap.id);
+  setSelected("swim", swim.id);
 
   document.body.classList.remove("shuffle");
 
-  // 🎯 살짝 텀 주고 폭발 (연출 강화)
-  await delay(100);
-
-  triggerWinEffect();
   createConfetti();
 }
 
-/* =========================
-   DELAY
-========================= */
-
 function delay(ms){
-  return new Promise(resolve => {
-    setTimeout(resolve, ms);
-  });
+  return new Promise(r => setTimeout(r, ms));
 }
 
 /* =========================
-   WIN EFFECT
-========================= */
-
-function triggerWinEffect(){
-
-  const card =
-    document.querySelector(".roulette-card");
-
-  if(!card) return;
-
-  card.classList.add("win");
-
-  setTimeout(() => {
-    card.classList.remove("win");
-  }, 300);
-}
-
-/* =========================
-   CONFETTI (CARD BASED)
+   CONFETTI FIX (핵심)
 ========================= */
 
 function createConfetti(){
@@ -85,8 +40,7 @@ function createConfetti(){
 
   if(!card) return;
 
-  const rect =
-    card.getBoundingClientRect();
+  const rect = card.getBoundingClientRect();
 
   const COLORS = [
     "#a78bfa",
@@ -98,49 +52,29 @@ function createConfetti(){
 
   for(let i = 0; i < 60; i++){
 
-    const confetti =
-      document.createElement("div");
+    const el = document.createElement("div");
+    el.className = "confetti";
 
-    confetti.className = "confetti";
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
 
-    // 🎯 카드 중심 기준
-    const startX =
-      rect.left + rect.width / 2;
+    el.style.position = "fixed";
+    el.style.left = `${x}px`;
+    el.style.top = `${y}px`;
 
-    const startY =
-      rect.top + rect.height / 2;
-
-    confetti.style.left = `${startX}px`;
-    confetti.style.top = `${startY}px`;
-
-    // 🎨 보라 랜덤
-    confetti.style.background =
+    el.style.background =
       COLORS[Math.floor(Math.random() * COLORS.length)];
 
-    // 🎯 퍼짐
-    confetti.style.setProperty(
-      "--driftX",
-      `${(Math.random() - 0.5) * 320}px`
-    );
+    el.style.setProperty("--driftX", `${(Math.random()-0.5)*320}px`);
+    el.style.setProperty("--driftY", `${(Math.random()-1.2)*260}px`);
 
-    confetti.style.setProperty(
-      "--driftY",
-      `${(Math.random() - 1.2) * 260}px`
-    );
+    el.style.width = `${6 + Math.random()*6}px`;
+    el.style.height = `${6 + Math.random()*8}px`;
 
-    // 💡 크기 랜덤
-    const size = 6 + Math.random() * 6;
-    confetti.style.width = `${size}px`;
-    confetti.style.height = `${size * 1.2}px`;
+    el.style.transform = "translate(-50%, -50%)";
 
-    // 💡 회전
-    confetti.style.transform =
-      `rotate(${Math.random() * 360}deg)`;
+    document.body.appendChild(el);
 
-    document.body.appendChild(confetti);
-
-    setTimeout(() => {
-      confetti.remove();
-    }, 2400);
+    setTimeout(() => el.remove(), 2400);
   }
 }
