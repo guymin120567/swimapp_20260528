@@ -41,6 +41,7 @@ export function initTabs(){
         "active",
 
         tab.dataset.tab === type
+
       );
 
     });
@@ -61,6 +62,10 @@ export function initTabs(){
       }
     );
 
+    // =========================
+    // RENDER
+    // =========================
+
     if(type === "roulette"){
 
       renderRoulette();
@@ -72,18 +77,17 @@ export function initTabs(){
       renderCoverflow();
 
     }
-
   }
+
+  // =========================
+  // CLICK
+  // =========================
 
   tabs.forEach(tab=>{
 
     tab.addEventListener(
       "click",
-      e=>{
-
-        e.preventDefault();
-
-        e.stopPropagation();
+      ()=>{
 
         activateTab(
           tab.dataset.tab
@@ -94,4 +98,9 @@ export function initTabs(){
 
   });
 
+  // =========================
+  // 🔥 최초 활성화 핵심
+  // =========================
+
+  activateTab("roulette");
 }
