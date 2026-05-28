@@ -72,7 +72,7 @@ export function bindDrag(){
 }
 
 /* =========================
-   ACTIVE FIX 핵심
+   ACTIVE FIX (RECT 기준 통일)
 ========================= */
 
 function updateDepth(wrap){
@@ -82,18 +82,22 @@ function updateDepth(wrap){
 
   if(!cards.length) return;
 
+  const wrapRect =
+    wrap.getBoundingClientRect();
+
   const center =
-    wrap.getBoundingClientRect().left + wrap.clientWidth / 2;
+    wrap.clientWidth / 2;
 
   let closest = null;
   let closestDistance = Infinity;
 
   cards.forEach(card=>{
 
-    const rect = card.getBoundingClientRect();
+    const rect =
+      card.getBoundingClientRect();
 
     const cardCenter =
-      rect.left + rect.width / 2;
+      (rect.left - wrapRect.left) + rect.width / 2;
 
     const distance =
       Math.abs(center - cardCenter);
@@ -106,15 +110,13 @@ function updateDepth(wrap){
   });
 
   cards.forEach(card=>{
-
     card.classList.toggle("active", card === closest);
-
   });
 
 }
 
 /* =========================
-   SNAP FIX
+   SNAP FIX (RECT 기준 통일)
 ========================= */
 
 function snapToCenter(wrap){
@@ -124,16 +126,22 @@ function snapToCenter(wrap){
 
   if(!cards.length) return;
 
+  const wrapRect =
+    wrap.getBoundingClientRect();
+
   let closest = null;
   let closestDistance = Infinity;
 
   const center =
-    wrap.scrollLeft + wrap.clientWidth / 2;
+    wrap.clientWidth / 2;
 
   cards.forEach(card => {
 
+    const rect =
+      card.getBoundingClientRect();
+
     const cardCenter =
-      card.offsetLeft + card.clientWidth / 2;
+      (rect.left - wrapRect.left) + rect.width / 2;
 
     const distance =
       Math.abs(center - cardCenter);
@@ -142,21 +150,25 @@ function snapToCenter(wrap){
       closestDistance = distance;
       closest = card;
     }
+
   });
 
   if(!closest) return;
 
-  const targetScroll =
-    closest.offsetLeft +
-    closest.clientWidth / 2 -
+  const rect =
+    closest.getBoundingClientRect();
+
+  const target =
+    wrap.scrollLeft +
+    (rect.left - wrapRect.left) +
+    rect.width / 2 -
     wrap.clientWidth / 2;
 
-  // 🔥 핵심: 좌우 끝 보정
   const maxScroll =
     wrap.scrollWidth - wrap.clientWidth;
 
   const clamped =
-    Math.max(0, Math.min(targetScroll, maxScroll));
+    Math.max(0, Math.min(target, maxScroll));
 
   wrap.scrollTo({
     left: clamped,
