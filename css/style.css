@@ -280,11 +280,11 @@ select{
 
 .cover-card{
   flex:0 0 auto;
-  margin-left:-34px;
+
+  /* ❌ margin overlap 제거 */
+  margin-left:0;
 
   cursor:grab;
-
-  transform-style:preserve-3d;
 
   scroll-snap-align:center;
 
@@ -446,10 +446,10 @@ select{
     width:140px;
   }
 
-  .coverflow{
-    min-height:280px;
-    padding:10px 20px 40px;
-  }
+.coverflow{
+  gap:16px;
+  padding:18px 34px 52px;
+}
 
   .roulette-page{
     border-radius:24px;
