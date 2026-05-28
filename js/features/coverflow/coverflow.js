@@ -37,10 +37,32 @@ function renderType(type){
   const state =
     getState();
 
+  // 안전 방어
+  const allItems =
+    Array.isArray(state.items)
+      ? state.items
+      : [];
+
   const items =
-    state.items.filter(
+    allItems.filter(
       item=>item.type === type
     );
+
+  // 빈 상태
+  if(!items.length){
+
+    target.innerHTML = `
+
+      <div class="empty-coverflow">
+
+        아이템 없음
+
+      </div>
+
+    `;
+
+    return;
+  }
 
   target.innerHTML =
 
