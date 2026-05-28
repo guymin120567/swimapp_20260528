@@ -12,12 +12,11 @@ import {
 
 export function renderCoverflow(){
 
-  const state =
-    getState();
-
   renderType("cap");
 
   renderType("swim");
+
+  bindSelect();
 
   requestAnimationFrame(()=>{
 
@@ -61,6 +60,7 @@ function renderType(type){
               <img
                 class="card-image"
                 src="${item.image}"
+                alt="${item.name}"
               />
             `
             : `
@@ -91,8 +91,6 @@ function renderType(type){
       </div>
 
     `).join("");
-
-  bindSelect();
 }
 
 function bindSelect(){
