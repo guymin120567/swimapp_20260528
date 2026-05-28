@@ -13,8 +13,6 @@ export async function spinAll(){
 
   if(!caps.length || !swims.length) return;
 
-  document.body.classList.add("shuffle");
-
   await delay(700);
 
   const cap =
@@ -26,11 +24,11 @@ export async function spinAll(){
   setSelected("cap", cap.id);
   setSelected("swim", swim.id);
 
-  document.body.classList.remove("shuffle");
-
   requestAnimationFrame(() => {
-    burst("cap");
-    burst("swim");
+    requestAnimationFrame(() => {
+      burst("cap");
+      burst("swim");
+    });
   });
 }
 
@@ -39,65 +37,62 @@ function delay(ms){
 }
 
 /* =========================
-   CONFETTI CORE (FIXED)
+   CONFETTI FIXED
 ========================= */
 
 function burst(type){
 
-  const slot =
-    document.querySelector(
-      `.roulette-slot[data-type="${type}"] .roulette-card`
-    );
+  requestAnimationFrame(() => {
 
-  if(!slot) return;
+    const slot =
+      document.querySelector(
+        `.roulette-slot[data-type="${type}"] .roulette-card`
+      );
 
-  const rect = slot.getBoundingClientRect();
+    if(!slot) return;
 
-  const fx =
-    document.getElementById("fx-layer");
+    const rect = slot.getBoundingClientRect();
 
-  if(!fx) return;
+    const fx =
+      document.getElementById("fx-layer");
 
-  const colors = [
-    "#a78bfa",
-    "#8b5cf6",
-    "#7c3aed",
-    "#c4b5fd",
-    "#6d28d9"
-  ];
+    if(!fx) return;
 
-  const originX = rect.left + rect.width / 2;
-  const originY = rect.top + rect.height / 2;
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
 
-  for(let i = 0; i < 50; i++){
+    const colors = [
+      "#a78bfa",
+      "#8b5cf6",
+      "#7c3aed",
+      "#c4b5fd",
+      "#6d28d9"
+    ];
 
-    const el = document.createElement("div");
-    el.className = "confetti";
+    for(let i=0;i<50;i++){
 
-    el.style.left = originX + "px";
-    el.style.top = originY + "px";
+      const el = document.createElement("div");
+      el.className = "confetti";
 
-    el.style.background =
-      colors[Math.floor(Math.random() * colors.length)];
+      el.style.left = x + "px";
+      el.style.top = y + "px";
 
-    el.style.setProperty(
-      "--dx",
-      (Math.random() - 0.5) * 320 + "px"
-    );
+      el.style.background =
+        colors[Math.floor(Math.random() * colors.length)];
 
-    el.style.setProperty(
-      "--dy",
-      (Math.random() - 1.2) * 260 + "px"
-    );
+      el.style.setProperty("--dx", (Math.random()-0.5)*320 + "px");
+      el.style.setProperty("--dy", (Math.random()-1.2)*260 + "px");
 
-    fx.appendChild(el);
+      fx.appendChild(el);
 
-    setTimeout(() => el.remove(), 2400);
-  }
+      setTimeout(() => el.remove(), 2400);
+    }
 
-  slot.classList.add("win");
+    slot.classList.add("win");
 
-  setTimeout(() => {
-    slot.classList.remove("win");
-  }, 400);
+    setTimeout(() => {
+      slot.classList.remove("win");
+    }, 400);
+
+  });
 }
