@@ -14,7 +14,7 @@ import { bindGlobal } from "../ui/events.js";
 import { renderLists } from "../features/lists/renderLists.js";
 import { renderRoulette } from "../features/roulette/renderRoulette.js";
 
-import { renderCoverflow } from "../features/coverflow/coverflow.js";
+import { bindDrag } from "../features/coverflow/drag.js";
 
 export function initController(){
 
@@ -38,14 +38,20 @@ export function initController(){
 
       renderLists();
       renderRoulette();
-      renderCoverflow();
+
+      requestAnimationFrame(()=>{
+        bindDrag();
+      });
 
       await saveState(getState());
     });
 
     renderLists();
     renderRoulette();
-    renderCoverflow();
+
+    requestAnimationFrame(()=>{
+      bindDrag();
+    });
 
     console.log("BOOT DONE");
   }
