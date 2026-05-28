@@ -9,14 +9,12 @@ export function renderCoverflow(){
 
   bindSelect();
 
-  requestAnimationFrame(()=>{
+  requestAnimationFrame(() => {
     bindDrag();
   });
 }
 
-/* =========================
-   RENDER TYPE
-========================= */
+/* ========================= */
 
 function renderType(type){
 
@@ -28,27 +26,24 @@ function renderType(type){
   const state = getState();
 
   const items =
-    (state.items || []).filter(item => item.type === type);
+    (state.items || []).filter(i => i.type === type);
 
   const selectedId =
     type === "cap"
       ? state.selection?.capId
       : state.selection?.swimId;
 
-  // EMPTY
   if(!items.length){
     target.innerHTML = `<div class="empty-coverflow">아이템 없음</div>`;
     return;
   }
 
   target.innerHTML = items.map(item => `
-
     <div
       class="cover-card ${item.id === selectedId ? "active" : ""} ready"
       data-id="${item.id}"
       data-type="${type}"
     >
-
       <div class="card-inner">
 
         ${
@@ -57,21 +52,19 @@ function renderType(type){
             : `<div class="card-placeholder">🏊</div>`
         }
 
-        <button class="delete-btn" data-action="delete" data-id="${item.id}">×</button>
+        <button class="delete-btn" data-action="delete">×</button>
 
         <div class="card-overlay">
           <div class="card-title">${item.name}</div>
         </div>
 
       </div>
-
     </div>
-
   `).join("");
 }
 
 /* =========================
-   CLICK + CENTER FIX
+   CLICK → SELECT + CENTER
 ========================= */
 
 function bindSelect(){
@@ -95,7 +88,6 @@ function bindSelect(){
 
       setSelected(type, id);
 
-      // 🔥 핵심: 클릭 즉시 중앙 이동 (scroll 기준)
       requestAnimationFrame(() => {
         centerCard(wrap, card);
       });
@@ -105,9 +97,7 @@ function bindSelect(){
   });
 }
 
-/* =========================
-   CENTER FIX (핵심 수정)
-========================= */
+/* ========================= */
 
 function centerCard(wrap, card){
 
@@ -115,20 +105,17 @@ function centerCard(wrap, card){
   const cardRect = card.getBoundingClientRect();
 
   const offset =
-    (cardRect.left - wrapRect.left) +
-    wrap.scrollLeft;
+    (cardRect.left - wrapRect.left) + wrap.scrollLeft;
 
-  const targetScroll =
+  const target =
     offset - (wrap.clientWidth / 2) + (cardRect.width / 2);
 
-  const maxScroll =
+  const max =
     wrap.scrollWidth - wrap.clientWidth;
 
-  const clamped =
-    Math.max(0, Math.min(targetScroll, maxScroll));
-
   wrap.scrollTo({
-    left: clamped,
+    left: Math.max(0, Math.min(target, max)),
     behavior: "smooth"
   });
+
 }
