@@ -478,19 +478,26 @@ select{
   75%  { transform: scale(1.05) rotate(-0.5deg); }
   100% { transform: scale(1); }
 }
+/* =========================
+   FX LAYER
+========================= */
+
+#fx-layer{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  pointer-events:none;
+}
 
 /* =========================
-   CONFETTI (CARD-BASED FIX)
+   CONFETTI
 ========================= */
 
 .confetti{
-  position:fixed;
+  position:absolute;
   width:8px;
   height:10px;
   border-radius:2px;
-  z-index:99999;
-  pointer-events:none;
-
   animation: confettiBurst 2.4s ease-out forwards;
 }
 
@@ -508,4 +515,18 @@ select{
 
     opacity:0;
   }
+}
+
+/* 카드 강조 */
+.roulette-card.win{
+  animation: winPop .35s ease;
+  box-shadow:
+    0 0 0 2px rgba(167,139,250,.5),
+    0 0 24px rgba(139,92,246,.4);
+}
+
+@keyframes winPop{
+  0%{ transform:scale(1); }
+  50%{ transform:scale(1.06); }
+  100%{ transform:scale(1); }
 }
