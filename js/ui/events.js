@@ -1,147 +1,126 @@
 import {
-  getState,
-  setState
+  getState
 } from "../state/state.js";
 
 import {
-  addCap,
-  addSwim,
-  removeCap,
-  removeSwim
+  addItem,
+  removeItem
 } from "../state/actions.js";
 
-import { spinAll } from "../features/roulette/roulette.js";
+import {
+  spinAll
+} from "../features/roulette/roulette.js";
 
-import { compressImage } from "../utils/image.js";
+import {
+  compressImage
+} from "../utils/image.js";
 
 export function bindGlobal(){
 
-  if(document.body.dataset.globalBound){
+  if(
+    document.body.dataset.globalBound
+  ){
     return;
   }
 
-  document.body.dataset.globalBound = "true";
+  document.body.dataset.globalBound =
+    "true";
 
-  document.addEventListener("click", async e=>{
+  document.addEventListener(
+    "click",
+    async e=>{
 
-    const action = e.target.dataset.action;
+      const action =
+        e.target.dataset.action;
 
-    if(action === "spin"){
+      // =========================
+      // SPIN
+      // =========================
 
-      await spinAll();
+      if(action === "spin"){
 
-      return;
-    }
+        await spinAll();
 
-    if(action === "add"){
-
-      const type =
-        document.getElementById("itemType")?.value;
-
-      const text =
-        document.getElementById("itemText")
-          ?.value
-          ?.trim();
-
-      const imageInput =
-        document.getElementById("itemImage");
-
-      if(!text){
         return;
       }
 
-      let image = null;
+      // =========================
+      // ADD
+      // =========================
 
-      const file = imageInput?.files?.[0];
+      if(action === "add"){
 
-      if(file){
-        image = await compressImage(file);
-      }
+        const type =
+          document.getElementById(
+            "itemType"
+          )?.value;
 
-      const item = {
-        id: crypto.randomUUID(),
-        name: text,
-        image
-      };
+        const text =
+          document.getElementById(
+            "itemText"
+          )?.value?.trim();
 
-      if(type === "cap"){
-        addCap(item);
-      }
-      else{
-        addSwim(item);
-      }
+        const imageInput =
+          document.getElementById(
+            "itemImage"
+          );
 
-      document.getElementById("itemText").value = "";
-
-      if(imageInput){
-        imageInput.value = "";
-      }
-
-      setState({
-        ui: {
-          ...getState().ui
+        if(!text){
+          return;
         }
-      });
 
-      return;
-    }
+        let image = null;
 
-    const deleteBtn =
-      e.target.closest(".delete-btn");
+        const file =
+          imageInput?.files?.[0];
 
-    if(deleteBtn){
+        if(file){
 
-      e.stopPropagation();
+          image =
+            await compressImage(
+              file
+            );
 
-      const type =
-        deleteBtn.dataset.type;
-
-      const id =
-        deleteBtn.dataset.id;
-
-      if(type === "cap"){
-        removeCap(id);
-      }
-      else{
-        removeSwim(id);
-      }
-
-      setState({
-        ui: {
-          ...getState().ui
         }
-      });
 
-      return;
-    }
+        addItem({
 
-    const card =
-      e.target.closest(".cover-card");
+          id:
+            crypto.randomUUID(),
 
-    if(card){
+          type,
 
-      const type =
-        card.dataset.type;
+          name:text,
 
-      const id =
-        card.dataset.id;
+          image
+        });
 
-      const state =
-        getState();
+        document.getElementById(
+          "itemText"
+        ).value = "";
 
-      setState({
-        selection: {
-          capId:
-            type === "cap"
-              ? id
-              : state.selection.capId,
+        if(imageInput){
 
-          swimId:
-            type === "swim"
-              ? id
-              : state.selection.swimId
+          imageInput.value = "";
+
         }
-      });
+
+        return;
+      }
+
+      // =========================
+      // DELETE
+      // =========================
+
+      if(action === "delete"){
+
+        const id =
+          e.target.dataset.id;
+
+        removeItem(id);
+
+      }
+
     }
-  });
+  );
 }
