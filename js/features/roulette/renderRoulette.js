@@ -1,5 +1,3 @@
-// js/features/roulette/renderRoulette.js
-
 import { getState } from "../../state/state.js";
 
 export function renderRoulette(){
@@ -14,14 +12,14 @@ export function renderRoulette(){
   const items =
     Array.isArray(state.items) ? state.items : [];
 
+  // 🔥 result 기준으로 렌더
   const cap =
-    items.find(i => i.id === state.selection?.capId);
+    items.find(i => i.id === state.result?.capId);
 
   const swim =
-    items.find(i => i.id === state.selection?.swimId);
+    items.find(i => i.id === state.result?.swimId);
 
   target.innerHTML = `
-
     <div class="block">
 
       <div class="section-title">룰렛 결과</div>
@@ -72,7 +70,9 @@ export function renderRoulette(){
 
       </div>
 
-      <button class="spin-btn" data-action="spin">SPIN</button>
+      <button class="spin-btn" data-action="spin">
+        SPIN
+      </button>
 
     </div>
   `;
