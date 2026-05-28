@@ -57,11 +57,12 @@ export function bindDrag(){
     }, { passive:true });
 
     updateDepth(wrap);
+
   });
 }
 
 /* =========================
-   ACTIVE CENTER (FIXED)
+   CENTER DETECT
 ========================= */
 
 function updateDepth(wrap){
@@ -71,37 +72,35 @@ function updateDepth(wrap){
 
   if(!cards.length) return;
 
-  const wrapRect = wrap.getBoundingClientRect();
-
-  const centerX =
-    wrapRect.left + wrap.clientWidth / 2;
+  const wrapCenter =
+    wrap.getBoundingClientRect().left + wrap.clientWidth / 2;
 
   let closest = null;
-  let closestDist = Infinity;
+  let min = Infinity;
 
   cards.forEach(card => {
 
     const rect = card.getBoundingClientRect();
 
-    const cardCenter =
-      rect.left + rect.width / 2;
+    const center = rect.left + rect.width / 2;
 
-    const dist =
-      Math.abs(centerX - cardCenter);
+    const dist = Math.abs(wrapCenter - center);
 
-    if(dist < closestDist){
-      closestDist = dist;
+    if(dist < min){
+      min = dist;
       closest = card;
     }
+
   });
 
   cards.forEach(card => {
     card.classList.toggle("active", card === closest);
   });
+
 }
 
 /* =========================
-   SNAP (FIXED ENDPOINT)
+   SNAP (EDGE FIXED)
 ========================= */
 
 function snapToCenter(wrap){
@@ -111,41 +110,32 @@ function snapToCenter(wrap){
 
   if(!cards.length) return;
 
-  const wrapRect = wrap.getBoundingClientRect();
-
-  const centerX =
-    wrapRect.left + wrap.clientWidth / 2;
-
   let closest = null;
-  let closestDist = Infinity;
+  let min = Infinity;
+
+  const wrapCenter =
+    wrap.scrollLeft + wrap.clientWidth / 2;
 
   cards.forEach(card => {
 
-    const rect = card.getBoundingClientRect();
+    const center =
+      card.offsetLeft + card.clientWidth / 2;
 
-    const cardCenter =
-      rect.left + rect.width / 2;
+    const dist = Math.abs(wrapCenter - center);
 
-    const dist =
-      Math.abs(centerX - cardCenter);
-
-    if(dist < closestDist){
-      closestDist = dist;
+    if(dist < min){
+      min = dist;
       closest = card;
     }
+
   });
 
   if(!closest) return;
 
-  const rect = closest.getBoundingClientRect();
-
-  const offset =
-    (rect.left - wrapRect.left) + wrap.scrollLeft;
-
   const target =
-    offset -
-    (wrap.clientWidth / 2) +
-    (rect.width / 2);
+    closest.offsetLeft +
+    closest.clientWidth / 2 -
+    wrap.clientWidth / 2;
 
   const max =
     wrap.scrollWidth - wrap.clientWidth;
@@ -154,4 +144,5 @@ function snapToCenter(wrap){
     left: Math.max(0, Math.min(target, max)),
     behavior: "smooth"
   });
+
 }
