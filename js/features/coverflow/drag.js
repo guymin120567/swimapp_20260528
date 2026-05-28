@@ -44,7 +44,7 @@ export function bindDrag(){
       e.preventDefault();
 
       const x = e.pageX;
-      const walk = (x - startX) * 1.3;
+      const walk = (x - startX) * 1.25;
 
       wrap.scrollLeft = scrollLeft - walk;
 
@@ -61,7 +61,7 @@ export function bindDrag(){
 }
 
 /* =========================
-   ACTIVE CENTER FIX
+   ACTIVE CENTER (FIXED)
 ========================= */
 
 function updateDepth(wrap){
@@ -71,18 +71,23 @@ function updateDepth(wrap){
 
   if(!cards.length) return;
 
-  const center =
-    wrap.scrollLeft + wrap.clientWidth / 2;
+  const wrapRect = wrap.getBoundingClientRect();
+
+  const centerX =
+    wrapRect.left + wrap.clientWidth / 2;
 
   let closest = null;
   let closestDist = Infinity;
 
   cards.forEach(card => {
 
-    const cardCenter =
-      card.offsetLeft + card.clientWidth / 2;
+    const rect = card.getBoundingClientRect();
 
-    const dist = Math.abs(center - cardCenter);
+    const cardCenter =
+      rect.left + rect.width / 2;
+
+    const dist =
+      Math.abs(centerX - cardCenter);
 
     if(dist < closestDist){
       closestDist = dist;
@@ -96,7 +101,7 @@ function updateDepth(wrap){
 }
 
 /* =========================
-   SNAP (양끝 해결)
+   SNAP (FIXED ENDPOINT)
 ========================= */
 
 function snapToCenter(wrap){
@@ -106,18 +111,23 @@ function snapToCenter(wrap){
 
   if(!cards.length) return;
 
-  const center =
-    wrap.scrollLeft + wrap.clientWidth / 2;
+  const wrapRect = wrap.getBoundingClientRect();
+
+  const centerX =
+    wrapRect.left + wrap.clientWidth / 2;
 
   let closest = null;
   let closestDist = Infinity;
 
   cards.forEach(card => {
 
-    const cardCenter =
-      card.offsetLeft + card.clientWidth / 2;
+    const rect = card.getBoundingClientRect();
 
-    const dist = Math.abs(center - cardCenter);
+    const cardCenter =
+      rect.left + rect.width / 2;
+
+    const dist =
+      Math.abs(centerX - cardCenter);
 
     if(dist < closestDist){
       closestDist = dist;
@@ -127,10 +137,15 @@ function snapToCenter(wrap){
 
   if(!closest) return;
 
+  const rect = closest.getBoundingClientRect();
+
+  const offset =
+    (rect.left - wrapRect.left) + wrap.scrollLeft;
+
   const target =
-    closest.offsetLeft +
-    closest.clientWidth / 2 -
-    wrap.clientWidth / 2;
+    offset -
+    (wrap.clientWidth / 2) +
+    (rect.width / 2);
 
   const max =
     wrap.scrollWidth - wrap.clientWidth;
