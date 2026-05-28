@@ -1,16 +1,31 @@
-import { getState, setState } from "../state/state.js";
+import {
+  getState,
+  setState
+} from "../state/state.js";
+
+import {
+  addCap,
+  addSwim,
+  removeCap,
+  removeSwim
+} from "../state/actions.js";
+
 import { spinAll } from "../features/roulette/roulette.js";
-import { addCap, addSwim, removeCap, removeSwim } from "../state/actions.js";
+
+import { compressImage } from "../utils/image.js";
 
 export function bindGlobal(){
 
-  document.addEventListener("click", async (e) => {
+  if(document.body.dataset.globalBound){
+    return;
+  }
+
+  document.body.dataset.globalBound = "true";
+
+  document.addEventListener("click", async e=>{
 
     const action = e.target.dataset.action;
 
-    // =========================
-    // SPIN
-    // =========================
     if(action === "spin"){
 
       await spinAll();
@@ -18,87 +33,115 @@ export function bindGlobal(){
       return;
     }
 
-    // =========================
-    // ADD ITEM
-    // =========================
     if(action === "add"){
 
-      const type = document.getElementById("itemType")?.value;
-      const text = document.getElementById("itemText")?.value?.trim();
+      const type =
+        document.getElementById("itemType")?.value;
 
-      if(!text) return;
+      const text =
+        document.getElementById("itemText")
+          ?.value
+          ?.trim();
+
+      const imageInput =
+        document.getElementById("itemImage");
+
+      if(!text){
+        return;
+      }
+
+      let image = null;
+
+      const file = imageInput?.files?.[0];
+
+      if(file){
+        image = await compressImage(file);
+      }
 
       const item = {
         id: crypto.randomUUID(),
         name: text,
-        image: null
+        image
       };
 
       if(type === "cap"){
         addCap(item);
-      } else {
+      }
+      else{
         addSwim(item);
       }
 
+      document.getElementById("itemText").value = "";
+
+      if(imageInput){
+        imageInput.value = "";
+      }
+
       setState({
-        ui: { ...getState().ui }
+        ui: {
+          ...getState().ui
+        }
       });
 
       return;
     }
 
-    // =========================
-    // DELETE (🔥 핵심 추가)
-    // =========================
-    const delBtn = e.target.closest(".delete-btn");
+    const deleteBtn =
+      e.target.closest(".delete-btn");
 
-    if(delBtn){
+    if(deleteBtn){
 
-      const type = delBtn.dataset.type;
-      const id = delBtn.dataset.id;
+      e.stopPropagation();
+
+      const type =
+        deleteBtn.dataset.type;
+
+      const id =
+        deleteBtn.dataset.id;
 
       if(type === "cap"){
         removeCap(id);
-      } else {
+      }
+      else{
         removeSwim(id);
       }
 
       setState({
-        ui: { ...getState().ui }
+        ui: {
+          ...getState().ui
+        }
       });
 
       return;
     }
 
-    // =========================
-    // COVER CLICK (센터 변경)
-    // =========================
-    const card = e.target.closest(".cover-card");
+    const card =
+      e.target.closest(".cover-card");
 
     if(card){
 
-      const type = card.dataset.type;
-      const id = card.dataset.id;
+      const type =
+        card.dataset.type;
 
-      const state = getState();
+      const id =
+        card.dataset.id;
 
-      if(type === "cap"){
-        setState({
-          selection: {
-            capId: id,
-            swimId: state.selection.swimId
-          }
-        });
-      }
+      const state =
+        getState();
 
-      if(type === "swim"){
-        setState({
-          selection: {
-            capId: state.selection.capId,
-            swimId: id
-          }
-        });
-      }
+      setState({
+        selection: {
+          capId:
+            type === "cap"
+              ? id
+              : state.selection.capId,
+
+          swimId:
+            type === "swim"
+              ? id
+              : state.selection.swimId
+        }
+      });
     }
   });
 }
