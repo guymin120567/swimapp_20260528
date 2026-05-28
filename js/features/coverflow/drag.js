@@ -8,7 +8,9 @@ export function bindDrag(){
   wraps.forEach(wrap=>{
 
     if(wrap.dataset.dragBound){
+
       updateDepth(wrap);
+
       return;
     }
 
@@ -71,7 +73,9 @@ export function bindDrag(){
           scrollLeft - walk;
 
         requestAnimationFrame(()=>{
+
           updateDepth(wrap);
+
         });
 
       }
@@ -82,7 +86,9 @@ export function bindDrag(){
       ()=>{
 
         requestAnimationFrame(()=>{
+
           updateDepth(wrap);
+
         });
 
       },
@@ -96,7 +102,9 @@ export function bindDrag(){
       ()=>{
 
         requestAnimationFrame(()=>{
+
           updateDepth(wrap);
+
         });
 
       },
@@ -117,11 +125,17 @@ function updateDepth(wrap){
       ".cover-card"
     );
 
+  // 핵심 방어
+  if(!cards.length){
+    return;
+  }
+
   const center =
     wrap.scrollLeft +
     wrap.clientWidth / 2;
 
   let closest = null;
+
   let closestDistance =
     Infinity;
 
@@ -153,9 +167,11 @@ function updateDepth(wrap){
     );
 
     requestAnimationFrame(()=>{
+
       card.classList.add(
         "ready"
       );
+
     });
 
   });
