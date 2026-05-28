@@ -9,6 +9,8 @@ import {
 
 export function renderCoverflow(){
 
+  console.log("COVERFLOW RUN");
+  
   const state =
     getState();
 
