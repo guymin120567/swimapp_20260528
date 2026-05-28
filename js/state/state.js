@@ -5,13 +5,18 @@ export const defaultState = {
   records: [],
 
   selection: {
+
     capId: null,
+
     swimId: null
   },
 
   ui: {
+
     activeTab: "roulette",
+
     activeItemId: null,
+
     isSpinning: false
   }
 };
@@ -65,19 +70,14 @@ export function setState(partial){
 
     ...state,
 
-    items:
-      partial.items ||
-      state.items,
-
-    records:
-      partial.records ||
-      state.records,
+    ...partial,
 
     selection: {
 
       ...state.selection,
 
       ...(partial.selection || {})
+
     },
 
     ui: {
@@ -85,7 +85,9 @@ export function setState(partial){
       ...state.ui,
 
       ...(partial.ui || {})
+
     }
+
   };
 
   emit();
