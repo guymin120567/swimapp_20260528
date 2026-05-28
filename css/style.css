@@ -491,3 +491,9 @@ select{
     opacity:0;
   }
 }
+
+
+.roulette-card.win {
+  transform: scale(1.08);
+  transition: transform 0.25s ease;
+}
