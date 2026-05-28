@@ -41,7 +41,7 @@ export function initController(){
     console.log("BOOT START");
 
     // =========================
-    // 1. LAYOUT 먼저
+    // LAYOUT
     // =========================
 
     renderLayout();
@@ -53,7 +53,7 @@ export function initController(){
     bindGlobal();
 
     // =========================
-    // 2. LOAD
+    // LOAD
     // =========================
 
     const saved =
@@ -62,7 +62,10 @@ export function initController(){
     let normalized =
       saved || defaultState;
 
-    // old migrate
+    // =========================
+    // OLD DATA MIGRATION
+    // =========================
+
     if(
       normalized?.data
     ){
@@ -98,18 +101,26 @@ export function initController(){
           normalized.selection || {
 
             capId:null,
+
             swimId:null
           },
 
         ui:
           normalized.ui || {
 
-            activeTab:"roulette"
+            activeTab:"roulette",
+
+            activeItemId:null,
+
+            isSpinning:false
           }
       };
     }
 
-    // items 보호
+    // =========================
+    // SAFE ITEMS
+    // =========================
+
     if(
       !Array.isArray(
         normalized.items
@@ -119,7 +130,7 @@ export function initController(){
     }
 
     // =========================
-    // 3. SUBSCRIBE 먼저
+    // SUBSCRIBE
     // =========================
 
     subscribe(async ()=>{
@@ -135,13 +146,13 @@ export function initController(){
     });
 
     // =========================
-    // 4. STATE 적용
+    // APPLY
     // =========================
 
     setState(normalized);
 
     // =========================
-    // 5. 최초 렌더
+    // FIRST RENDER
     // =========================
 
     renderRoulette();
