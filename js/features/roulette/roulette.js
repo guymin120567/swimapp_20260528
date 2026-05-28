@@ -1,5 +1,5 @@
 import { getState } from "../../state/state.js";
-import { setSelected } from "../../state/actions.js";
+import { setResult } from "../../state/actions.js";
 
 export async function spinAll(){
 
@@ -13,7 +13,7 @@ export async function spinAll(){
 
   if(!caps.length || !swims.length) return;
 
-  await delay(700);
+  await delay(600);
 
   const cap =
     caps[Math.floor(Math.random() * caps.length)];
@@ -21,9 +21,11 @@ export async function spinAll(){
   const swim =
     swims[Math.floor(Math.random() * swims.length)];
 
-  setSelected("cap", cap.id);
-  setSelected("swim", swim.id);
+  // 🔥 결과는 result에 저장 (selection과 분리)
+  setResult("capId", cap.id);
+  setResult("swimId", swim.id);
 
+  // FX 타이밍
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
       burst("cap");
@@ -37,7 +39,7 @@ function delay(ms){
 }
 
 /* =========================
-   CONFETTI FIXED
+   CONFETTI
 ========================= */
 
 function burst(type){
@@ -69,7 +71,7 @@ function burst(type){
       "#6d28d9"
     ];
 
-    for(let i=0;i<50;i++){
+    for(let i=0;i<40;i++){
 
       const el = document.createElement("div");
       el.className = "confetti";
@@ -80,8 +82,8 @@ function burst(type){
       el.style.background =
         colors[Math.floor(Math.random() * colors.length)];
 
-      el.style.setProperty("--dx", (Math.random()-0.5)*320 + "px");
-      el.style.setProperty("--dy", (Math.random()-1.2)*260 + "px");
+      el.style.setProperty("--dx", (Math.random()-0.5)*300 + "px");
+      el.style.setProperty("--dy", (Math.random()-1.2)*240 + "px");
 
       fx.appendChild(el);
 
@@ -92,7 +94,7 @@ function burst(type){
 
     setTimeout(() => {
       slot.classList.remove("win");
-    }, 400);
+    }, 350);
 
   });
 }
