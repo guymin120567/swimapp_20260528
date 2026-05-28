@@ -52,6 +52,7 @@ export function renderCapsList(){
 
                 <button
                   class="delete-btn"
+                  data-action="delete"
                   data-type="cap"
                   data-id="${item.id}"
                 >
