@@ -3,8 +3,7 @@ import {
 } from "../../state/state.js";
 
 import {
-  setSelectedCap,
-  setSelectedSwim
+  setSelected
 } from "../../state/actions.js";
 
 export async function spinAll(){
@@ -13,19 +12,20 @@ export async function spinAll(){
     getState();
 
   const caps =
-    state.data.caps || [];
+    state.items.filter(
+      item=>item.type === "cap"
+    );
 
   const swims =
-    state.data.swimsuits || [];
+    state.items.filter(
+      item=>item.type === "swim"
+    );
 
   if(!caps.length) return;
 
   if(!swims.length) return;
 
-  const root =
-    document.body;
-
-  root.classList.add(
+  document.body.classList.add(
     "shuffle"
   );
 
@@ -47,15 +47,17 @@ export async function spinAll(){
       )
     ];
 
-  setSelectedCap(
+  setSelected(
+    "cap",
     randomCap.id
   );
 
-  setSelectedSwim(
+  setSelected(
+    "swim",
     randomSwim.id
   );
 
-  root.classList.remove(
+  document.body.classList.remove(
     "shuffle"
   );
 
@@ -78,11 +80,7 @@ function delay(ms){
 
 function createConfetti(){
 
-  for(
-    let i = 0;
-    i < 42;
-    i++
-  ){
+  for(let i=0;i<42;i++){
 
     const confetti =
       document.createElement(
@@ -93,19 +91,18 @@ function createConfetti(){
       "confetti";
 
     confetti.style.left =
-      Math.random() * 100 +
-      "vw";
+      Math.random()*100 + "vw";
 
     confetti.style.background =
       `hsl(${
-        Math.random() * 360
+        Math.random()*360
       } 90% 70%)`;
 
     confetti.style.setProperty(
       "--driftX",
       `${
-        (Math.random() - .5)
-        * 220
+        (Math.random()-.5)
+        *220
       }px`
     );
 
