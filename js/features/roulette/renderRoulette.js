@@ -14,18 +14,24 @@ export function renderRoulette(){
   const state =
     getState();
 
+  // 안전 방어
+  const items =
+    Array.isArray(state.items)
+      ? state.items
+      : [];
+
   const cap =
-    state.items.find(
+    items.find(
       item=>
         item.id ===
-        state.selection.capId
+        state.selection?.capId
     );
 
   const swim =
-    state.items.find(
+    items.find(
       item=>
         item.id ===
-        state.selection.swimId
+        state.selection?.swimId
     );
 
   target.innerHTML = `
@@ -51,7 +57,7 @@ export function renderRoulette(){
               ? `
                 <img
                   class="card-image"
-                  src="${cap.image}"
+                  src="${cap.image || ""}"
                 />
 
                 <div class="card-overlay">
@@ -86,7 +92,7 @@ export function renderRoulette(){
               ? `
                 <img
                   class="card-image"
-                  src="${swim.image}"
+                  src="${swim.image || ""}"
                 />
 
                 <div class="card-overlay">
@@ -122,5 +128,6 @@ export function renderRoulette(){
       </div>
 
     </div>
+
   `;
 }
