@@ -458,40 +458,12 @@ select{
   .splash-image{
     width:260px;
   }
-}
-/* =========================
-   WIN EFFECT (GLow + Shake)
-========================= */
-
-.roulette-card.win{
-  animation: winShake .35s ease;
-  box-shadow:
-    0 0 0 2px rgba(167,139,250,.6),
-    0 0 24px rgba(139,92,246,.55),
-    0 18px 40px rgba(120,170,220,.35);
-}
-
-@keyframes winShake{
-  0%   { transform: scale(1); }
-  25%  { transform: scale(1.05) rotate(-1deg); }
-  50%  { transform: scale(1.06) rotate(1deg); }
-  75%  { transform: scale(1.05) rotate(-0.5deg); }
-  100% { transform: scale(1); }
-}
-/* =========================
-   FX LAYER
-========================= */
-
-#fx-layer{
+}#fx-layer{
   position:fixed;
   inset:0;
-  z-index:99999;
   pointer-events:none;
+  z-index:99999;
 }
-
-/* =========================
-   CONFETTI
-========================= */
 
 .confetti{
   position:absolute;
@@ -506,27 +478,11 @@ select{
     transform: translate(0,0) rotate(0deg);
     opacity:1;
   }
-
   100%{
     transform:
       translate(var(--dx), var(--dy))
       translateY(120vh)
       rotate(720deg);
-
     opacity:0;
   }
-}
-
-/* 카드 강조 */
-.roulette-card.win{
-  animation: winPop .35s ease;
-  box-shadow:
-    0 0 0 2px rgba(167,139,250,.5),
-    0 0 24px rgba(139,92,246,.4);
-}
-
-@keyframes winPop{
-  0%{ transform:scale(1); }
-  50%{ transform:scale(1.06); }
-  100%{ transform:scale(1); }
 }
