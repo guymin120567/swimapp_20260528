@@ -1,43 +1,90 @@
-import { startApp } from "./controller/appController.js";
+import {
+  startApp
+} from "./controller/appController.js";
 
-window.addEventListener("DOMContentLoaded", async () => {
+window.addEventListener(
+  "DOMContentLoaded",
+  async ()=>{
 
-  showSplash();
+    showSplash();
 
-  // 🔥 최소 표시시간 보장 (깜빡임 방지)
-  const minSplashTime = new Promise(res => setTimeout(res, 600));
+    // 최소 splash 유지
+    const minSplashTime =
+      new Promise(
+        res=>setTimeout(
+          res,
+          600
+        )
+      );
 
-  await Promise.all([
-    startApp(),
-    minSplashTime
-  ]);
+    // 앱 시작
+    await Promise.all([
 
-  requestAnimationFrame(() => {
+      startApp(),
 
-    requestAnimationFrame(() => {
+      minSplashTime
 
-      if (window.requestIdleCallback) {
-        requestIdleCallback(() => hideSplash());
-      } else {
-        setTimeout(() => hideSplash(), 120);
-      }
+    ]);
+
+    // 🔥 핵심 추가
+    const app =
+      document.getElementById(
+        "app"
+      );
+
+    if(app){
+
+      app.classList.add(
+        "show"
+      );
+
+    }
+
+    requestAnimationFrame(()=>{
+
+      requestAnimationFrame(()=>{
+
+        if(
+          window.requestIdleCallback
+        ){
+
+          requestIdleCallback(
+            ()=>hideSplash()
+          );
+
+        }else{
+
+          setTimeout(
+            ()=>hideSplash(),
+            120
+          );
+
+        }
+
+      });
 
     });
 
-  });
-
-});
+  }
+);
 
 // =========================
 // SPLASH
 // =========================
 
-function showSplash() {
+function showSplash(){
 
-  const el = document.getElementById("splash");
-  if (!el) return;
+  const el =
+    document.getElementById(
+      "splash"
+    );
 
-  el.classList.remove("hide");
+  if(!el) return;
+
+  el.classList.remove(
+    "hide"
+  );
+
   el.style.opacity = "1";
 }
 
@@ -45,14 +92,22 @@ function showSplash() {
 // HIDE
 // =========================
 
-function hideSplash() {
+function hideSplash(){
 
-  const el = document.getElementById("splash");
-  if (!el) return;
+  const el =
+    document.getElementById(
+      "splash"
+    );
 
-  el.classList.add("hide");
+  if(!el) return;
 
-  setTimeout(() => {
+  el.classList.add(
+    "hide"
+  );
+
+  setTimeout(()=>{
+
     el.remove();
-  }, 600);
+
+  },600);
 }
