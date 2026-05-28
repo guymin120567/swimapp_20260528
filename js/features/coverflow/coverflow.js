@@ -36,18 +36,17 @@ function renderType(type){
       : state.selection?.swimId;
 
   if(!items.length){
-    target.innerHTML = `<div class="empty-coverflow">아이템 없음</div>`;
+    target.innerHTML =
+      `<div class="empty-coverflow">아이템 없음</div>`;
     return;
   }
 
   target.innerHTML = items.map(item => `
-
     <div
-      class="cover-card ${item.id === selectedId ? "active" : ""} ready"
+      class="cover-card ${item.id === selectedId ? "active" : ""}"
       data-id="${item.id}"
       data-type="${type}"
     >
-
       <div class="card-inner">
 
         ${
@@ -61,14 +60,12 @@ function renderType(type){
         </div>
 
       </div>
-
     </div>
-
   `).join("");
 }
 
 /* =========================
-   CLICK CENTER FIX
+   SELECT
 ========================= */
 
 function bindSelect(){
@@ -87,7 +84,6 @@ function bindSelect(){
         e.target.closest(".cover-card");
 
       if(!card) return;
-
       if(e.target.closest(".delete-btn")) return;
 
       const type = card.dataset.type;
@@ -107,7 +103,7 @@ function bindSelect(){
 }
 
 /* =========================
-   CENTER FIX
+   CENTER
 ========================= */
 
 function centerCard(wrap, card){
@@ -124,10 +120,10 @@ function centerCard(wrap, card){
 
   wrap.scrollTo({
     left: Math.max(0, Math.min(target, max)),
-    behavior: "smooth"
+    behavior: wrap._isProgrammatic ? "auto" : "smooth"
   });
 
   setTimeout(() => {
     wrap._isProgrammatic = false;
-  }, 450);
+  }, 400);
 }
