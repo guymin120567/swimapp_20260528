@@ -37,7 +37,6 @@ function renderType(type){
   const state =
     getState();
 
-  // 안전 방어
   const allItems =
     Array.isArray(state.items)
       ? state.items
@@ -48,7 +47,10 @@ function renderType(type){
       item=>item.type === type
     );
 
-  // 빈 상태
+  // =========================
+  // EMPTY
+  // =========================
+
   if(!items.length){
 
     target.innerHTML = `
@@ -63,6 +65,10 @@ function renderType(type){
 
     return;
   }
+
+  // =========================
+  // RENDER
+  // =========================
 
   target.innerHTML =
 
