@@ -1,5 +1,6 @@
 import {
-  getState
+  getState,
+  setState
 } from "./state.js";
 
 // =========================
@@ -8,20 +9,32 @@ import {
 
 export function addCap(item){
 
-  getState()
-    .data
-    .caps
-    .push(item);
+  const state =
+    getState();
 
+  setState({
+    data: {
+      caps: [
+        ...state.data.caps,
+        item
+      ]
+    }
+  });
 }
 
 export function addSwim(item){
 
-  getState()
-    .data
-    .swimsuits
-    .push(item);
+  const state =
+    getState();
 
+  setState({
+    data: {
+      swimsuits: [
+        ...state.data.swimsuits,
+        item
+      ]
+    }
+  });
 }
 
 // =========================
@@ -33,11 +46,14 @@ export function removeCap(id){
   const state =
     getState();
 
-  state.data.caps =
-    state.data.caps.filter(
-      v => v.id !== id
-    );
-
+  setState({
+    data: {
+      caps:
+        state.data.caps.filter(
+          v => v.id !== id
+        )
+    }
+  });
 }
 
 export function removeSwim(id){
@@ -45,11 +61,14 @@ export function removeSwim(id){
   const state =
     getState();
 
-  state.data.swimsuits =
-    state.data.swimsuits.filter(
-      v => v.id !== id
-    );
-
+  setState({
+    data: {
+      swimsuits:
+        state.data.swimsuits.filter(
+          v => v.id !== id
+        )
+    }
+  });
 }
 
 // =========================
@@ -58,16 +77,20 @@ export function removeSwim(id){
 
 export function setSelectedCap(id){
 
-  getState().selection.capId =
-    id;
-
+  setState({
+    selection: {
+      capId: id
+    }
+  });
 }
 
 export function setSelectedSwim(id){
 
-  getState().selection.swimId =
-    id;
-
+  setState({
+    selection: {
+      swimId: id
+    }
+  });
 }
 
 // =========================
@@ -76,14 +99,18 @@ export function setSelectedSwim(id){
 
 export function setActiveCap(id){
 
-  getState().ui.activeCapId =
-    id;
-
+  setState({
+    ui: {
+      activeCapId: id
+    }
+  });
 }
 
 export function setActiveSwim(id){
 
-  getState().ui.activeSwimId =
-    id;
-
+  setState({
+    ui: {
+      activeSwimId: id
+    }
+  });
 }
