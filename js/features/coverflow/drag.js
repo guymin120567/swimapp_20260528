@@ -16,9 +16,6 @@ export function bindDrag(){
     let startX = 0;
     let scrollLeft = 0;
 
-    let isProgrammatic = false;
-
-    // 외부에서도 공유하려고 dataset에 저장
     wrap._isProgrammatic = false;
 
     wrap.addEventListener("mousedown", e => {
@@ -59,7 +56,6 @@ export function bindDrag(){
 
     wrap.addEventListener("scroll", () => {
 
-      // 🔥 핵심: programmatic 이동이면 무시
       if(wrap._isProgrammatic) return;
 
       requestAnimationFrame(() => updateDepth(wrap));
@@ -72,7 +68,7 @@ export function bindDrag(){
 }
 
 /* =========================
-   CENTER DETECT
+   ACTIVE DETECT
 ========================= */
 
 function updateDepth(wrap){
@@ -91,7 +87,6 @@ function updateDepth(wrap){
   cards.forEach(card => {
 
     const rect = card.getBoundingClientRect();
-
     const center = rect.left + rect.width / 2;
 
     const dist = Math.abs(wrapCenter - center);
@@ -100,7 +95,6 @@ function updateDepth(wrap){
       min = dist;
       closest = card;
     }
-
   });
 
   cards.forEach(card => {
@@ -110,7 +104,7 @@ function updateDepth(wrap){
 }
 
 /* =========================
-   SNAP (FULL FIXED)
+   SNAP CENTER (FIXED)
 ========================= */
 
 function snapToCenter(wrap){
@@ -149,14 +143,10 @@ function snapToCenter(wrap){
   const max =
     wrap.scrollWidth - wrap.clientWidth;
 
-  const clamped =
-    Math.max(0, Math.min(target, max));
-
-  // 🔥 핵심: snap 중 scroll 이벤트 차단
   wrap._isProgrammatic = true;
 
   wrap.scrollTo({
-    left: clamped,
+    left: Math.max(0, Math.min(target, max)),
     behavior: "smooth"
   });
 
