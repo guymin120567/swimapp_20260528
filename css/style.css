@@ -497,8 +497,53 @@ select{
   }
 }
 
+/* =========================
+   WIN EFFECT (GLow + Shake)
+========================= */
 
-.roulette-card.win {
-  transform: scale(1.08);
-  transition: transform 0.25s cubic-bezier(.2,.9,.2,1);
+.roulette-card.win{
+  animation: winShake .35s ease;
+  box-shadow:
+    0 0 0 2px rgba(167,139,250,.6),
+    0 0 24px rgba(139,92,246,.55),
+    0 18px 40px rgba(120,170,220,.35);
+}
+
+@keyframes winShake{
+  0%   { transform: scale(1); }
+  25%  { transform: scale(1.05) rotate(-1deg); }
+  50%  { transform: scale(1.06) rotate(1deg); }
+  75%  { transform: scale(1.05) rotate(-0.5deg); }
+  100% { transform: scale(1); }
+}
+
+/* =========================
+   CONFETTI (CARD-BASED FIX)
+========================= */
+
+.confetti{
+  position:fixed;
+  width:8px;
+  height:10px;
+  border-radius:2px;
+  z-index:99999;
+  pointer-events:none;
+
+  animation: confettiBurst 2.4s ease-out forwards;
+}
+
+@keyframes confettiBurst{
+  0%{
+    transform: translate(0,0) rotate(0deg);
+    opacity:1;
+  }
+
+  100%{
+    transform:
+      translate(var(--dx), var(--dy))
+      translateY(120vh)
+      rotate(720deg);
+
+    opacity:0;
+  }
 }
