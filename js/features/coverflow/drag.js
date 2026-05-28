@@ -18,7 +18,9 @@ export function bindDrag(){
       "true";
 
     let isDown = false;
+
     let startX = 0;
+
     let scrollLeft = 0;
 
     wrap.addEventListener(
@@ -125,7 +127,10 @@ function updateDepth(wrap){
       ".cover-card"
     );
 
-  // 핵심 방어
+  // =========================
+  // EMPTY SAFE
+  // =========================
+
   if(!cards.length){
     return;
   }
