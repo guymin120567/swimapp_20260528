@@ -3,7 +3,7 @@ export function bindDrag(){
   const wraps =
     document.querySelectorAll(".coverflow");
 
-  wraps.forEach(wrap=>{
+  wraps.forEach(wrap => {
 
     if(wrap.dataset.dragBound){
       updateDepth(wrap);
@@ -16,7 +16,7 @@ export function bindDrag(){
     let startX = 0;
     let scrollLeft = 0;
 
-    wrap.addEventListener("mousedown", e=>{
+    wrap.addEventListener("mousedown", e => {
 
       isDown = true;
       wrap.classList.add("dragging");
@@ -26,53 +26,42 @@ export function bindDrag(){
 
     });
 
-    window.addEventListener("mouseup", ()=>{
+    window.addEventListener("mouseup", () => {
 
       isDown = false;
       wrap.classList.remove("dragging");
 
-      requestAnimationFrame(()=>{
+      requestAnimationFrame(() => {
         snapToCenter(wrap);
       });
 
     });
 
-    wrap.addEventListener("mousemove", e=>{
+    wrap.addEventListener("mousemove", e => {
 
       if(!isDown) return;
 
       e.preventDefault();
 
       const x = e.pageX;
-      const walk = (x - startX) * 1.2;
+      const walk = (x - startX) * 1.3;
 
       wrap.scrollLeft = scrollLeft - walk;
 
-      requestAnimationFrame(()=>{
-        updateDepth(wrap);
-      });
+      requestAnimationFrame(() => updateDepth(wrap));
 
     });
 
-    wrap.addEventListener("scroll", ()=>{
-      requestAnimationFrame(()=>{
-        updateDepth(wrap);
-      });
-    }, { passive:true });
-
-    wrap.addEventListener("touchmove", ()=>{
-      requestAnimationFrame(()=>{
-        updateDepth(wrap);
-      });
+    wrap.addEventListener("scroll", () => {
+      requestAnimationFrame(() => updateDepth(wrap));
     }, { passive:true });
 
     updateDepth(wrap);
-
   });
 }
 
 /* =========================
-   ACTIVE FIX (RECT 기준 통일)
+   ACTIVE CENTER FIX
 ========================= */
 
 function updateDepth(wrap){
@@ -82,41 +71,32 @@ function updateDepth(wrap){
 
   if(!cards.length) return;
 
-  const wrapRect =
-    wrap.getBoundingClientRect();
-
   const center =
-    wrap.clientWidth / 2;
+    wrap.scrollLeft + wrap.clientWidth / 2;
 
   let closest = null;
-  let closestDistance = Infinity;
+  let closestDist = Infinity;
 
-  cards.forEach(card=>{
-
-    const rect =
-      card.getBoundingClientRect();
+  cards.forEach(card => {
 
     const cardCenter =
-      (rect.left - wrapRect.left) + rect.width / 2;
+      card.offsetLeft + card.clientWidth / 2;
 
-    const distance =
-      Math.abs(center - cardCenter);
+    const dist = Math.abs(center - cardCenter);
 
-    if(distance < closestDistance){
-      closestDistance = distance;
+    if(dist < closestDist){
+      closestDist = dist;
       closest = card;
     }
-
   });
 
-  cards.forEach(card=>{
+  cards.forEach(card => {
     card.classList.toggle("active", card === closest);
   });
-
 }
 
 /* =========================
-   SNAP FIX (RECT 기준 통일)
+   SNAP (양끝 해결)
 ========================= */
 
 function snapToCenter(wrap){
@@ -126,52 +106,37 @@ function snapToCenter(wrap){
 
   if(!cards.length) return;
 
-  const wrapRect =
-    wrap.getBoundingClientRect();
+  const center =
+    wrap.scrollLeft + wrap.clientWidth / 2;
 
   let closest = null;
-  let closestDistance = Infinity;
-
-  const center =
-    wrap.clientWidth / 2;
+  let closestDist = Infinity;
 
   cards.forEach(card => {
 
-    const rect =
-      card.getBoundingClientRect();
-
     const cardCenter =
-      (rect.left - wrapRect.left) + rect.width / 2;
+      card.offsetLeft + card.clientWidth / 2;
 
-    const distance =
-      Math.abs(center - cardCenter);
+    const dist = Math.abs(center - cardCenter);
 
-    if(distance < closestDistance){
-      closestDistance = distance;
+    if(dist < closestDist){
+      closestDist = dist;
       closest = card;
     }
-
   });
 
   if(!closest) return;
 
-  const rect =
-    closest.getBoundingClientRect();
-
   const target =
-    wrap.scrollLeft +
-    (rect.left - wrapRect.left) +
-    rect.width / 2 -
+    closest.offsetLeft +
+    closest.clientWidth / 2 -
     wrap.clientWidth / 2;
 
-  const maxScroll =
+  const max =
     wrap.scrollWidth - wrap.clientWidth;
 
-  const clamped =
-    Math.max(0, Math.min(target, maxScroll));
-
   wrap.scrollTo({
-    left: clamped,
+    left: Math.max(0, Math.min(target, max)),
     behavior: "smooth"
   });
 }
