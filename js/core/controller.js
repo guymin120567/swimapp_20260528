@@ -7,14 +7,22 @@ import {
 
 import { renderLayout } from "../ui/renderLayout.js";
 import { initDOM } from "../ui/dom.js";
-import { loadState, saveState } from "../../db/database.js";
+
+import {
+  loadState,
+  saveState
+} from "../../db/database.js";
+
 import { initTabs } from "../ui/tabs.js";
 import { bindGlobal } from "../ui/events.js";
 
-import { renderLists } from "../features/lists/renderLists.js";
-import { renderRoulette } from "../features/roulette/renderRoulette.js";
+import {
+  renderRoulette
+} from "../features/roulette/renderRoulette.js";
 
-import { bindDrag } from "../features/coverflow/drag.js";
+import {
+  renderCoverflow
+} from "../features/coverflow/coverflow.js";
 
 export function initController(){
 
@@ -22,9 +30,12 @@ export function initController(){
 
     console.log("BOOT START");
 
-    const saved = await loadState();
+    const saved =
+      await loadState();
 
-    setState(saved || defaultState);
+    setState(
+      saved || defaultState
+    );
 
     renderLayout();
 
@@ -36,22 +47,19 @@ export function initController(){
 
     subscribe(async ()=>{
 
-      renderLists();
       renderRoulette();
 
-      requestAnimationFrame(()=>{
-        bindDrag();
-      });
+      renderCoverflow();
 
-      await saveState(getState());
+      await saveState(
+        getState()
+      );
+
     });
 
-    renderLists();
     renderRoulette();
 
-    requestAnimationFrame(()=>{
-      bindDrag();
-    });
+    renderCoverflow();
 
     console.log("BOOT DONE");
   }
