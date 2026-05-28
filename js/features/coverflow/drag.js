@@ -124,18 +124,16 @@ function snapToCenter(wrap){
 
   if(!cards.length) return;
 
-  const center =
-    wrap.getBoundingClientRect().left + wrap.clientWidth / 2;
-
   let closest = null;
   let closestDistance = Infinity;
 
-  cards.forEach(card=>{
+  const center =
+    wrap.scrollLeft + wrap.clientWidth / 2;
 
-    const rect = card.getBoundingClientRect();
+  cards.forEach(card => {
 
     const cardCenter =
-      rect.left + rect.width / 2;
+      card.offsetLeft + card.clientWidth / 2;
 
     const distance =
       Math.abs(center - cardCenter);
@@ -144,7 +142,6 @@ function snapToCenter(wrap){
       closestDistance = distance;
       closest = card;
     }
-
   });
 
   if(!closest) return;
@@ -154,9 +151,15 @@ function snapToCenter(wrap){
     closest.clientWidth / 2 -
     wrap.clientWidth / 2;
 
+  // 🔥 핵심: 좌우 끝 보정
+  const maxScroll =
+    wrap.scrollWidth - wrap.clientWidth;
+
+  const clamped =
+    Math.max(0, Math.min(targetScroll, maxScroll));
+
   wrap.scrollTo({
-    left: targetScroll,
+    left: clamped,
     behavior: "smooth"
   });
-
 }
