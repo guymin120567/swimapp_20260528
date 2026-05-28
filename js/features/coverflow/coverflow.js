@@ -3,84 +3,166 @@ import {
 } from "../../state/state.js";
 
 import {
-  renderCoverflow
-} from "./renderCoverflow.js";
+  setSelected
+} from "../../state/actions.js";
 
 import {
   bindDrag
 } from "./drag.js";
 
-// =========================
-// REFRESH ALL
-// =========================
-export function refreshCoverflow(){
+export function renderCoverflow(){
 
-  const state =
-    getState();
+  renderType("cap");
 
-  renderCoverflow({
+  renderType("swim");
 
-    type:"cap",
-
-    targetId:"capCoverflow",
-
-    items:
-      state.data.caps
-  });
-
-  renderCoverflow({
-
-    type:"swim",
-
-    targetId:"swimCoverflow",
-
-    items:
-      state.data.swimsuits
-  });
+  bindSelect();
 
   requestAnimationFrame(()=>{
 
     bindDrag();
+
   });
 }
 
-// =========================
-// REFRESH SINGLE
-// =========================
-export function refreshSingleCoverflow(
-  type
-){
+function renderType(type){
+
+  const target =
+    document.querySelector(
+      `.coverflow[data-type="${type}"]`
+    );
+
+  if(!target) return;
 
   const state =
     getState();
 
-  if(type === "cap"){
+  const allItems =
+    Array.isArray(state.items)
+      ? state.items
+      : [];
 
-    renderCoverflow({
+  const items =
+    allItems.filter(
+      item=>item.type === type
+    );
 
-      type:"cap",
+  // =========================
+  // EMPTY
+  // =========================
 
-      targetId:"capCoverflow",
+  if(!items.length){
 
-      items:
-        state.data.caps
-    });
+    target.innerHTML = `
 
-  }else{
+      <div class="empty-coverflow">
 
-    renderCoverflow({
+        아이템 없음
 
-      type:"swim",
+      </div>
 
-      targetId:"swimCoverflow",
+    `;
 
-      items:
-        state.data.swimsuits
-    });
+    return;
   }
 
-  requestAnimationFrame(()=>{
+  // =========================
+  // RENDER
+  // =========================
 
-    bindDrag();
+  target.innerHTML =
+
+    items.map(item=>`
+
+      <div
+        class="cover-card ready"
+        data-id="${item.id}"
+        data-type="${type}"
+      >
+
+        <div class="card-inner">
+
+          ${
+            item.image
+            ? `
+              <img
+                class="card-image"
+                src="${item.image}"
+                alt="${item.name}"
+              />
+            `
+            : `
+              <div class="card-placeholder">
+                🏊
+              </div>
+            `
+          }
+
+          <button
+            class="delete-btn"
+            data-action="delete"
+            data-id="${item.id}"
+          >
+            ×
+          </button>
+
+          <div class="card-overlay">
+
+            <div class="card-title">
+              ${item.name}
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    `).join("");
+}
+
+function bindSelect(){
+
+  const wraps =
+    document.querySelectorAll(
+      ".coverflow"
+    );
+
+  wraps.forEach(wrap=>{
+
+    if(wrap.dataset.bound){
+      return;
+    }
+
+    wrap.dataset.bound =
+      "true";
+
+    wrap.addEventListener(
+      "click",
+      e=>{
+
+        const card =
+          e.target.closest(
+            ".cover-card"
+          );
+
+        if(!card) return;
+
+        if(
+          e.target.closest(
+            ".delete-btn"
+          )
+        ){
+          return;
+        }
+
+        setSelected(
+          card.dataset.type,
+          card.dataset.id
+        );
+
+      }
+    );
+
   });
 }

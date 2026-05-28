@@ -3,8 +3,8 @@ import {
 } from "../features/roulette/renderRoulette.js";
 
 import {
-  renderLists
-} from "../features/lists/renderLists.js";
+  renderCoverflow
+} from "../features/coverflow/coverflow.js";
 
 export function initTabs(){
 
@@ -34,13 +34,14 @@ export function initTabs(){
 
   function activateTab(type){
 
-    tabs.forEach(tab => {
+    tabs.forEach(tab=>{
 
       tab.classList.toggle(
 
         "active",
 
         tab.dataset.tab === type
+
       );
 
     });
@@ -61,6 +62,10 @@ export function initTabs(){
       }
     );
 
+    // =========================
+    // RENDER
+    // =========================
+
     if(type === "roulette"){
 
       renderRoulette();
@@ -69,21 +74,20 @@ export function initTabs(){
 
     if(type === "inventory"){
 
-      renderLists();
+      renderCoverflow();
 
     }
-
   }
 
-  tabs.forEach(tab => {
+  // =========================
+  // CLICK
+  // =========================
+
+  tabs.forEach(tab=>{
 
     tab.addEventListener(
       "click",
-      e=>{
-
-        e.preventDefault();
-
-        e.stopPropagation();
+      ()=>{
 
         activateTab(
           tab.dataset.tab
@@ -94,4 +98,9 @@ export function initTabs(){
 
   });
 
+  // =========================
+  // 🔥 최초 활성화 핵심
+  // =========================
+
+  activateTab("roulette");
 }

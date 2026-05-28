@@ -1,13 +1,8 @@
 export const defaultState = {
 
-  data: {
+  items: [],
 
-    caps: [],
-
-    swimsuits: [],
-
-    records: []
-  },
+  records: [],
 
   selection: {
 
@@ -20,9 +15,7 @@ export const defaultState = {
 
     activeTab: "roulette",
 
-    activeCapId: null,
-
-    activeSwimId: null,
+    activeItemId: null,
 
     isSpinning: false
   }
@@ -33,56 +26,69 @@ let state =
     defaultState
   );
 
+const listeners =
+  new Set();
+
 // =========================
 // GET
 // =========================
+
 export function getState(){
 
   return state;
 }
 
 // =========================
+// SUBSCRIBE
+// =========================
+
+export function subscribe(fn){
+
+  listeners.add(fn);
+
+  return ()=>{
+
+    listeners.delete(fn);
+
+  };
+}
+
+function emit(){
+
+  listeners.forEach(
+    fn=>fn(state)
+  );
+}
+
+// =========================
 // SET
 // =========================
-export function setState(
-  newState
-){
+
+export function setState(partial){
 
   state = {
 
     ...state,
 
-    data:{
-      ...state.data,
-      ...newState.data
-    },
+    ...partial,
 
-    selection:{
+    selection: {
+
       ...state.selection,
-      ...newState.selection
+
+      ...(partial.selection || {})
+
     },
 
-    ui:{
+    ui: {
+
       ...state.ui,
-      ...newState.ui
+
+      ...(partial.ui || {})
+
     }
+
   };
-}
 
-// =========================
-// UI
-// =========================
-export function setActiveTab(tab){
-
-  state.ui.activeTab = tab;
-}
-
-export function setActiveCapId(id){
-
-  state.ui.activeCapId = id;
-}
-
-export function setActiveSwimId(id){
-
-  state.ui.activeSwimId = id;
+  emit();
 }

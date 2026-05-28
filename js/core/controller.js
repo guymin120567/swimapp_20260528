@@ -1,386 +1,165 @@
 import {
-  getState,
   setState,
-  defaultState
+  defaultState,
+  subscribe,
+  getState
 } from "../state/state.js";
-
-import {
-  addCap,
-  addSwim,
-  removeCap,
-  removeSwim,
-  setActiveCap,
-  setActiveSwim
-} from "../state/actions.js";
 
 import {
   renderLayout
 } from "../ui/renderLayout.js";
 
 import {
-  renderLists
-} from "../features/lists/renderLists.js";
+  initDOM
+} from "../ui/dom.js";
 
 import {
-  renderRoulette
-} from "../features/roulette/renderRoulette.js";
+  loadState,
+  saveState
+} from "../../db/database.js";
 
 import {
   initTabs
 } from "../ui/tabs.js";
 
 import {
-  initDOM
-} from "../ui/dom.js";
+  bindGlobal
+} from "../ui/events.js";
 
 import {
-  saveState,
-  loadState
-} from "../../db/database.js";
+  renderRoulette
+} from "../features/roulette/renderRoulette.js";
 
 import {
-  compressImage
-} from "../utils/image.js";
+  renderCoverflow
+} from "../features/coverflow/coverflow.js";
 
-import {
-  spinAll
-} from "../features/roulette/roulette.js";
-
-// =========================
-// INIT
-// =========================
 export function initController(){
 
   async function boot(){
 
-    initDOM();
+    console.log("BOOT START");
 
-    const saved =
-      await loadState();
-
-    if(saved){
-
-      setState(saved);
-
-    }else{
-
-      setState(
-        structuredClone(
-          defaultState
-        )
-      );
-    }
-
-    normalizeState();
+    // =========================
+    // LAYOUT
+    // =========================
 
     renderLayout();
 
-    renderRoulette();
-
-    renderLists();
+    initDOM();
 
     initTabs();
 
     bindGlobal();
-  }
 
-  // =========================
-  // NORMALIZE
-  // =========================
-  function normalizeState(){
+    // =========================
+    // LOAD
+    // =========================
 
-    const state =
-      getState();
+    const saved =
+      await loadState();
 
-    setState({
+    let normalized =
+      saved || defaultState;
 
-      data:{
+    // =========================
+    // OLD DATA MIGRATION
+    // =========================
 
-        caps:
-          Array.isArray(
-            state.data?.caps
-          )
-            ? state.data.caps
-            : [],
+    if(
+      normalized?.data
+    ){
 
-        swimsuits:
-          Array.isArray(
-            state.data?.swimsuits
-          )
-            ? state.data.swimsuits
-            : [],
+      normalized = {
+
+        items: [
+
+          ...(normalized.data.caps || [])
+            .map(item=>({
+
+              ...item,
+
+              type:"cap"
+
+            })),
+
+          ...(normalized.data.swimsuits || [])
+            .map(item=>({
+
+              ...item,
+
+              type:"swim"
+
+            }))
+
+        ],
 
         records:
-          Array.isArray(
-            state.data?.records
-          )
-            ? state.data.records
-            : []
-      },
+          normalized.data.records || [],
 
-      selection:{
+        selection:
+          normalized.selection || {
 
-        capId:
-          state.selection?.capId
-          || null,
+            capId:null,
 
-        swimId:
-          state.selection?.swimId
-          || null
-      },
+            swimId:null
+          },
 
-      ui:{
+        ui:
+          normalized.ui || {
 
-        activeTab:
-          state.ui?.activeTab
-          || "roulette",
+            activeTab:"roulette",
 
-        activeCapId:
-          state.ui?.activeCapId
-          || null,
+            activeItemId:null,
 
-        activeSwimId:
-          state.ui?.activeSwimId
-          || null,
+            isSpinning:false
+          }
+      };
+    }
 
-        isSpinning:false
-      }
+    // =========================
+    // SAFE ITEMS
+    // =========================
+
+    if(
+      !Array.isArray(
+        normalized.items
+      )
+    ){
+      normalized.items = [];
+    }
+
+    // =========================
+    // SUBSCRIBE
+    // =========================
+
+    subscribe(async ()=>{
+
+      renderRoulette();
+
+      renderCoverflow();
+
+      await saveState(
+        getState()
+      );
+
     });
-  }
 
-  // =========================
-  // SAVE
-  // =========================
-  async function persist(){
+    // =========================
+    // APPLY
+    // =========================
 
-    await saveState(
-      getState()
-    );
-  }
+    setState(normalized);
 
-  // =========================
-  // RENDER
-  // =========================
-  function rerender(){
+    // =========================
+    // FIRST RENDER
+    // =========================
 
     renderRoulette();
 
-    renderLists();
+    renderCoverflow();
 
-  }
-
-  // =========================
-  // ADD
-  // =========================
-  async function submitSelectedItem(){
-
-    const typeEl =
-      document.getElementById(
-        "itemType"
-      );
-
-    const textEl =
-      document.getElementById(
-        "itemText"
-      );
-
-    const imageEl =
-      document.getElementById(
-        "itemImage"
-      );
-
-    if(
-      !typeEl ||
-      !textEl ||
-      !imageEl
-    ){
-      return;
-    }
-
-    const type =
-      typeEl.value;
-
-    const text =
-      textEl.value.trim();
-
-    const file =
-      imageEl.files?.[0];
-
-    if(!text){
-
-      alert(
-        "이름 입력"
-      );
-
-      return;
-    }
-
-    let image = null;
-
-    if(file){
-
-      image =
-        await compressImage(
-          file
-        );
-    }
-
-    const item = {
-
-      id:
-        crypto.randomUUID(),
-
-      name:text,
-
-      image
-    };
-
-    if(type === "cap"){
-
-      addCap(item);
-
-    }else{
-
-      addSwim(item);
-    }
-
-    textEl.value = "";
-
-    imageEl.value = "";
-
-    rerender();
-
-    await persist();
-  }
-
-  // =========================
-  // REMOVE
-  // =========================
-  async function removeItem(
-    type,
-    id
-  ){
-
-    const ok =
-      confirm(
-        "정말 삭제할까요?"
-      );
-
-    if(!ok) return;
-
-    if(type === "cap"){
-
-      removeCap(id);
-
-    }else{
-
-      removeSwim(id);
-    }
-
-    rerender();
-
-    await persist();
-  }
-
-  // =========================
-  // ACTIVE
-  // =========================
-  function setActiveItem(
-    type,
-    id
-  ){
-
-    if(type === "cap"){
-
-      setActiveCap(id);
-
-    }else{
-
-      setActiveSwim(id);
-    }
-
-    renderLists();
-  }
-
-  // =========================
-  // EVENTS
-  // =========================
-  function bindGlobal(){
-
-    document.addEventListener(
-      "click",
-      async e=>{
-
-        const action =
-          e.target.dataset.action;
-
-        // =========================
-        // SPIN
-        // =========================
-        if(action === "spin"){
-
-          await spinAll();
-
-          renderRoulette();
-
-          await persist();
-
-          return;
-        }
-
-        // =========================
-        // ADD
-        // =========================
-        if(action === "add"){
-
-          await submitSelectedItem();
-
-          return;
-        }
-
-        // =========================
-        // DELETE
-        // =========================
-        const removeBtn =
-          e.target.closest(
-            ".delete-btn"
-          );
-
-        if(removeBtn){
-
-          e.stopPropagation();
-
-          await removeItem(
-
-            removeBtn.dataset.type,
-
-            String(
-              removeBtn.dataset.id
-            )
-          );
-
-          return;
-        }
-
-        // =========================
-        // ACTIVE
-        // =========================
-        const card =
-          e.target.closest(
-            ".cover-card"
-          );
-
-        if(card){
-
-          setActiveItem(
-
-            card.dataset.type,
-
-            card.dataset.id
-          );
-        }
-      }
-    );
+    console.log("BOOT DONE");
   }
 
   return {

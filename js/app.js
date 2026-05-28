@@ -1,91 +1,113 @@
-import { startApp } from "./controller/appController.js";
+import {
+  startApp
+} from "./controller/appController.js";
 
-// =========================
-// APP INIT
-// =========================
-window.addEventListener("DOMContentLoaded", async () => {
-
-  console.log("APP INIT");
-
-  try {
+window.addEventListener(
+  "DOMContentLoaded",
+  async ()=>{
 
     showSplash();
 
-    await startApp();
+    // 최소 splash 유지
+    const minSplashTime =
+      new Promise(
+        res=>setTimeout(
+          res,
+          600
+        )
+      );
 
-    hideSplash();
+    // 앱 시작
+    await Promise.all([
 
-  } catch (err) {
+      startApp(),
 
-    console.error("APP INIT ERROR", err);
+      minSplashTime
 
-    forceStart(err);
+    ]);
+
+    // 🔥 핵심 추가
+    const app =
+      document.getElementById(
+        "app"
+      );
+
+    if(app){
+
+      app.classList.add(
+        "show"
+      );
+
+    }
+
+    requestAnimationFrame(()=>{
+
+      requestAnimationFrame(()=>{
+
+        if(
+          window.requestIdleCallback
+        ){
+
+          requestIdleCallback(
+            ()=>hideSplash()
+          );
+
+        }else{
+
+          setTimeout(
+            ()=>hideSplash(),
+            120
+          );
+
+        }
+
+      });
+
+    });
+
   }
-});
+);
 
 // =========================
-// SHOW SPLASH
+// SPLASH
 // =========================
-function showSplash() {
 
-  const splash = document.getElementById("splash");
+function showSplash(){
 
-  if (!splash) return;
+  const el =
+    document.getElementById(
+      "splash"
+    );
 
-  splash.classList.remove("hide");
+  if(!el) return;
 
-  splash.style.opacity = "1";
-  splash.style.visibility = "visible";
+  el.classList.remove(
+    "hide"
+  );
+
+  el.style.opacity = "1";
 }
 
 // =========================
-// HIDE SPLASH
+// HIDE
 // =========================
-function hideSplash() {
 
-  const splash = document.getElementById("splash");
+function hideSplash(){
 
-  const app = document.getElementById("app");
+  const el =
+    document.getElementById(
+      "splash"
+    );
 
-  if (app) {
-    app.style.opacity = "1";
-  }
+  if(!el) return;
 
-  if (!splash) return;
+  el.classList.add(
+    "hide"
+  );
 
-  splash.classList.add("hide");
+  setTimeout(()=>{
 
-  // ❌ remove 하지 않는다 (중요)
-  // DOM 재사용 안정성 확보
-}
+    el.remove();
 
-// =========================
-// FORCE START (ERROR)
-// =========================
-function forceStart(err) {
-
-  const splash = document.getElementById("splash");
-  splash?.remove();
-
-  const app = document.getElementById("app");
-
-  if (app) {
-
-    app.innerHTML = `
-      <div style="padding:40px;text-align:center;">
-
-        <h2>앱 시작 오류</h2>
-
-        <pre style="
-          margin-top:20px;
-          white-space:pre-wrap;
-          font-size:12px;
-          opacity:0.7;
-        ">
-${err}
-        </pre>
-
-      </div>
-    `;
-  }
+  },600);
 }

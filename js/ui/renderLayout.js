@@ -1,73 +1,19 @@
-export function renderLayout(){
+export function renderLayout() {
 
-  const app =
-    document.getElementById(
-      "app"
-    );
-
-  if(!app) return;
+  const app = document.getElementById("app");
+  if (!app) return;
 
   app.innerHTML = `
-
-    <!-- ========================= -->
-    <!-- SPLASH -->
-    <!-- ========================= -->
-
-    <div id="splash">
-
-      <div class="splash-bg"></div>
-
-      <div class="splash-inner">
-
-        <img
-          class="splash-image"
-          src="./assets/splash.png"
-          alt="splash"
-        />
-
-      </div>
-
-    </div>
-
-    <!-- ========================= -->
-    <!-- APP -->
-    <!-- ========================= -->
-
     <div class="container">
 
       <main class="main-content">
 
-        <!-- ========================= -->
-        <!-- ROULETTE -->
-        <!-- ========================= -->
-
-        <section
-          id="rouletteSection"
-          class="
-            section
-            roulette-page
-          "
-        >
-
-          <div
-            class="roulette-bg"
-          ></div>
-
-          <div
-            id="rouletteContent"
-          ></div>
-
+        <section id="rouletteSection" class="section roulette-page">
+          <div class="roulette-bg"></div>
+          <div id="rouletteContent"></div>
         </section>
 
-        <!-- ========================= -->
-        <!-- LISTS -->
-        <!-- ========================= -->
-
-        <section
-          id="listsSection"
-          class="section"
-          style="display:none"
-        >
+        <section id="listsSection" class="section" style="display:none">
 
           <div class="block">
 
@@ -78,15 +24,8 @@ export function renderLayout(){
             <div class="input-area">
 
               <select id="itemType">
-
-                <option value="cap">
-                  수모
-                </option>
-
-                <option value="swim">
-                  수영복
-                </option>
-
+                <option value="cap">수모</option>
+                <option value="swim">수영복</option>
               </select>
 
               <input
@@ -112,15 +51,37 @@ export function renderLayout(){
 
           </div>
 
-          <div
-            id="listsContent"
-          ></div>
+          <!-- 수모 -->
+          <div class="block">
+
+            <div class="section-title">
+              수모 리스트
+            </div>
+
+            <div
+              class="coverflow"
+              data-type="cap"
+            ></div>
+
+          </div>
+
+          <!-- 수영복 -->
+          <div class="block">
+
+            <div class="section-title">
+              수영복 리스트
+            </div>
+
+            <div
+              class="coverflow"
+              data-type="swim"
+            ></div>
+
+          </div>
+
+          <div id="listsContent"></div>
 
         </section>
-
-        <!-- ========================= -->
-        <!-- RECORD -->
-        <!-- ========================= -->
 
         <section
           id="recordsSection"
@@ -140,17 +101,10 @@ export function renderLayout(){
 
       </main>
 
-      <!-- ========================= -->
-      <!-- TAB -->
-      <!-- ========================= -->
-
       <nav class="bottom-tabs">
 
         <button
-          class="
-            bottom-tab
-            active
-          "
+          class="bottom-tab active"
           data-tab="roulette"
         >
           룰렛
@@ -173,30 +127,5 @@ export function renderLayout(){
       </nav>
 
     </div>
-
   `;
-
-  requestAnimationFrame(()=>{
-
-    app.classList.add(
-      "show"
-    );
-
-  });
-
-  const splash =
-    document.getElementById(
-      "splash"
-    );
-
-  if(splash){
-
-    setTimeout(()=>{
-
-      splash.classList.add(
-        "hide"
-      );
-
-    }, 1800);
-  }
 }

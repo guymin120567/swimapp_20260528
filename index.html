@@ -17,65 +17,37 @@
 
   <title>Swim App</title>
 
-  <link rel="icon" type="image/png" href="favicon.png" />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-
-  <link rel="stylesheet"
-    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
-  />
-
-  <link rel="stylesheet" href="./css/style.css?v=4" />
+  <link rel="stylesheet" href="./css/style.css?v=5" />
 
 </head>
 
 <body>
 
   <!-- =========================
-       SPLASH (분리)
+       SPLASH
   ========================== -->
 
-  <div id="splash">
+  <div id="splash" class="splash">
 
     <div class="splash-bg"></div>
 
     <div class="splash-inner">
 
-      <img
-        class="splash-image"
-        src="./assets/splash.png"
-        alt="splash"
-      />
+      <img class="splash-image" src="./assets/splash.png" />
+
+      <!-- 🔥 로딩 텍스트 (이미지 위로 올림) -->
+      <div id="loadingText" class="splash-loading">
+        로딩중...
+      </div>
 
     </div>
 
   </div>
 
-  <!-- =========================
-       APP ROOT
-  ========================== -->
-
+  <!-- APP -->
   <main id="app"></main>
 
-  <!-- =========================
-       TEMPLATE
-  ========================== -->
-
-  <template id="loadingTemplate">
-    <div class="app-loading">
-      <div class="loading-spinner"></div>
-      <div class="loading-text">로딩중...</div>
-    </div>
-  </template>
-
-  <noscript>
-    <div class="noscript-box">
-      JavaScript가 필요합니다.
-    </div>
-  </noscript>
-
-  <script type="module" src="./js/app.js?v=4"></script>
+  <script type="module" src="./js/app.js?v=5"></script>
 
 </body>
 

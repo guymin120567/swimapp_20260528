@@ -14,18 +14,24 @@ export function renderRoulette(){
   const state =
     getState();
 
+  // 안전 방어
+  const items =
+    Array.isArray(state.items)
+      ? state.items
+      : [];
+
   const cap =
-    state.data.caps.find(
-      v =>
-        v.id ===
-        state.selection.capId
+    items.find(
+      item=>
+        item.id ===
+        state.selection?.capId
     );
 
   const swim =
-    state.data.swimsuits.find(
-      v =>
-        v.id ===
-        state.selection.swimId
+    items.find(
+      item=>
+        item.id ===
+        state.selection?.swimId
     );
 
   target.innerHTML = `
@@ -38,8 +44,6 @@ export function renderRoulette(){
 
       <div class="roulette-wrap">
 
-        <!-- CAP -->
-
         <div class="roulette-slot">
 
           <div class="roulette-label">
@@ -51,11 +55,9 @@ export function renderRoulette(){
             ${
               cap
               ? `
-
                 <img
                   class="card-image"
-                  src="${cap.image}"
-                  alt="${cap.name}"
+                  src="${cap.image || ""}"
                 />
 
                 <div class="card-overlay">
@@ -65,14 +67,11 @@ export function renderRoulette(){
                   </div>
 
                 </div>
-
               `
               : `
-
                 <div class="card-placeholder">
                   🧢
                 </div>
-
               `
             }
 
@@ -80,12 +79,10 @@ export function renderRoulette(){
 
         </div>
 
-        <!-- SWIM -->
-
         <div class="roulette-slot">
 
           <div class="roulette-label">
-            SWIMSUIT
+            SWIM
           </div>
 
           <div class="roulette-card">
@@ -93,11 +90,9 @@ export function renderRoulette(){
             ${
               swim
               ? `
-
                 <img
                   class="card-image"
-                  src="${swim.image}"
-                  alt="${swim.name}"
+                  src="${swim.image || ""}"
                 />
 
                 <div class="card-overlay">
@@ -107,14 +102,11 @@ export function renderRoulette(){
                   </div>
 
                 </div>
-
               `
               : `
-
                 <div class="card-placeholder">
                   🏊
                 </div>
-
               `
             }
 
@@ -130,7 +122,7 @@ export function renderRoulette(){
           class="spin-btn"
           data-action="spin"
         >
-          돌리기
+          SPIN
         </button>
 
       </div>

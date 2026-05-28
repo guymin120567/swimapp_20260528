@@ -1,89 +1,81 @@
 import {
-  getState
+  getState,
+  setState
 } from "./state.js";
 
 // =========================
-// ADD
+// ITEMS
 // =========================
 
-export function addCap(item){
-
-  getState()
-    .data
-    .caps
-    .push(item);
-
-}
-
-export function addSwim(item){
-
-  getState()
-    .data
-    .swimsuits
-    .push(item);
-
-}
-
-// =========================
-// REMOVE
-// =========================
-
-export function removeCap(id){
+export function addItem(item){
 
   const state =
     getState();
 
-  state.data.caps =
-    state.data.caps.filter(
-      v => v.id !== id
-    );
+  const items =
+    Array.isArray(state.items)
+      ? state.items
+      : [];
 
+  setState({
+
+    items: [
+      ...items,
+      item
+    ]
+
+  });
 }
 
-export function removeSwim(id){
+export function removeItem(id){
 
   const state =
     getState();
 
-  state.data.swimsuits =
-    state.data.swimsuits.filter(
-      v => v.id !== id
-    );
+  const items =
+    Array.isArray(state.items)
+      ? state.items
+      : [];
 
+  setState({
+
+    items:
+      items.filter(
+        item=>item.id !== id
+      )
+
+  });
 }
 
 // =========================
-// SELECTION
+// SELECT
 // =========================
 
-export function setSelectedCap(id){
+export function setSelected(type,id){
 
-  getState().selection.capId =
-    id;
+  const state =
+    getState();
 
-}
+  const selection = {
 
-export function setSelectedSwim(id){
+    ...(state.selection || {})
+  };
 
-  getState().selection.swimId =
-    id;
+  if(type === "cap"){
 
-}
+    selection.capId = id;
 
-// =========================
-// ACTIVE
-// =========================
+  }
 
-export function setActiveCap(id){
+  if(type === "swim"){
 
-  getState().ui.activeCapId =
-    id;
+    selection.swimId = id;
 
-}
+  }
 
-export function setActiveSwim(id){
+  setState({
 
-  getState().ui.activeSwimId =
-    id;
+    selection
 
+  });
 }

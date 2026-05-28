@@ -1,74 +1,40 @@
 export const dom = {
 
-  initialized:false,
+  initialized: false,
 
-  // ROOT
-  app:null,
+  app: null,
 
-  // TAB
-  rouletteTab:null,
-  inventoryTab:null,
-  recordsTab:null,
+  rouletteTab: null,
+  inventoryTab: null,
+  recordsTab: null,
 
-  // SECTION
-  rouletteSection:null,
-  listsSection:null,
-  recordsSection:null,
+  rouletteSection: null,
+  listsSection: null,
+  recordsSection: null,
 
-  // BUTTON
-  spinButton:null
+  spinButton: null
 };
 
-// =========================
-// CACHE
-// =========================
 export function cacheDOM(){
 
-  dom.app =
-    document.getElementById(
-      "app"
-    );
+  dom.app = document.getElementById("app");
 
-  dom.rouletteTab =
-    document.getElementById(
-      "rouletteTab"
-    );
+  dom.rouletteTab = document.querySelector('[data-tab="roulette"]');
+  dom.inventoryTab = document.querySelector('[data-tab="inventory"]');
+  dom.recordsTab = document.querySelector('[data-tab="records"]');
 
-  dom.inventoryTab =
-    document.getElementById(
-      "inventoryTab"
-    );
+  dom.rouletteSection = document.getElementById("rouletteSection");
+  dom.listsSection = document.getElementById("listsSection");
+  dom.recordsSection = document.getElementById("recordsSection");
 
-  dom.recordsTab =
-    document.getElementById(
-      "recordsTab"
-    );
-
-  dom.rouletteSection =
-    document.getElementById(
-      "rouletteSection"
-    );
-
-  dom.listsSection =
-    document.getElementById(
-      "listsSection"
-    );
-
-  dom.recordsSection =
-    document.getElementById(
-      "recordsSection"
-    );
-
-  dom.spinButton =
-    document.getElementById(
-      "spinButton"
-    );
+  dom.spinButton = document.querySelector('[data-action="spin"]');
 }
 
-// =========================
-// INIT
-// =========================
 export function initDOM(){
 
   cacheDOM();
+
+  dom.initialized = true;
+
+  console.log("DOM INIT DONE", dom);
 }
