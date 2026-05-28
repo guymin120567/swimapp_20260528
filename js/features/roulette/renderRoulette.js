@@ -1,4 +1,6 @@
-import { getState } from "../../state/state.js";
+import {
+  getState
+} from "../../state/state.js";
 
 export function renderRoulette(){
 
@@ -9,16 +11,21 @@ export function renderRoulette(){
 
   if(!target) return;
 
-  const state = getState();
+  const state =
+    getState();
 
   const cap =
-    state.data.caps.find(
-      v => v.id === state.selection.capId
+    state.items.find(
+      item=>
+        item.id ===
+        state.selection.capId
     );
 
   const swim =
-    state.data.swimsuits.find(
-      v => v.id === state.selection.swimId
+    state.items.find(
+      item=>
+        item.id ===
+        state.selection.swimId
     );
 
   target.innerHTML = `
@@ -48,9 +55,11 @@ export function renderRoulette(){
                 />
 
                 <div class="card-overlay">
+
                   <div class="roulette-name">
                     ${cap.name}
                   </div>
+
                 </div>
               `
               : `
@@ -67,7 +76,7 @@ export function renderRoulette(){
         <div class="roulette-slot">
 
           <div class="roulette-label">
-            SWIMSUIT
+            SWIM
           </div>
 
           <div class="roulette-card">
@@ -81,9 +90,11 @@ export function renderRoulette(){
                 />
 
                 <div class="card-overlay">
+
                   <div class="roulette-name">
                     ${swim.name}
                   </div>
+
                 </div>
               `
               : `
