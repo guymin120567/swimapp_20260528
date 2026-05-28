@@ -1,119 +1,98 @@
-import {
-  getState
-} from "../../state/state.js";
-
-import {
-  setSelected
-} from "../../state/actions.js";
+import { getState } from "../../state/state.js";
+import { setSelected } from "../../state/actions.js";
 
 export async function spinAll(){
 
-  const state =
-    getState();
+  const state = getState();
 
   const caps =
-    state.items.filter(
-      item=>item.type === "cap"
-    );
+    state.items.filter(i => i.type === "cap");
 
   const swims =
-    state.items.filter(
-      item=>item.type === "swim"
-    );
+    state.items.filter(i => i.type === "swim");
 
-  if(!caps.length) return;
-
-  if(!swims.length) return;
-
-  document.body.classList.add(
-    "shuffle"
-  );
+  if(!caps.length || !swims.length) return;
 
   await delay(700);
 
-  const randomCap =
-    caps[
-      Math.floor(
-        Math.random() *
-        caps.length
-      )
-    ];
+  const cap =
+    caps[Math.floor(Math.random() * caps.length)];
 
-  const randomSwim =
-    swims[
-      Math.floor(
-        Math.random() *
-        swims.length
-      )
-    ];
+  const swim =
+    swims[Math.floor(Math.random() * swims.length)];
 
-  setSelected(
-    "cap",
-    randomCap.id
-  );
+  setSelected("cap", cap.id);
+  setSelected("swim", swim.id);
 
-  setSelected(
-    "swim",
-    randomSwim.id
-  );
-
-  document.body.classList.remove(
-    "shuffle"
-  );
-
-  createConfetti();
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      burst("cap");
+      burst("swim");
+    });
+  });
 }
 
 function delay(ms){
-
-  return new Promise(
-    resolve=>{
-
-      setTimeout(
-        resolve,
-        ms
-      );
-
-    }
-  );
+  return new Promise(r => setTimeout(r, ms));
 }
 
-function createConfetti(){
+/* =========================
+   CONFETTI FIXED
+========================= */
 
-  for(let i=0;i<42;i++){
+function burst(type){
 
-    const confetti =
-      document.createElement(
-        "div"
+  requestAnimationFrame(() => {
+
+    const slot =
+      document.querySelector(
+        `.roulette-slot[data-type="${type}"] .roulette-card`
       );
 
-    confetti.className =
-      "confetti";
+    if(!slot) return;
 
-    confetti.style.left =
-      Math.random()*100 + "vw";
+    const rect = slot.getBoundingClientRect();
 
-    confetti.style.background =
-      `hsl(${
-        Math.random()*360
-      } 90% 70%)`;
+    const fx =
+      document.getElementById("fx-layer");
 
-    confetti.style.setProperty(
-      "--driftX",
-      `${
-        (Math.random()-.5)
-        *220
-      }px`
-    );
+    if(!fx) return;
 
-    document.body.appendChild(
-      confetti
-    );
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
 
-    setTimeout(()=>{
+    const colors = [
+      "#a78bfa",
+      "#8b5cf6",
+      "#7c3aed",
+      "#c4b5fd",
+      "#6d28d9"
+    ];
 
-      confetti.remove();
+    for(let i=0;i<50;i++){
 
-    },2400);
-  }
+      const el = document.createElement("div");
+      el.className = "confetti";
+
+      el.style.left = x + "px";
+      el.style.top = y + "px";
+
+      el.style.background =
+        colors[Math.floor(Math.random() * colors.length)];
+
+      el.style.setProperty("--dx", (Math.random()-0.5)*320 + "px");
+      el.style.setProperty("--dy", (Math.random()-1.2)*260 + "px");
+
+      fx.appendChild(el);
+
+      setTimeout(() => el.remove(), 2400);
+    }
+
+    slot.classList.add("win");
+
+    setTimeout(() => {
+      slot.classList.remove("win");
+    }, 400);
+
+  });
 }

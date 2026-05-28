@@ -1,183 +1,156 @@
 export function bindDrag(){
 
   const wraps =
-    document.querySelectorAll(
-      ".coverflow"
-    );
+    document.querySelectorAll(".coverflow");
 
-  wraps.forEach(wrap=>{
+  wraps.forEach(wrap => {
 
     if(wrap.dataset.dragBound){
-
       updateDepth(wrap);
-
       return;
     }
 
-    wrap.dataset.dragBound =
-      "true";
+    wrap.dataset.dragBound = "true";
 
     let isDown = false;
-
     let startX = 0;
-
     let scrollLeft = 0;
 
-    wrap.addEventListener(
-      "mousedown",
-      e=>{
+    wrap._isProgrammatic = false;
 
-        isDown = true;
+    wrap.addEventListener("mousedown", e => {
 
-        wrap.classList.add(
-          "dragging"
-        );
+      isDown = true;
+      wrap.classList.add("dragging");
 
-        startX =
-          e.pageX -
-          wrap.offsetLeft;
+      startX = e.pageX;
+      scrollLeft = wrap.scrollLeft;
 
-        scrollLeft =
-          wrap.scrollLeft;
+    });
 
-      }
-    );
+    window.addEventListener("mouseup", () => {
 
-    window.addEventListener(
-      "mouseup",
-      ()=>{
+      isDown = false;
+      wrap.classList.remove("dragging");
 
-        isDown = false;
+      requestAnimationFrame(() => {
+        snapToCenter(wrap);
+      });
 
-        wrap.classList.remove(
-          "dragging"
-        );
+    });
 
-      }
-    );
+    wrap.addEventListener("mousemove", e => {
 
-    wrap.addEventListener(
-      "mousemove",
-      e=>{
+      if(!isDown) return;
 
-        if(!isDown) return;
+      e.preventDefault();
 
-        e.preventDefault();
+      const x = e.pageX;
+      const walk = (x - startX) * 1.25;
 
-        const x =
-          e.pageX -
-          wrap.offsetLeft;
+      wrap.scrollLeft = scrollLeft - walk;
 
-        const walk =
-          (x - startX) * 1.2;
+      requestAnimationFrame(() => updateDepth(wrap));
 
-        wrap.scrollLeft =
-          scrollLeft - walk;
+    });
 
-        requestAnimationFrame(()=>{
+    wrap.addEventListener("scroll", () => {
 
-          updateDepth(wrap);
+      if(wrap._isProgrammatic) return;
 
-        });
+      requestAnimationFrame(() => updateDepth(wrap));
 
-      }
-    );
-
-    wrap.addEventListener(
-      "scroll",
-      ()=>{
-
-        requestAnimationFrame(()=>{
-
-          updateDepth(wrap);
-
-        });
-
-      },
-      {
-        passive:true
-      }
-    );
-
-    wrap.addEventListener(
-      "touchmove",
-      ()=>{
-
-        requestAnimationFrame(()=>{
-
-          updateDepth(wrap);
-
-        });
-
-      },
-      {
-        passive:true
-      }
-    );
+    }, { passive:true });
 
     updateDepth(wrap);
 
   });
 }
 
+/* =========================
+   ACTIVE DETECT
+========================= */
+
 function updateDepth(wrap){
 
   const cards =
-    wrap.querySelectorAll(
-      ".cover-card"
-    );
+    wrap.querySelectorAll(".cover-card");
 
-  // =========================
-  // EMPTY SAFE
-  // =========================
+  if(!cards.length) return;
 
-  if(!cards.length){
-    return;
-  }
-
-  const center =
-    wrap.scrollLeft +
-    wrap.clientWidth / 2;
+  const wrapCenter =
+    wrap.getBoundingClientRect().left + wrap.clientWidth / 2;
 
   let closest = null;
+  let min = Infinity;
 
-  let closestDistance =
-    Infinity;
+  cards.forEach(card => {
 
-  cards.forEach(card=>{
+    const rect = card.getBoundingClientRect();
+    const center = rect.left + rect.width / 2;
 
-    const cardCenter =
-      card.offsetLeft +
-      card.clientWidth / 2;
+    const dist = Math.abs(wrapCenter - center);
 
-    const distance =
-      Math.abs(
-        center - cardCenter
-      );
-
-    if(distance < closestDistance){
-
-      closestDistance =
-        distance;
-
+    if(dist < min){
+      min = dist;
       closest = card;
     }
   });
 
-  cards.forEach(card=>{
-
-    card.classList.toggle(
-      "active",
-      card === closest
-    );
-
-    requestAnimationFrame(()=>{
-
-      card.classList.add(
-        "ready"
-      );
-
-    });
-
+  cards.forEach(card => {
+    card.classList.toggle("active", card === closest);
   });
+
+}
+
+/* =========================
+   SNAP CENTER (FIXED)
+========================= */
+
+function snapToCenter(wrap){
+
+  const cards =
+    wrap.querySelectorAll(".cover-card");
+
+  if(!cards.length) return;
+
+  let closest = null;
+  let min = Infinity;
+
+  const wrapCenter =
+    wrap.scrollLeft + wrap.clientWidth / 2;
+
+  cards.forEach(card => {
+
+    const center =
+      card.offsetLeft + card.clientWidth / 2;
+
+    const dist = Math.abs(wrapCenter - center);
+
+    if(dist < min){
+      min = dist;
+      closest = card;
+    }
+  });
+
+  if(!closest) return;
+
+  const target =
+    closest.offsetLeft +
+    closest.clientWidth / 2 -
+    wrap.clientWidth / 2;
+
+  const max =
+    wrap.scrollWidth - wrap.clientWidth;
+
+  wrap._isProgrammatic = true;
+
+  wrap.scrollTo({
+    left: Math.max(0, Math.min(target, max)),
+    behavior: "smooth"
+  });
+
+  setTimeout(() => {
+    wrap._isProgrammatic = false;
+  }, 450);
 }
