@@ -45,6 +45,12 @@ export function initController(){
 
     bindGlobal();
 
+    // 최초 렌더
+    renderRoulette();
+
+    renderCoverflow();
+
+    // 상태 구독
     subscribe(async ()=>{
 
       renderRoulette();
@@ -56,10 +62,6 @@ export function initController(){
       );
 
     });
-
-    renderRoulette();
-
-    renderCoverflow();
 
     console.log("BOOT DONE");
   }
