@@ -1,183 +1,167 @@
 export function bindDrag(){
 
   const wraps =
-    document.querySelectorAll(
-      ".coverflow"
-    );
+    document.querySelectorAll(".coverflow");
 
   wraps.forEach(wrap=>{
 
     if(wrap.dataset.dragBound){
-
       updateDepth(wrap);
-
       return;
     }
 
-    wrap.dataset.dragBound =
-      "true";
+    wrap.dataset.dragBound = "true";
 
     let isDown = false;
-
     let startX = 0;
-
     let scrollLeft = 0;
 
-    wrap.addEventListener(
-      "mousedown",
-      e=>{
+    wrap.addEventListener("mousedown", e=>{
 
-        isDown = true;
+      isDown = true;
+      wrap.classList.add("dragging");
 
-        wrap.classList.add(
-          "dragging"
-        );
+      startX = e.pageX - wrap.offsetLeft;
+      scrollLeft = wrap.scrollLeft;
 
-        startX =
-          e.pageX -
-          wrap.offsetLeft;
+    });
 
-        scrollLeft =
-          wrap.scrollLeft;
+    window.addEventListener("mouseup", ()=>{
 
-      }
-    );
+      isDown = false;
+      wrap.classList.remove("dragging");
 
-    window.addEventListener(
-      "mouseup",
-      ()=>{
+      // 🔥 드래그 끝나면 강제 중심 보정
+      requestAnimationFrame(()=> {
+        snapToCenter(wrap);
+      });
 
-        isDown = false;
+    });
 
-        wrap.classList.remove(
-          "dragging"
-        );
+    wrap.addEventListener("mousemove", e=>{
 
-      }
-    );
+      if(!isDown) return;
 
-    wrap.addEventListener(
-      "mousemove",
-      e=>{
+      e.preventDefault();
 
-        if(!isDown) return;
+      const x = e.pageX - wrap.offsetLeft;
+      const walk = (x - startX) * 1.2;
 
-        e.preventDefault();
+      wrap.scrollLeft = scrollLeft - walk;
 
-        const x =
-          e.pageX -
-          wrap.offsetLeft;
+      requestAnimationFrame(()=> {
+        updateDepth(wrap);
+      });
 
-        const walk =
-          (x - startX) * 1.2;
+    });
 
-        wrap.scrollLeft =
-          scrollLeft - walk;
+    wrap.addEventListener("scroll", ()=>{
 
-        requestAnimationFrame(()=>{
+      requestAnimationFrame(()=> {
+        updateDepth(wrap);
+      });
 
-          updateDepth(wrap);
+    }, { passive:true });
 
-        });
+    wrap.addEventListener("touchmove", ()=>{
 
-      }
-    );
+      requestAnimationFrame(()=> {
+        updateDepth(wrap);
+      });
 
-    wrap.addEventListener(
-      "scroll",
-      ()=>{
-
-        requestAnimationFrame(()=>{
-
-          updateDepth(wrap);
-
-        });
-
-      },
-      {
-        passive:true
-      }
-    );
-
-    wrap.addEventListener(
-      "touchmove",
-      ()=>{
-
-        requestAnimationFrame(()=>{
-
-          updateDepth(wrap);
-
-        });
-
-      },
-      {
-        passive:true
-      }
-    );
+    }, { passive:true });
 
     updateDepth(wrap);
 
   });
 }
 
+/* =========================
+   ACTIVE / DEPTH
+========================= */
+
 function updateDepth(wrap){
 
   const cards =
-    wrap.querySelectorAll(
-      ".cover-card"
-    );
+    wrap.querySelectorAll(".cover-card");
 
-  // =========================
-  // EMPTY SAFE
-  // =========================
-
-  if(!cards.length){
-    return;
-  }
+  if(!cards.length) return;
 
   const center =
-    wrap.scrollLeft +
-    wrap.clientWidth / 2;
+    wrap.scrollLeft + wrap.clientWidth / 2;
 
   let closest = null;
-
-  let closestDistance =
-    Infinity;
+  let closestDistance = Infinity;
 
   cards.forEach(card=>{
 
     const cardCenter =
-      card.offsetLeft +
-      card.clientWidth / 2;
+      card.offsetLeft + card.clientWidth / 2;
 
     const distance =
-      Math.abs(
-        center - cardCenter
-      );
+      Math.abs(center - cardCenter);
 
     if(distance < closestDistance){
-
-      closestDistance =
-        distance;
-
+      closestDistance = distance;
       closest = card;
     }
+
   });
 
   cards.forEach(card=>{
 
-    card.classList.toggle(
-      "active",
-      card === closest
-    );
+    card.classList.toggle("active", card === closest);
 
-    requestAnimationFrame(()=>{
-
-      card.classList.add(
-        "ready"
-      );
-
+    requestAnimationFrame(()=> {
+      card.classList.add("ready");
     });
 
   });
+
+}
+
+/* =========================
+   SNAP TO CENTER
+========================= */
+
+function snapToCenter(wrap){
+
+  const cards =
+    wrap.querySelectorAll(".cover-card");
+
+  if(!cards.length) return;
+
+  const center =
+    wrap.scrollLeft + wrap.clientWidth / 2;
+
+  let closest = null;
+  let closestDistance = Infinity;
+
+  cards.forEach(card=>{
+
+    const cardCenter =
+      card.offsetLeft + card.clientWidth / 2;
+
+    const distance =
+      Math.abs(center - cardCenter);
+
+    if(distance < closestDistance){
+      closestDistance = distance;
+      closest = card;
+    }
+
+  });
+
+  if(!closest) return;
+
+  const targetScroll =
+    closest.offsetLeft +
+    closest.clientWidth / 2 -
+    wrap.clientWidth / 2;
+
+  wrap.scrollTo({
+    left: targetScroll,
+    behavior: "smooth"
+  });
+
 }
