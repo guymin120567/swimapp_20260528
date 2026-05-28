@@ -1,15 +1,9 @@
-import {
-  renderRoulette
-} from "../features/roulette/renderRoulette.js";
-
-import {
-  renderLists
-} from "../features/lists/renderLists.js";
+import { renderCoverflow } from "../features/coverflow/coverflow.js";
 
 export function renderApp(){
 
   renderRoulette();
 
-  renderLists();
+  renderCoverflow(); // ⭐ 이거 필요
 
 }
