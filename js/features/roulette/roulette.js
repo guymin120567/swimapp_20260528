@@ -80,40 +80,66 @@ function delay(ms){
 
 function createConfetti(){
 
-  for(let i=0;i<42;i++){
+  const card =
+    document.querySelector(".roulette-card");
+
+  if(!card) return;
+
+  const rect =
+    card.getBoundingClientRect();
+
+  const PURPLE_COLORS = [
+    "#a78bfa",
+    "#8b5cf6",
+    "#7c3aed",
+    "#c4b5fd",
+    "#6d28d9"
+  ];
+
+  for(let i=0;i<50;i++){
 
     const confetti =
-      document.createElement(
-        "div"
-      );
+      document.createElement("div");
 
-    confetti.className =
-      "confetti";
+    confetti.className = "confetti";
+
+    // 카드 중심 기준 시작점
+    const startX =
+      rect.left + rect.width / 2;
+
+    const startY =
+      rect.top + rect.height / 2;
 
     confetti.style.left =
-      Math.random()*100 + "vw";
+      startX + "px";
 
+    confetti.style.top =
+      startY + "px";
+
+    // 보라 계열 랜덤 색
     confetti.style.background =
-      `hsl(${
-        Math.random()*360
-      } 90% 70%)`;
+      PURPLE_COLORS[
+        Math.floor(
+          Math.random() *
+          PURPLE_COLORS.length
+        )
+      ];
 
+    // 퍼짐 방향
     confetti.style.setProperty(
       "--driftX",
-      `${
-        (Math.random()-.5)
-        *220
-      }px`
+      `${(Math.random() - 0.5) * 260}px`
     );
 
-    document.body.appendChild(
-      confetti
+    confetti.style.setProperty(
+      "--driftY",
+      `${(Math.random() - 0.5) * 180}px`
     );
+
+    document.body.appendChild(confetti);
 
     setTimeout(()=>{
-
       confetti.remove();
-
-    },2400);
+    }, 2400);
   }
 }
