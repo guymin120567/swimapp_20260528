@@ -249,7 +249,7 @@ function burst(type){
 
   const slot =
     document.querySelector(
-      \`.roulette-slot[data-type="\${type}"] .roulette-card\`
+      \`.roulette-slot[data-type="${type}"] .roulette-card`
     );
 
   const fx =
