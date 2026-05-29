@@ -1,51 +1,128 @@
+// js/features/coverflow/drag.js
+
 export function bindDrag(){
 
   const wraps =
-    document.querySelectorAll(".coverflow");
+    document.querySelectorAll(
+      ".coverflow"
+    );
 
   wraps.forEach(wrap => {
 
-    if(wrap.dataset.dragBound){
+    if(
+      wrap.dataset.dragBound
+    ){
 
       requestAnimationFrame(()=>{
 
         updateDepth(wrap);
-        snapToCenter(wrap, false);
 
       });
 
       return;
     }
 
-    wrap.dataset.dragBound = "true";
+    wrap.dataset.dragBound =
+      "true";
 
     let isDown = false;
+
     let startX = 0;
+
     let scrollLeft = 0;
+
     let velocity = 0;
+
     let lastX = 0;
 
     wrap._isProgrammatic = false;
 
-    wrap.addEventListener("mousedown", e => {
+    /* =========================
+       INIT CENTER
+    ========================= */
 
-      if(wrap._isProgrammatic){
-        return;
-      }
+    requestAnimationFrame(()=>{
 
-      isDown = true;
+      centerFirst(wrap);
 
-      wrap.classList.add(
-        "dragging"
-      );
+      requestAnimationFrame(()=>{
 
-      startX = e.pageX;
-      lastX = e.pageX;
+        updateDepth(wrap);
 
-      scrollLeft =
-        wrap.scrollLeft;
+      });
 
     });
+
+    /* =========================
+       DOWN
+    ========================= */
+
+    wrap.addEventListener(
+      "mousedown",
+      e => {
+
+        if(
+          wrap._isProgrammatic
+        ){
+          return;
+        }
+
+        isDown = true;
+
+        wrap.classList.add(
+          "dragging"
+        );
+
+        startX = e.pageX;
+
+        lastX = e.pageX;
+
+        scrollLeft =
+          wrap.scrollLeft;
+
+      }
+    );
+
+    /* =========================
+       MOVE
+    ========================= */
+
+    wrap.addEventListener(
+      "mousemove",
+      e => {
+
+        if(!isDown){
+          return;
+        }
+
+        e.preventDefault();
+
+        const x =
+          e.pageX;
+
+        const walk =
+          (x - startX) * 1.08;
+
+        velocity =
+          x - lastX;
+
+        lastX = x;
+
+        wrap.scrollLeft =
+          scrollLeft - walk;
+
+        requestAnimationFrame(()=>{
+
+          updateDepth(wrap);
+
+        });
+
+      }
+    );
+
+    /* =========================
+       END
+    ========================= */
 
     window.addEventListener(
       "mouseup",
@@ -91,44 +168,17 @@ export function bindDrag(){
       }
     );
 
-    wrap.addEventListener(
-      "mousemove",
-      e => {
-
-        if(!isDown){
-          return;
-        }
-
-        e.preventDefault();
-
-        const x =
-          e.pageX;
-
-        const walk =
-          (x - startX) * 1.1;
-
-        velocity =
-          x - lastX;
-
-        lastX = x;
-
-        wrap.scrollLeft =
-          scrollLeft - walk;
-
-        requestAnimationFrame(()=>{
-
-          updateDepth(wrap);
-
-        });
-
-      }
-    );
+    /* =========================
+       SCROLL
+    ========================= */
 
     wrap.addEventListener(
       "scroll",
       ()=>{
 
-        if(wrap._isProgrammatic){
+        if(
+          wrap._isProgrammatic
+        ){
           return;
         }
 
@@ -142,14 +192,34 @@ export function bindDrag(){
       { passive:true }
     );
 
-    requestAnimationFrame(()=>{
-
-      updateDepth(wrap);
-      snapToCenter(wrap, false);
-
-    });
-
   });
+
+}
+
+/* =========================
+   CENTER FIRST
+========================= */
+
+function centerFirst(
+  wrap
+){
+
+  const first =
+    wrap.querySelector(
+      ".cover-card"
+    );
+
+  if(!first){
+    return;
+  }
+
+  const target =
+    first.offsetLeft +
+    first.clientWidth / 2 -
+    wrap.clientWidth / 2;
+
+  wrap.scrollLeft =
+    Math.max(0, target);
 
 }
 
@@ -190,14 +260,95 @@ function inertia(
 
   }
 
-  requestAnimationFrame(
-    frame
-  );
+  requestAnimationFrame(frame);
 
 }
 
 /* =========================
-   ACTIVE DETECT
+   SNAP CENTER
+========================= */
+
+function snapToCenter(
+  wrap,
+  smooth = true
+){
+
+  const cards =
+    [
+      ...wrap.querySelectorAll(
+        ".cover-card"
+      )
+    ];
+
+  if(!cards.length){
+    return;
+  }
+
+  const wrapCenter =
+    wrap.scrollLeft +
+    wrap.clientWidth / 2;
+
+  let closest = null;
+
+  let min = Infinity;
+
+  cards.forEach(card => {
+
+    const center =
+      card.offsetLeft +
+      card.clientWidth / 2;
+
+    const dist =
+      Math.abs(
+        wrapCenter - center
+      );
+
+    if(dist < min){
+
+      min = dist;
+
+      closest = card;
+
+    }
+
+  });
+
+  if(!closest){
+    return;
+  }
+
+  const target =
+    closest.offsetLeft +
+    closest.clientWidth / 2 -
+    wrap.clientWidth / 2;
+
+  wrap._isProgrammatic =
+    true;
+
+  wrap.scrollTo({
+
+    left:target,
+
+    behavior:
+      smooth
+        ? "smooth"
+        : "auto"
+
+  });
+
+  setTimeout(()=>{
+
+    wrap._isProgrammatic =
+      false;
+
+    updateDepth(wrap);
+
+  }, 420);
+
+}
+
+/* =========================
+   DEPTH
 ========================= */
 
 function updateDepth(
@@ -220,6 +371,7 @@ function updateDepth(
     wrap.clientWidth / 2;
 
   let closest = null;
+
   let min = Infinity;
 
   cards.forEach(card => {
@@ -239,6 +391,7 @@ function updateDepth(
     if(dist < min){
 
       min = dist;
+
       closest = card;
 
     }
@@ -285,90 +438,5 @@ function updateDepth(
     }
 
   });
-
-}
-
-/* =========================
-   SNAP CENTER
-========================= */
-
-function snapToCenter(
-  wrap,
-  smooth = true
-){
-
-  const cards =
-    wrap.querySelectorAll(
-      ".cover-card"
-    );
-
-  if(!cards.length){
-    return;
-  }
-
-  let closest = null;
-  let min = Infinity;
-
-  const wrapCenter =
-    wrap.scrollLeft +
-    wrap.clientWidth / 2;
-
-  cards.forEach(card => {
-
-    const center =
-      card.offsetLeft +
-      card.clientWidth / 2;
-
-    const dist =
-      Math.abs(
-        wrapCenter - center
-      );
-
-    if(dist < min){
-
-      min = dist;
-      closest = card;
-
-    }
-
-  });
-
-  if(!closest){
-    return;
-  }
-
-  const target =
-    closest.offsetLeft +
-    closest.clientWidth / 2 -
-    wrap.clientWidth / 2;
-
-  const max =
-    wrap.scrollWidth -
-    wrap.clientWidth;
-
-  wrap._isProgrammatic = true;
-
-  wrap.scrollTo({
-
-    left:
-      Math.max(
-        0,
-        Math.min(target, max)
-      ),
-
-    behavior:
-      smooth
-        ? "smooth"
-        : "auto"
-
-  });
-
-  setTimeout(()=>{
-
-    wrap._isProgrammatic = false;
-
-    updateDepth(wrap);
-
-  }, 450);
 
 }
