@@ -11,8 +11,14 @@ export function renderCoverflow(){
 
   bindSelect();
 
-  window.addEventListener("spin-start", startSpin);
-  window.addEventListener("spin-stop", stopSpin);
+  // 🔥 이벤트 중복 방지
+  if(!window.__coverflowBound){
+
+    window.addEventListener("spin-start", startSpin);
+    window.addEventListener("spin-stop", stopSpin);
+
+    window.__coverflowBound = true;
+  }
 
   requestAnimationFrame(() => {
     bindDrag();
@@ -35,10 +41,11 @@ function renderType(type){
   const items =
     (state.items || []).filter(i => i.type === type);
 
+  // 🔥 selection 기준 통일
   const selectedId =
     type === "cap"
-      ? state.result?.capId
-      : state.result?.swimId;
+      ? state.selection?.capId
+      : state.selection?.swimId;
 
   target.innerHTML = items.map(item => `
     <div
@@ -84,10 +91,11 @@ function bindSelect(){
 
       setSelected(type, id);
 
+      // 🔥 핵심: UI 재렌더
+      renderCoverflow();
+
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          centerCard(wrap, card);
-        });
+        centerCard(wrap, card);
       });
 
     });
@@ -96,7 +104,7 @@ function bindSelect(){
 }
 
 /* =========================
-   SLOT MACHINE SPIN
+   SPIN START
 ========================= */
 
 function startSpin(){
@@ -114,7 +122,6 @@ function startSpin(){
 
     const tick = () => {
 
-      // 🔥 1. 가속
       if(phase === "accelerate"){
         velocity += accel;
         if(velocity >= maxSpeed){
@@ -123,18 +130,15 @@ function startSpin(){
         }
       }
 
-      // 🔥 2. 최대속 유지 → 감속 전환
       else if(phase === "cruise"){
         if(Math.random() < 0.02){
           phase = "decelerate";
         }
       }
 
-      // 🔥 3. 감속
       else if(phase === "decelerate"){
         velocity *= decel;
 
-        // 🔥 마지막 3칸 구간 진입
         if(velocity < 8){
           velocity *= 0.92;
         }
@@ -158,7 +162,7 @@ function startSpin(){
 }
 
 /* =========================
-   STOP + SNAP CENTER
+   SPIN STOP + SNAP
 ========================= */
 
 function stopSpin(){
@@ -191,6 +195,12 @@ function stopSpin(){
 
     if(!closest) return;
 
+    const type = closest.dataset.type;
+    const id = closest.dataset.id;
+
+    // 🔥 결과 확정
+    setSelected(type, id);
+
     const target =
       closest.offsetLeft +
       closest.clientWidth / 2 -
@@ -200,12 +210,6 @@ function stopSpin(){
       left: target,
       behavior: "smooth"
     });
-
-    // 🔥 마지막 확정 selection 동기화
-    const type = closest.dataset.type;
-    const id = closest.dataset.id;
-
-    setSelected(type, id);
 
   });
 }
