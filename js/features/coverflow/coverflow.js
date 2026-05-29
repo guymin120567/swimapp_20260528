@@ -11,7 +11,6 @@ export function renderCoverflow(){
 
   bindSelect();
 
-  // 🔥 이벤트 중복 방지
   if(!window.__coverflowBound){
 
     window.addEventListener("spin-start", startSpin);
@@ -20,9 +19,7 @@ export function renderCoverflow(){
     window.__coverflowBound = true;
   }
 
-  requestAnimationFrame(() => {
-    bindDrag();
-  });
+  requestAnimationFrame(bindDrag);
 }
 
 /* =========================
@@ -41,24 +38,20 @@ function renderType(type){
   const items =
     (state.items || []).filter(i => i.type === type);
 
-  // 🔥 selection 기준 통일
   const selectedId =
     type === "cap"
       ? state.selection?.capId
       : state.selection?.swimId;
 
   target.innerHTML = items.map(item => `
-    <div
-      class="cover-card ${item.id === selectedId ? "active" : ""}"
-      data-id="${item.id}"
-      data-type="${type}"
-    >
+    <div class="cover-card ${item.id === selectedId ? "active" : ""}"
+         data-id="${item.id}"
+         data-type="${type}">
       <div class="card-inner">
 
-        ${
-          item.image
-            ? `<img class="card-image" src="${item.image}" />`
-            : `<div class="card-placeholder">🏊</div>`
+        ${item.image
+          ? `<img class="card-image" src="${item.image}" />`
+          : `<div class="card-placeholder">🏊</div>`
         }
 
         <div class="card-overlay">
@@ -71,7 +64,7 @@ function renderType(type){
 }
 
 /* =========================
-   CLICK SELECT
+   CLICK
 ========================= */
 
 function bindSelect(){
@@ -91,15 +84,10 @@ function bindSelect(){
 
       setSelected(type, id);
 
-      // 🔥 핵심: UI 재렌더
-      renderCoverflow();
-
       requestAnimationFrame(() => {
         centerCard(wrap, card);
       });
-
     });
-
   });
 }
 
@@ -139,13 +127,8 @@ function startSpin(){
       else if(phase === "decelerate"){
         velocity *= decel;
 
-        if(velocity < 8){
-          velocity *= 0.92;
-        }
-
-        if(velocity < 0.6){
-          velocity = 0;
-        }
+        if(velocity < 8) velocity *= 0.92;
+        if(velocity < 0.6) velocity = 0;
       }
 
       flow.scrollLeft += velocity;
@@ -153,16 +136,14 @@ function startSpin(){
       if(velocity > 0){
         spinRAF = requestAnimationFrame(tick);
       }
-
     };
 
     spinRAF = requestAnimationFrame(tick);
-
   });
 }
 
 /* =========================
-   SPIN STOP + SNAP
+   STOP + SNAP
 ========================= */
 
 function stopSpin(){
@@ -195,11 +176,7 @@ function stopSpin(){
 
     if(!closest) return;
 
-    const type = closest.dataset.type;
-    const id = closest.dataset.id;
-
-    // 🔥 결과 확정
-    setSelected(type, id);
+    setSelected(closest.dataset.type, closest.dataset.id);
 
     const target =
       closest.offsetLeft +
@@ -210,12 +187,11 @@ function stopSpin(){
       left: target,
       behavior: "smooth"
     });
-
   });
 }
 
 /* =========================
-   CENTER UTIL
+   CENTER
 ========================= */
 
 function centerCard(wrap, card){
