@@ -1,6 +1,4 @@
-import {
-  getState
-} from "../state/state.js";
+// js/ui/events.js
 
 import {
   addItem,
@@ -15,6 +13,10 @@ import {
   compressImage
 } from "../utils/image.js";
 
+// =========================
+// GLOBAL EVENTS
+// =========================
+
 export function bindGlobal(){
 
   if(
@@ -26,101 +28,141 @@ export function bindGlobal(){
   document.body.dataset.globalBound =
     "true";
 
+  // =========================
+  // CLICK
+  // =========================
+
   document.addEventListener(
     "click",
-    async e=>{
-
-      const action =
-        e.target.dataset.action;
-
-      // =========================
-      // SPIN
-      // =========================
-
-      if(action === "spin"){
-
-        await spinAll();
-
-        return;
-      }
-
-      // =========================
-      // ADD
-      // =========================
-
-      if(action === "add"){
-
-        const type =
-          document.getElementById(
-            "itemType"
-          )?.value;
-
-        const text =
-          document.getElementById(
-            "itemText"
-          )?.value?.trim();
-
-        const imageInput =
-          document.getElementById(
-            "itemImage"
-          );
-
-        if(!text){
-          return;
-        }
-
-        let image = null;
-
-        const file =
-          imageInput?.files?.[0];
-
-        if(file){
-
-          image =
-            await compressImage(
-              file
-            );
-
-        }
-
-        addItem({
-
-          id:
-            crypto.randomUUID(),
-
-          type,
-
-          name:text,
-
-          image
-        });
-
-        document.getElementById(
-          "itemText"
-        ).value = "";
-
-        if(imageInput){
-
-          imageInput.value = "";
-
-        }
-
-        return;
-      }
-
-      // =========================
-      // DELETE
-      // =========================
-
-      if(action === "delete"){
-
-        const id =
-          e.target.dataset.id;
-
-        removeItem(id);
-
-      }
-
-    }
+    handleClick
   );
+
+}
+
+// =========================
+// CLICK HANDLER
+// =========================
+
+async function handleClick(e){
+
+  const action =
+    e.target.dataset.action;
+
+  if(!action){
+    return;
+  }
+
+  // =========================
+  // SPIN
+  // =========================
+
+  if(
+    action === "spin"
+  ){
+
+    await spinAll();
+
+    return;
+
+  }
+
+  // =========================
+  // ADD
+  // =========================
+
+  if(
+    action === "add"
+  ){
+
+    await handleAdd();
+
+    return;
+
+  }
+
+  // =========================
+  // DELETE
+  // =========================
+
+  if(
+    action === "delete"
+  ){
+
+    const id =
+      e.target.dataset.id;
+
+    if(!id){
+      return;
+    }
+
+    removeItem(id);
+
+  }
+
+}
+
+// =========================
+// ADD
+// =========================
+
+async function handleAdd(){
+
+  const type =
+    document.getElementById(
+      "itemType"
+    )?.value;
+
+  const text =
+    document.getElementById(
+      "itemText"
+    )?.value
+      ?.trim();
+
+  const imageInput =
+    document.getElementById(
+      "itemImage"
+    );
+
+  if(!text){
+    return;
+  }
+
+  let image = null;
+
+  const file =
+    imageInput?.files?.[0];
+
+  if(file){
+
+    image =
+      await compressImage(
+        file
+      );
+
+  }
+
+  addItem({
+
+    id:
+      crypto.randomUUID(),
+
+    type,
+
+    name:text,
+
+    image
+
+  });
+
+  // reset
+  document.getElementById(
+    "itemText"
+  ).value = "";
+
+  if(imageInput){
+
+    imageInput.value = "";
+
+  }
+
 }
