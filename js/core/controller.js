@@ -1,3 +1,5 @@
+// js/core/controller.js
+
 import {
   setState,
   defaultState,
@@ -34,11 +36,35 @@ import {
   renderCoverflow
 } from "../features/coverflow/coverflow.js";
 
+// =========================
+// CONTROLLER
+// =========================
+
 export function initController(){
+
+  let saveTimer = null;
+
+  // =========================
+  // RENDER APP
+  // =========================
+
+  function renderApp(){
+
+    renderRoulette();
+
+    renderCoverflow();
+
+  }
+
+  // =========================
+  // BOOT
+  // =========================
 
   async function boot(){
 
-    console.log("BOOT START");
+    console.log(
+      "BOOT START"
+    );
 
     // =========================
     // LAYOUT
@@ -126,43 +152,59 @@ export function initController(){
         normalized.items
       )
     ){
+
       normalized.items = [];
+
     }
 
     // =========================
     // SUBSCRIBE
     // =========================
 
-    subscribe(async ()=>{
+    subscribe(()=>{
 
-      renderRoulette();
+      // render
+      renderApp();
 
-      renderCoverflow();
-
-      await saveState(
-        getState()
+      // debounce save
+      clearTimeout(
+        saveTimer
       );
+
+      saveTimer =
+        setTimeout(()=>{
+
+          saveState(
+            getState()
+          );
+
+        },200);
 
     });
 
     // =========================
-    // APPLY
+    // APPLY STATE
     // =========================
 
-    setState(normalized);
+    setState(
+      normalized
+    );
 
     // =========================
     // FIRST RENDER
     // =========================
 
-    renderRoulette();
+    renderApp();
 
-    renderCoverflow();
+    console.log(
+      "BOOT DONE"
+    );
 
-    console.log("BOOT DONE");
   }
 
   return {
+
     boot
+
   };
 }
