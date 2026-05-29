@@ -18,7 +18,6 @@ export async function spinAll(){
   const state =
     getState();
 
-  // guard
   if(
     state.ui?.isSpinning
   ){
@@ -98,7 +97,7 @@ export async function spinAll(){
 
   let ticks = 0;
 
-  const maxTicks = 24;
+  const maxTicks = 30;
 
   let speed = 38;
 
@@ -142,19 +141,19 @@ export async function spinAll(){
     // EASING
     // =========================
 
-    if(ticks < 8){
+    if(ticks < 10){
 
-      speed *= 1.08;
+      speed *= 1.05;
 
     }else if(
-      ticks < 16
+      ticks < 18
     ){
 
-      speed *= 1.14;
+      speed *= 1.11;
 
     }else{
 
-      speed *= 1.2;
+      speed *= 1.18;
 
     }
 
@@ -258,19 +257,33 @@ function updateSlot(
   item
 ){
 
+  const hasImage =
+    item.image &&
+    item.image.trim() !== "";
+
   slot.innerHTML = `
 
     <div class="spin-image-wrap">
 
-      <img
-        class="
-          card-image
-          spinning-image
-        "
-        src="${item.image || ""}"
-        alt="${item.name}"
-        draggable="false"
-      />
+      ${
+        hasImage
+          ? `
+            <img
+              class="
+                card-image
+                spinning-image
+              "
+              src="${item.image}"
+              alt="${item.name}"
+              draggable="false"
+            />
+          `
+          : `
+            <div class="roulette-placeholder">
+              🏊
+            </div>
+          `
+      }
 
       <div class="spin-glow"></div>
 
@@ -289,14 +302,28 @@ function renderFinal(
   item
 ){
 
+  const hasImage =
+    item.image &&
+    item.image.trim() !== "";
+
   slot.innerHTML = `
 
-    <img
-      class="card-image"
-      src="${item.image || ""}"
-      alt="${item.name}"
-      draggable="false"
-    />
+    ${
+      hasImage
+        ? `
+          <img
+            class="card-image"
+            src="${item.image}"
+            alt="${item.name}"
+            draggable="false"
+          />
+        `
+        : `
+          <div class="roulette-placeholder">
+            🏊
+          </div>
+        `
+    }
 
     <div class="winner-glow"></div>
 
@@ -384,15 +411,15 @@ function burst(type){
     const spread =
       (Math.random() - 0.5);
 
-const dx =
-  spread * (
-    280 +
-    Math.random() * 240
-  );
+    const dx =
+      spread * (
+        280 +
+        Math.random() * 240
+      );
 
-const dy =
-  340 +
-  Math.random() * 380;
+    const dy =
+      340 +
+      Math.random() * 380;
 
     el.style.setProperty(
       "--dx",
@@ -405,14 +432,14 @@ const dy =
     );
 
     const lift =
-  120 +
-  Math.random() * 180;
+      120 +
+      Math.random() * 180;
 
-el.style.setProperty(
-  "--lift",
-  `${lift}px`
-);
-    
+    el.style.setProperty(
+      "--lift",
+      `${lift}px`
+    );
+
     el.style.setProperty(
       "--rot",
       `${Math.random() * 1080}deg`
