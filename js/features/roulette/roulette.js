@@ -96,46 +96,39 @@ function burst(type){
   if(!slot) return;
 
   const rect = slot.getBoundingClientRect();
-  const fx = document.getElementById("fx-layer");
 
-  if(!fx) return;
+  const colors = ["#a78bfa","#8b5cf6","#7c3aed","#c4b5fd","#ffd700"];
 
-  const colors = ["#a78bfa","#8b5cf6","#7c3aed","#c4b5fd","#6d28d9","#facc15"];
-
-  const baseX = rect.left + rect.width / 2;
-  const baseY = rect.top + rect.height / 2;
-
-  for(let i=0;i<60;i++){
+  for(let i=0;i<50;i++){
 
     const el = document.createElement("div");
     el.className = "confetti";
 
-    // 🔥 중심에서 살짝 랜덤 시작
-    const x = baseX + (Math.random() - 0.5) * 20;
-    const y = baseY + (Math.random() - 0.5) * 10;
+    // 👉 카드 내부 기준으로 들어가게 변경
+    const x = (Math.random() * rect.width);
+    const y = (Math.random() * rect.height * 0.3);
 
     el.style.left = x + "px";
     el.style.top = y + "px";
 
-    // 🔥 핵심: "위로 튀는 힘" + 좌우 확산
-    const upwardForce = - (Math.random() * 280 + 120);
+    // 🔥 핵심: “위로 튐 + 옆 퍼짐”
+    const dx = (Math.random() - 0.5) * 300;
+    const dy = (Math.random() - 1.2) * 250;
 
-    el.style.setProperty("--dx", (Math.random() - 0.5) * 420 + "px");
-    el.style.setProperty("--dy", upwardForce + "px");
+    el.style.setProperty("--dx", dx + "px");
+    el.style.setProperty("--dy", dy + "px");
 
-    // 속도 다양성
-    el.style.animationDuration = (1.4 + Math.random() * 0.9) + "s";
+    // 👉 카드 안에서 움직이게
+    slot.appendChild(el);
 
-    // 크기 다양성 (카지노 느낌)
-    const size = 6 + Math.random() * 6;
-    el.style.width = size + "px";
-    el.style.height = size + "px";
+    // 👉 카드 아래로 “흐르는 느낌” 추가
+    const drift = setInterval(() => {
+      el.style.transform += ` translateY(1.2px)`;
+    }, 16);
 
-    el.style.background =
-      colors[Math.floor(Math.random() * colors.length)];
-
-    fx.appendChild(el);
-
-    setTimeout(() => el.remove(), 2600);
+    setTimeout(() => {
+      clearInterval(drift);
+      el.remove();
+    }, 2600);
   }
 }
