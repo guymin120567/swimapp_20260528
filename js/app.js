@@ -1,6 +1,6 @@
 import {
-  startApp
-} from "./controller/appController.js";
+  initController
+} from "./core/controller.js";
 
 window.addEventListener(
   "DOMContentLoaded",
@@ -8,7 +8,6 @@ window.addEventListener(
 
     showSplash();
 
-    // 최소 splash 유지
     const minSplashTime =
       new Promise(
         res=>setTimeout(
@@ -17,16 +16,17 @@ window.addEventListener(
         )
       );
 
-    // 앱 시작
+    const controller =
+      initController();
+
     await Promise.all([
 
-      startApp(),
+      controller.boot(),
 
       minSplashTime
 
     ]);
 
-    // 🔥 핵심 추가
     const app =
       document.getElementById(
         "app"
