@@ -28,9 +28,10 @@ export async function spinAll(){
   const swimImg = swimSlot.querySelector("img");
 
   let ticks = 0;
-  const maxTicks = 24;
 
-  let speed = 60; // 시작 속도 (ms)
+  // 🔥 스핀 시간 단축 핵심
+  const maxTicks = 16;   // 기존 24 → 16 (짧아짐)
+  let speed = 45;        // 기존 60 → 45 (빠른 시작)
 
   const run = () => {
 
@@ -40,7 +41,7 @@ export async function spinAll(){
     const swim =
       swims[Math.floor(Math.random() * swims.length)];
 
-    // 🎰 이미지 교체
+    // 이미지 변경
     if(capImg){
       capImg.src = cap.image;
     } else {
@@ -55,15 +56,12 @@ export async function spinAll(){
 
     ticks++;
 
-    // 🔥 easing (점점 느려짐)
-    speed *= 1.12;
+    // 🔥 easing
+    speed *= 1.10;
 
     if(ticks < maxTicks){
-
       setTimeout(run, speed);
-
     } else {
-
       finish(caps, swims, capSlot, swimSlot);
     }
   };
@@ -78,7 +76,6 @@ export async function spinAll(){
     const finalSwim =
       swims[Math.floor(Math.random() * swims.length)];
 
-    // 🎯 최종 고정
     capSlot.innerHTML = `
       <img class="card-image" src="${finalCap.image}" />
       <div class="card-overlay">
