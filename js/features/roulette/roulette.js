@@ -119,12 +119,15 @@ function burst(type){
     el.className = "confetti";
 
     // 시작점: 카드 상단 근처 + 약간 랜덤
-    el.style.left = centerX + (Math.random() - 0.5) * 40 + "px";
-    el.style.top = centerY + (Math.random() * 20) + "px";
+el.style.left =
+  centerX + (Math.random() - 0.5) * 20 + "px";
+
+el.style.top =
+  centerY + (Math.random() * 10) + "px";
 
     // 🔥 핵심 움직임 (위로 튐 + 확산 + 낙하)
-    const dx = (Math.random() - 0.5) * 220;
-    const dy = (Math.random() * 160) + 120;
+    const dx = (Math.random() - 0.5) * 260;
+    const dy = (Math.random() * 180) + 140;
 
     el.style.setProperty("--dx", dx + "px");
     el.style.setProperty("--dy", dy + "px");
