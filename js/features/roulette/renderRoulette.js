@@ -1,5 +1,3 @@
-// js/features/roulette/renderRoulette.js
-
 import { getState } from "../../state/state.js";
 
 export function renderRoulette(){
@@ -21,16 +19,13 @@ export function renderRoulette(){
     items.find(i => i.id === state.selection?.swimId);
 
   target.innerHTML = `
-
     <div class="block">
 
       <div class="section-title">룰렛 결과</div>
 
       <div class="roulette-wrap">
 
-        <!-- CAP -->
         <div class="roulette-slot" data-type="cap">
-
           <div class="roulette-label">CAP</div>
 
           <div class="roulette-card">
@@ -38,7 +33,6 @@ export function renderRoulette(){
               cap
                 ? `
                   <img class="card-image" src="${cap.image || ""}" />
-
                   <div class="card-overlay">
                     <div class="roulette-name">${cap.name}</div>
                   </div>
@@ -46,12 +40,9 @@ export function renderRoulette(){
                 : `<div class="card-placeholder">🧢</div>`
             }
           </div>
-
         </div>
 
-        <!-- SWIM -->
         <div class="roulette-slot" data-type="swim">
-
           <div class="roulette-label">SWIM</div>
 
           <div class="roulette-card">
@@ -59,7 +50,6 @@ export function renderRoulette(){
               swim
                 ? `
                   <img class="card-image" src="${swim.image || ""}" />
-
                   <div class="card-overlay">
                     <div class="roulette-name">${swim.name}</div>
                   </div>
@@ -67,7 +57,6 @@ export function renderRoulette(){
                 : `<div class="card-placeholder">🏊</div>`
             }
           </div>
-
         </div>
 
       </div>

@@ -1,3 +1,5 @@
+// js/ui/tabs.js
+
 import {
   renderRoulette
 } from "../features/roulette/renderRoulette.js";
@@ -6,12 +8,75 @@ import {
   renderCoverflow
 } from "../features/coverflow/coverflow.js";
 
+// =========================
+// INIT
+// =========================
+
 export function initTabs(){
+
+  if(
+    document.body.dataset.tabsBound
+  ){
+    return;
+  }
+
+  document.body.dataset.tabsBound =
+    "true";
+
+  document.addEventListener(
+    "click",
+    handleTabClick
+  );
+
+  activateTab(
+    "roulette"
+  );
+
+}
+
+// =========================
+// CLICK
+// =========================
+
+function handleTabClick(e){
+
+  const button =
+    e.target.closest(
+      ".bottom-tab"
+    );
+
+  if(!button){
+    return;
+  }
+
+  activateTab(
+    button.dataset.tab
+  );
+
+}
+
+// =========================
+// ACTIVATE
+// =========================
+
+function activateTab(type){
 
   const tabs =
     document.querySelectorAll(
       ".bottom-tab"
     );
+
+  tabs.forEach(tab=>{
+
+    tab.classList.toggle(
+
+      "active",
+
+      tab.dataset.tab === type
+
+    );
+
+  });
 
   const sections = {
 
@@ -32,75 +97,35 @@ export function initTabs(){
 
   };
 
-  function activateTab(type){
+  Object.entries(
+    sections
+  ).forEach(
+    ([key,section])=>{
 
-    tabs.forEach(tab=>{
-
-      tab.classList.toggle(
-
-        "active",
-
-        tab.dataset.tab === type
-
-      );
-
-    });
-
-    Object.entries(
-      sections
-    ).forEach(
-      ([key,section])=>{
-
-        if(!section) return;
-
-        section.style.display =
-
-          key === type
-            ? "block"
-            : "none";
-
+      if(!section){
+        return;
       }
-    );
 
-    // =========================
-    // RENDER
-    // =========================
-
-    if(type === "roulette"){
-
-      renderRoulette();
+      section.hidden =
+        key !== type;
 
     }
+  );
 
-    if(type === "inventory"){
+  // =========================
+  // RENDER
+  // =========================
 
-      renderCoverflow();
+  if(type === "roulette"){
 
-    }
+    renderRoulette();
+
   }
 
-  // =========================
-  // CLICK
-  // =========================
+  if(type === "inventory"){
 
-  tabs.forEach(tab=>{
+    renderCoverflow();
 
-    tab.addEventListener(
-      "click",
-      ()=>{
+  }
 
-        activateTab(
-          tab.dataset.tab
-        );
-
-      }
-    );
-
-  });
-
-  // =========================
-  // 🔥 최초 활성화 핵심
-  // =========================
-
-  activateTab("roulette");
 }

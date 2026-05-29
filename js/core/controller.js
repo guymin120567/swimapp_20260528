@@ -1,3 +1,5 @@
+// js/core/controller.js
+
 import {
   setState,
   defaultState,
@@ -8,10 +10,6 @@ import {
 import {
   renderLayout
 } from "../ui/renderLayout.js";
-
-import {
-  initDOM
-} from "../ui/dom.js";
 
 import {
   loadState,
@@ -34,19 +32,41 @@ import {
   renderCoverflow
 } from "../features/coverflow/coverflow.js";
 
+// =========================
+// CONTROLLER
+// =========================
+
 export function initController(){
+
+  let saveTimer = null;
+
+  // =========================
+  // RENDER
+  // =========================
+
+  function renderApp(){
+
+    renderRoulette();
+
+    renderCoverflow();
+
+  }
+
+  // =========================
+  // BOOT
+  // =========================
 
   async function boot(){
 
-    console.log("BOOT START");
+    console.log(
+      "BOOT START"
+    );
 
     // =========================
     // LAYOUT
     // =========================
 
     renderLayout();
-
-    initDOM();
 
     initTabs();
 
@@ -63,7 +83,7 @@ export function initController(){
       saved || defaultState;
 
     // =========================
-    // OLD DATA MIGRATION
+    // OLD MIGRATION
     // =========================
 
     if(
@@ -72,7 +92,7 @@ export function initController(){
 
       normalized = {
 
-        items: [
+        items:[
 
           ...(normalized.data.caps || [])
             .map(item=>({
@@ -103,6 +123,7 @@ export function initController(){
             capId:null,
 
             swimId:null
+
           },
 
         ui:
@@ -113,8 +134,11 @@ export function initController(){
             activeItemId:null,
 
             isSpinning:false
+
           }
+
       };
+
     }
 
     // =========================
@@ -126,22 +150,32 @@ export function initController(){
         normalized.items
       )
     ){
+
       normalized.items = [];
+
     }
 
     // =========================
     // SUBSCRIBE
     // =========================
 
-    subscribe(async ()=>{
+    subscribe(()=>{
 
-      renderRoulette();
+      renderApp();
 
-      renderCoverflow();
-
-      await saveState(
-        getState()
+      // debounce save
+      clearTimeout(
+        saveTimer
       );
+
+      saveTimer =
+        setTimeout(()=>{
+
+          saveState(
+            getState()
+          );
+
+        },200);
 
     });
 
@@ -149,20 +183,20 @@ export function initController(){
     // APPLY
     // =========================
 
-    setState(normalized);
+    setState(
+      normalized
+    );
 
-    // =========================
-    // FIRST RENDER
-    // =========================
+    console.log(
+      "BOOT DONE"
+    );
 
-    renderRoulette();
-
-    renderCoverflow();
-
-    console.log("BOOT DONE");
   }
 
   return {
+
     boot
+
   };
+
 }

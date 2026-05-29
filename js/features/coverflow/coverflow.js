@@ -1,133 +1,432 @@
-import { getState } from "../../state/state.js";
-import { setSelected } from "../../state/actions.js";
-import { bindDrag } from "./drag.js";
+// js/features/coverflow/coverflow.js
 
-export function renderCoverflow(){
+import {
+  getState
+} from "../../state/state.js";
 
-  renderType("cap");
-  renderType("swim");
+import {
+  setSelected
+} from "../../state/actions.js";
 
-  bindSelect();
+import {
+  bindDrag
+} from "./drag.js";
 
-  requestAnimationFrame(() => {
-    bindDrag();
-  });
-}
+let spinRAF = [];
 
 /* =========================
    RENDER
 ========================= */
 
+export function renderCoverflow(){
+
+  renderType("cap");
+
+  renderType("swim");
+
+  bindSelect();
+
+  bindSpinEvents();
+
+  requestAnimationFrame(()=>{
+
+    bindDrag();
+
+  });
+
+}
+
+/* =========================
+   TYPE
+========================= */
+
 function renderType(type){
 
   const target =
-    document.querySelector(`.coverflow[data-type="${type}"]`);
+    document.querySelector(
+      `.coverflow[data-type="${type}"]`
+    );
 
-  if(!target) return;
+  if(!target){
+    return;
+  }
 
-  const state = getState();
+  const state =
+    getState();
 
   const items =
-    (state.items || []).filter(i => i.type === type);
+    (state.items || [])
+      .filter(
+        i => i.type === type
+      );
 
   const selectedId =
     type === "cap"
       ? state.selection?.capId
       : state.selection?.swimId;
 
+  /* =========================
+     EMPTY FIX
+  ========================= */
+
   if(!items.length){
-    target.innerHTML = `<div class="empty-coverflow">아이템 없음</div>`;
+
+    target.innerHTML = `
+
+      <div class="empty-coverflow">
+        아직 아이템이 없습니다
+      </div>
+
+    `;
+
     return;
   }
 
-  target.innerHTML = items.map(item => `
+  target.innerHTML =
+    items.map(item => `
 
-    <div
-      class="cover-card ${item.id === selectedId ? "active" : ""} ready"
-      data-id="${item.id}"
-      data-type="${type}"
-    >
+      <div
+        class="
+          cover-card
+          ${item.id === selectedId ? "active" : ""}
+        "
+        data-id="${item.id}"
+        data-type="${type}"
+      >
 
-      <div class="card-inner">
+        <div class="card-inner">
 
-        ${
-          item.image
-            ? `<img class="card-image" src="${item.image}" />`
-            : `<div class="card-placeholder">🏊</div>`
-        }
+          ${
+            item.image
+              ? `
+                <img
+                  class="card-image"
+                  src="${item.image}"
+                  alt="${item.name}"
+                  draggable="false"
+                />
+              `
+              : `
+                <div class="card-placeholder">
+                  🏊
+                </div>
+              `
+          }
 
-        <div class="card-overlay">
-          <div class="card-title">${item.name}</div>
+          <div class="card-overlay">
+
+            <div class="card-title">
+              ${item.name}
+            </div>
+
+          </div>
+
         </div>
 
       </div>
 
-    </div>
+    `).join("");
 
-  `).join("");
+  requestAnimationFrame(()=>{
+
+    const active =
+      target.querySelector(
+        ".cover-card.active"
+      );
+
+    if(active){
+
+      centerCard(
+        target,
+        active,
+        false
+      );
+
+    }
+
+  });
+
 }
 
 /* =========================
-   CLICK CENTER FIX
+   CLICK
 ========================= */
 
 function bindSelect(){
 
-  const wraps =
-    document.querySelectorAll(".coverflow");
+  document
+    .querySelectorAll(".coverflow")
+    .forEach(wrap => {
 
-  wraps.forEach(wrap => {
+      if(
+        wrap.dataset.bound
+      ){
+        return;
+      }
 
-    if(wrap.dataset.bound) return;
-    wrap.dataset.bound = "true";
+      wrap.dataset.bound =
+        "true";
 
-    wrap.addEventListener("click", e => {
+      wrap.addEventListener(
+        "click",
+        e => {
 
-      const card =
-        e.target.closest(".cover-card");
+          const card =
+            e.target.closest(
+              ".cover-card"
+            );
 
-      if(!card) return;
+          if(!card){
+            return;
+          }
 
-      if(e.target.closest(".delete-btn")) return;
+          const type =
+            card.dataset.type;
 
-      const type = card.dataset.type;
-      const id = card.dataset.id;
+          const id =
+            card.dataset.id;
 
-      setSelected(type, id);
+          setSelected(
+            type,
+            id
+          );
 
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          centerCard(wrap, card);
-        });
-      });
+          // =========================
+          // FORCE ACTIVE UPDATE
+          // =========================
+
+          wrap
+            .querySelectorAll(
+              ".cover-card"
+            )
+            .forEach(c => {
+
+              c.classList.remove(
+                "active"
+              );
+
+            });
+
+          card.classList.add(
+            "active"
+          );
+
+          requestAnimationFrame(()=>{
+
+            centerCard(
+              wrap,
+              card
+            );
+
+          });
+
+        }
+      );
 
     });
 
-  });
 }
 
 /* =========================
-   CENTER FIX
+   SPIN EVENTS
 ========================= */
 
-function centerCard(wrap, card){
+function bindSpinEvents(){
+
+  if(
+    window.__coverflowSpinBound
+  ){
+    return;
+  }
+
+  window.addEventListener(
+    "spin-start",
+    startSpin
+  );
+
+  window.addEventListener(
+    "spin-stop",
+    stopSpin
+  );
+
+  window.__coverflowSpinBound =
+    true;
+
+}
+
+/* =========================
+   START SPIN
+========================= */
+
+function startSpin(){
+
+  stopSpin();
+
+  const flows =
+    document.querySelectorAll(
+      ".coverflow"
+    );
+
+  flows.forEach(flow => {
+
+    let velocity = 0;
+
+    let raf = null;
+
+    const maxSpeed =
+      38;
+
+    function tick(){
+
+      velocity += 0.9;
+
+      if(
+        velocity > maxSpeed
+      ){
+
+        velocity =
+          maxSpeed;
+
+      }
+
+      flow.scrollLeft +=
+        velocity;
+
+      raf =
+        requestAnimationFrame(
+          tick
+        );
+
+    }
+
+    raf =
+      requestAnimationFrame(
+        tick
+      );
+
+    spinRAF.push({
+      flow,
+      raf
+    });
+
+  });
+
+}
+
+/* =========================
+   STOP
+========================= */
+
+function stopSpin(){
+
+  spinRAF.forEach(item => {
+
+    cancelAnimationFrame(
+      item.raf
+    );
+
+  });
+
+  spinRAF = [];
+
+  document
+    .querySelectorAll(
+      ".coverflow"
+    )
+    .forEach(flow => {
+
+      const cards = [
+
+        ...flow.querySelectorAll(
+          ".cover-card"
+        )
+
+      ];
+
+      if(
+        !cards.length
+      ){
+        return;
+      }
+
+      const center =
+        flow.scrollLeft +
+        flow.clientWidth / 2;
+
+      let closest =
+        null;
+
+      let minDist =
+        Infinity;
+
+      cards.forEach(card => {
+
+        const cardCenter =
+          card.offsetLeft +
+          card.clientWidth / 2;
+
+        const dist =
+          Math.abs(
+            center -
+            cardCenter
+          );
+
+        if(
+          dist < minDist
+        ){
+
+          minDist =
+            dist;
+
+          closest =
+            card;
+
+        }
+
+      });
+
+      if(!closest){
+        return;
+      }
+
+      setSelected(
+        closest.dataset.type,
+        closest.dataset.id
+      );
+
+      centerCard(
+        flow,
+        closest
+      );
+
+    });
+
+}
+
+/* =========================
+   CENTER
+========================= */
+
+function centerCard(
+  wrap,
+  card,
+  smooth = true
+){
 
   const target =
     card.offsetLeft +
     card.clientWidth / 2 -
     wrap.clientWidth / 2;
 
-  const max =
-    wrap.scrollWidth - wrap.clientWidth;
-
-  wrap._isProgrammatic = true;
-
   wrap.scrollTo({
-    left: Math.max(0, Math.min(target, max)),
-    behavior: "smooth"
+
+    left:target,
+
+    behavior:
+      smooth
+        ? "smooth"
+        : "auto"
+
   });
 
-  setTimeout(() => {
-    wrap._isProgrammatic = false;
-  }, 450);
 }

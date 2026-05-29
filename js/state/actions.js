@@ -1,3 +1,5 @@
+// js/state/actions.js
+
 import {
   getState,
   setState
@@ -12,19 +14,15 @@ export function addItem(item){
   const state =
     getState();
 
-  const items =
-    Array.isArray(state.items)
-      ? state.items
-      : [];
-
   setState({
 
-    items: [
-      ...items,
+    items:[
+      ...(state.items || []),
       item
     ]
 
   });
+
 }
 
 export function removeItem(id){
@@ -32,23 +30,20 @@ export function removeItem(id){
   const state =
     getState();
 
-  const items =
-    Array.isArray(state.items)
-      ? state.items
-      : [];
-
   setState({
 
     items:
-      items.filter(
-        item=>item.id !== id
-      )
+      (state.items || [])
+        .filter(
+          i => i.id !== id
+        )
 
   });
+
 }
 
 // =========================
-// SELECT
+// SELECTION
 // =========================
 
 export function setSelected(type,id){
@@ -56,26 +51,42 @@ export function setSelected(type,id){
   const state =
     getState();
 
-  const selection = {
+  setState({
 
-    ...(state.selection || {})
-  };
+    selection:{
 
-  if(type === "cap"){
+      ...(state.selection || {}),
 
-    selection.capId = id;
+      ...(type === "cap"
+        ? { capId:id }
+        : {}),
 
-  }
+      ...(type === "swim"
+        ? { swimId:id }
+        : {})
 
-  if(type === "swim"){
+    }
 
-    selection.swimId = id;
+  });
 
-  }
+}
+
+// =========================
+// SPINNING
+// =========================
+
+export function setSpinning(value){
+
+  const state =
+    getState();
 
   setState({
 
-    selection
+    ui:{
+      ...(state.ui || {}),
+      isSpinning:value
+    }
 
   });
+
 }
