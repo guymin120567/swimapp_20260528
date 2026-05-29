@@ -12,10 +12,6 @@ import {
 } from "../ui/renderLayout.js";
 
 import {
-  initDOM
-} from "../ui/dom.js";
-
-import {
   loadState,
   saveState
 } from "../../db/database.js";
@@ -71,8 +67,6 @@ export function initController(){
     // =========================
 
     renderLayout();
-
-    initDOM();
 
     initTabs();
 
