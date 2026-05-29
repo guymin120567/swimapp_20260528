@@ -1,4 +1,23 @@
 /* =========================
+   ROULETTE IMAGE
+========================= */
+
+.roulette-image{
+
+  position:absolute;
+  inset:0;
+
+  width:100%;
+  height:100%;
+
+  object-fit:cover;
+
+  user-select:none;
+  -webkit-user-drag:none;
+
+}
+
+/* =========================
    SPIN IMAGE
 ========================= */
 
@@ -218,5 +237,39 @@
       #f8fbff,
       #dcefff
     );
+
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.roulette-page .spin-btn{
+
+  width:100%;
+  height:58px;
+
+  border:none;
+
+  border-radius:22px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--accent),
+      var(--accent2)
+    );
+
+  color:#174569;
+
+  font-size:17px;
+
+  font-weight:800;
+
+  cursor:pointer;
+
+  box-shadow:
+    0 10px 24px
+    rgba(125,211,252,.28);
 
 }
