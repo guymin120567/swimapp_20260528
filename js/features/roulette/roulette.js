@@ -100,27 +100,35 @@ function burst(type){
 
   if(!fx) return;
 
-  const x = rect.left + rect.width / 2;
-  const y = rect.top + rect.height / 2;
-
   const colors = ["#a78bfa","#8b5cf6","#7c3aed","#c4b5fd","#6d28d9"];
 
-  for(let i=0;i<40;i++){
+  const baseX = rect.left + rect.width / 2;
+  const baseY = rect.top + rect.height / 2;
+
+  for(let i=0;i<50;i++){
 
     const el = document.createElement("div");
     el.className = "confetti";
 
+    // 🔥 핵심 1: 작은 랜덤 퍼짐 시작
+    const x = baseX + (Math.random() - 0.5) * 40;
+    const y = baseY + (Math.random() - 0.5) * 25;
+
     el.style.left = x + "px";
     el.style.top = y + "px";
 
-    el.style.setProperty("--dx", (Math.random()-0.5)*180 + "px");
-    el.style.setProperty("--dy", (Math.random()*200) + 100 + "px");
+    // 🔥 핵심 2: 완전 랜덤 방향
+    el.style.setProperty("--dx", (Math.random() - 0.5) * 420 + "px");
+    el.style.setProperty("--dy", (Math.random() - 0.8) * 380 + "px");
+
+    // 🔥 핵심 3: 속도 랜덤
+    el.style.animationDuration = (1.6 + Math.random() * 0.9) + "s";
 
     el.style.background =
       colors[Math.floor(Math.random() * colors.length)];
 
     fx.appendChild(el);
 
-    setTimeout(() => el.remove(), 2400);
+    setTimeout(() => el.remove(), 2600);
   }
 }
