@@ -42,7 +42,39 @@ export function renderLayout(){
           hidden
         >
 
+          <!-- CAP -->
+
           <div class="block">
+
+            <div class="section-title">
+              수모 리스트
+            </div>
+
+            <div
+              class="coverflow"
+              data-type="cap"
+            ></div>
+
+          </div>
+
+          <!-- SWIM -->
+
+          <div class="block">
+
+            <div class="section-title">
+              수영복 리스트
+            </div>
+
+            <div
+              class="coverflow"
+              data-type="swim"
+            ></div>
+
+          </div>
+
+          <!-- ADD -->
+
+          <div class="block add-block">
 
             <div class="section-title">
               아이템 추가
@@ -82,36 +114,6 @@ export function renderLayout(){
               </button>
 
             </div>
-
-          </div>
-
-          <!-- CAP -->
-
-          <div class="block">
-
-            <div class="section-title">
-              수모 리스트
-            </div>
-
-            <div
-              class="coverflow"
-              data-type="cap"
-            ></div>
-
-          </div>
-
-          <!-- SWIM -->
-
-          <div class="block">
-
-            <div class="section-title">
-              수영복 리스트
-            </div>
-
-            <div
-              class="coverflow"
-              data-type="swim"
-            ></div>
 
           </div>
 
