@@ -1,200 +1,409 @@
-import { getState } from "../../state/state.js";
-import { setSelected } from "../../state/actions.js";
-import { bindDrag } from "./drag.js";
+// js/features/coverflow/coverflow.js
+
+import {
+  getState
+} from "../../state/state.js";
+
+import {
+  setSelected
+} from "../../state/actions.js";
+
+import {
+  bindDrag
+} from "./drag.js";
 
 let spinRAF = null;
+
+// =========================
+// RENDER
+// =========================
 
 export function renderCoverflow(){
 
   renderType("cap");
+
   renderType("swim");
 
   bindSelect();
 
-  if(!window.__coverflowBound){
+  bindSpinEvents();
 
-    window.addEventListener("spin-start", startSpin);
-    window.addEventListener("spin-stop", stopSpin);
+  requestAnimationFrame(
+    bindDrag
+  );
 
-    window.__coverflowBound = true;
-  }
-
-  requestAnimationFrame(bindDrag);
 }
 
-/* =========================
-   RENDER
-========================= */
+// =========================
+// TYPE
+// =========================
 
 function renderType(type){
 
   const target =
-    document.querySelector(`.coverflow[data-type="${type}"]`);
+    document.querySelector(
+      `.coverflow[data-type="${type}"]`
+    );
 
   if(!target) return;
 
-  const state = getState();
+  const state =
+    getState();
 
   const items =
-    (state.items || []).filter(i => i.type === type);
+    (state.items || [])
+      .filter(
+        i => i.type === type
+      );
 
   const selectedId =
     type === "cap"
       ? state.selection?.capId
       : state.selection?.swimId;
 
-  target.innerHTML = items.map(item => `
-    <div class="cover-card ${item.id === selectedId ? "active" : ""}"
-         data-id="${item.id}"
-         data-type="${type}">
-      <div class="card-inner">
+  target.innerHTML =
+    items.map(item => `
 
-        ${item.image
-          ? `<img class="card-image" src="${item.image}" />`
-          : `<div class="card-placeholder">🏊</div>`
-        }
+      <div
+        class="
+          cover-card
+          ${item.id === selectedId ? "active" : ""}
+        "
+        data-id="${item.id}"
+        data-type="${type}"
+      >
 
-        <div class="card-overlay">
-          <div class="card-title">${item.name}</div>
+        <div class="card-inner">
+
+          ${
+            item.image
+              ? `
+                <img
+                  class="card-image"
+                  src="${item.image}"
+                  alt="${item.name}"
+                  draggable="false"
+                />
+              `
+              : `
+                <div class="card-placeholder">
+                  🏊
+                </div>
+              `
+          }
+
+          <div class="card-overlay">
+
+            <div class="card-title">
+              ${item.name}
+            </div>
+
+          </div>
+
         </div>
 
       </div>
-    </div>
-  `).join("");
+
+    `).join("");
+
+  // 선택 카드 중앙 정렬
+  requestAnimationFrame(()=>{
+
+    const active =
+      target.querySelector(
+        ".cover-card.active"
+      );
+
+    if(active){
+
+      centerCard(
+        target,
+        active,
+        false
+      );
+
+    }
+
+  });
+
 }
 
-/* =========================
-   CLICK
-========================= */
+// =========================
+// CLICK
+// =========================
 
 function bindSelect(){
 
-  document.querySelectorAll(".coverflow").forEach(wrap => {
+  document
+    .querySelectorAll(".coverflow")
+    .forEach(wrap => {
 
-    if(wrap.dataset.bound) return;
-    wrap.dataset.bound = "true";
+      if(
+        wrap.dataset.bound
+      ){
+        return;
+      }
 
-    wrap.addEventListener("click", e => {
+      wrap.dataset.bound =
+        "true";
 
-      const card = e.target.closest(".cover-card");
-      if(!card) return;
+      wrap.addEventListener(
+        "click",
+        e => {
 
-      const type = card.dataset.type;
-      const id = card.dataset.id;
+          const card =
+            e.target.closest(
+              ".cover-card"
+            );
 
-      setSelected(type, id);
+          if(!card){
+            return;
+          }
 
-      requestAnimationFrame(() => {
-        centerCard(wrap, card);
-      });
+          const type =
+            card.dataset.type;
+
+          const id =
+            card.dataset.id;
+
+          // state sync
+          setSelected(
+            type,
+            id
+          );
+
+          requestAnimationFrame(()=>{
+
+            centerCard(
+              wrap,
+              card
+            );
+
+          });
+
+        }
+      );
+
     });
-  });
+
 }
 
-/* =========================
-   SPIN START
-========================= */
+// =========================
+// SPIN EVENTS
+// =========================
+
+function bindSpinEvents(){
+
+  if(
+    window.__coverflowSpinBound
+  ){
+    return;
+  }
+
+  window.addEventListener(
+    "spin-start",
+    startSpin
+  );
+
+  window.addEventListener(
+    "spin-stop",
+    stopSpin
+  );
+
+  window.__coverflowSpinBound =
+    true;
+
+}
+
+// =========================
+// START SPIN
+// =========================
 
 function startSpin(){
 
-  const flows = document.querySelectorAll(".coverflow");
+  const flows =
+    document.querySelectorAll(
+      ".coverflow"
+    );
 
   flows.forEach(flow => {
 
     let velocity = 0;
-    let phase = "accelerate";
+
+    let phase =
+      "accelerate";
 
     const maxSpeed = 28;
+
     const accel = 0.8;
+
     const decel = 0.96;
 
     const tick = () => {
 
-      if(phase === "accelerate"){
+      if(
+        phase === "accelerate"
+      ){
+
         velocity += accel;
-        if(velocity >= maxSpeed){
-          velocity = maxSpeed;
-          phase = "cruise";
+
+        if(
+          velocity >= maxSpeed
+        ){
+
+          velocity =
+            maxSpeed;
+
+          phase =
+            "cruise";
+
         }
+
       }
 
-      else if(phase === "cruise"){
-        if(Math.random() < 0.02){
-          phase = "decelerate";
+      else if(
+        phase === "cruise"
+      ){
+
+        if(
+          Math.random() < 0.02
+        ){
+
+          phase =
+            "decelerate";
+
         }
+
       }
 
-      else if(phase === "decelerate"){
+      else if(
+        phase === "decelerate"
+      ){
+
         velocity *= decel;
 
-        if(velocity < 8) velocity *= 0.92;
-        if(velocity < 0.6) velocity = 0;
+        if(velocity < 8){
+          velocity *= 0.92;
+        }
+
+        if(velocity < 0.6){
+          velocity = 0;
+        }
+
       }
 
       flow.scrollLeft += velocity;
 
       if(velocity > 0){
-        spinRAF = requestAnimationFrame(tick);
+
+        spinRAF =
+          requestAnimationFrame(
+            tick
+          );
+
       }
+
     };
 
-    spinRAF = requestAnimationFrame(tick);
+    spinRAF =
+      requestAnimationFrame(
+        tick
+      );
+
   });
+
 }
 
-/* =========================
-   STOP + SNAP
-========================= */
+// =========================
+// STOP
+// =========================
 
 function stopSpin(){
 
-  cancelAnimationFrame(spinRAF);
+  cancelAnimationFrame(
+    spinRAF
+  );
+
   spinRAF = null;
 
-  document.querySelectorAll(".coverflow").forEach(flow => {
+  document
+    .querySelectorAll(
+      ".coverflow"
+    )
+    .forEach(flow => {
 
-    const cards = [...flow.querySelectorAll(".cover-card")];
-    if(!cards.length) return;
+      const cards = [
 
-    const center = flow.scrollLeft + flow.clientWidth / 2;
+        ...flow.querySelectorAll(
+          ".cover-card"
+        )
 
-    let closest = null;
-    let minDist = Infinity;
+      ];
 
-    for(const card of cards){
-
-      const cardCenter =
-        card.offsetLeft + card.clientWidth / 2;
-
-      const dist = Math.abs(center - cardCenter);
-
-      if(dist < minDist){
-        minDist = dist;
-        closest = card;
+      if(!cards.length){
+        return;
       }
-    }
 
-    if(!closest) return;
+      const center =
+        flow.scrollLeft +
+        flow.clientWidth / 2;
 
-    setSelected(closest.dataset.type, closest.dataset.id);
+      let closest = null;
 
-    const target =
-      closest.offsetLeft +
-      closest.clientWidth / 2 -
-      flow.clientWidth / 2;
+      let minDist =
+        Infinity;
 
-    flow.scrollTo({
-      left: target,
-      behavior: "smooth"
+      for(
+        const card of cards
+      ){
+
+        const cardCenter =
+          card.offsetLeft +
+          card.clientWidth / 2;
+
+        const dist =
+          Math.abs(
+            center - cardCenter
+          );
+
+        if(dist < minDist){
+
+          minDist = dist;
+
+          closest = card;
+
+        }
+
+      }
+
+      if(!closest){
+        return;
+      }
+
+      // state sync
+      setSelected(
+        closest.dataset.type,
+        closest.dataset.id
+      );
+
+      centerCard(
+        flow,
+        closest
+      );
+
     });
-  });
+
 }
 
-/* =========================
-   CENTER
-========================= */
+// =========================
+// CENTER
+// =========================
 
-function centerCard(wrap, card){
+function centerCard(
+  wrap,
+  card,
+  smooth = true
+){
 
   const target =
     card.offsetLeft +
@@ -202,7 +411,14 @@ function centerCard(wrap, card){
     wrap.clientWidth / 2;
 
   wrap.scrollTo({
+
     left: target,
-    behavior: "smooth"
+
+    behavior:
+      smooth
+        ? "smooth"
+        : "auto"
+
   });
+
 }
