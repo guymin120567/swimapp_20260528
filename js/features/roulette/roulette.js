@@ -59,8 +59,28 @@ export async function spinAll(){
     return;
   }
 
-  // spinning state
+  // =========================
+  // LOCK
+  // =========================
+
   setSpinning(true);
+
+  const spinBtn =
+    document.querySelector(
+      ".spin-btn"
+    );
+
+  if(spinBtn){
+    spinBtn.disabled = true;
+  }
+
+  capSlot.classList.remove(
+    "winner"
+  );
+
+  swimSlot.classList.remove(
+    "winner"
+  );
 
   capSlot.classList.add(
     "spinning"
@@ -78,13 +98,19 @@ export async function spinAll(){
 
   let ticks = 0;
 
-  const maxTicks = 16;
+  const maxTicks = 24;
 
-  let speed = 45;
+  let speed = 38;
+
+  let finalCap =
+    caps[0];
+
+  let finalSwim =
+    swims[0];
 
   const run = ()=>{
 
-    const cap =
+    finalCap =
       caps[
         Math.floor(
           Math.random() *
@@ -92,7 +118,7 @@ export async function spinAll(){
         )
       ];
 
-    const swim =
+    finalSwim =
       swims[
         Math.floor(
           Math.random() *
@@ -102,17 +128,35 @@ export async function spinAll(){
 
     updateSlot(
       capSlot,
-      cap
+      finalCap
     );
 
     updateSlot(
       swimSlot,
-      swim
+      finalSwim
     );
 
     ticks++;
 
-    speed *= 1.10;
+    // =========================
+    // EASING
+    // =========================
+
+    if(ticks < 8){
+
+      speed *= 1.08;
+
+    }else if(
+      ticks < 16
+    ){
+
+      speed *= 1.14;
+
+    }else{
+
+      speed *= 1.2;
+
+    }
 
     if(
       ticks < maxTicks
@@ -126,8 +170,8 @@ export async function spinAll(){
     }else{
 
       finish(
-        cap,
-        swim
+        finalCap,
+        finalSwim
       );
 
     }
@@ -163,6 +207,14 @@ export async function spinAll(){
       "spinning"
     );
 
+    capSlot.classList.add(
+      "winner"
+    );
+
+    swimSlot.classList.add(
+      "winner"
+    );
+
     setSelected(
       "cap",
       finalCap.id
@@ -177,13 +229,21 @@ export async function spinAll(){
 
     burst("swim");
 
-    setSpinning(false);
+    setTimeout(()=>{
 
-    window.dispatchEvent(
-      new CustomEvent(
-        "spin-stop"
-      )
-    );
+      setSpinning(false);
+
+      if(spinBtn){
+        spinBtn.disabled = false;
+      }
+
+      window.dispatchEvent(
+        new CustomEvent(
+          "spin-stop"
+        )
+      );
+
+    }, 500);
 
   }
 
@@ -283,11 +343,16 @@ function burst(type){
 
   const centerY =
     rect.top +
-    rect.height * 0.25;
+    rect.height * 0.32;
+
+  const amount =
+    window.innerWidth < 768
+      ? 55
+      : 90;
 
   for(
     let i = 0;
-    i < 45;
+    i < amount;
     i++
   ){
 
@@ -300,29 +365,34 @@ function burst(type){
       "confetti";
 
     el.style.left =
-      centerX +
-      (Math.random() - 0.5) * 20 +
-      "px";
+      centerX + "px";
 
     el.style.top =
-      centerY +
-      (Math.random() * 10) +
-      "px";
+      centerY + "px";
+
+    const spread =
+      (Math.random() - 0.5);
 
     const dx =
-      (Math.random() - 0.5) * 260;
+      spread * 420;
 
     const dy =
-      (Math.random() * 180) + 140;
+      220 +
+      Math.random() * 260;
 
     el.style.setProperty(
       "--dx",
-      dx + "px"
+      `${dx}px`
     );
 
     el.style.setProperty(
       "--dy",
-      dy + "px"
+      `${dy}px`
+    );
+
+    el.style.setProperty(
+      "--rot",
+      `${Math.random() * 1080}deg`
     );
 
     el.style.background =
@@ -333,13 +403,23 @@ function burst(type){
         )
       ];
 
+    el.style.width =
+      6 +
+      Math.random() * 6 +
+      "px";
+
+    el.style.height =
+      8 +
+      Math.random() * 8 +
+      "px";
+
     fx.appendChild(el);
 
     setTimeout(()=>{
 
       el.remove();
 
-    },2200);
+    },2600);
 
   }
 
