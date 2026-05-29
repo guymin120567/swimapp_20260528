@@ -58,15 +58,11 @@ export async function spinAll(){
     return;
   }
 
-  // =========================
-  // LOCK
-  // =========================
-
   setSpinning(true);
 
   const spinBtn =
     document.querySelector(
-      ".spin-btn"
+      "#rouletteSection .spin-btn"
     );
 
   if(spinBtn){
@@ -137,10 +133,6 @@ export async function spinAll(){
 
     ticks++;
 
-    // =========================
-    // EASING
-    // =========================
-
     if(ticks < 10){
 
       speed *= 1.05;
@@ -178,10 +170,6 @@ export async function spinAll(){
   };
 
   run();
-
-  // =========================
-  // FINISH
-  // =========================
 
   function finish(
     finalCap,
@@ -270,7 +258,7 @@ function updateSlot(
           ? `
             <img
               class="
-                card-image
+                roulette-image
                 spinning-image
               "
               src="${item.image}"
@@ -312,7 +300,7 @@ function renderFinal(
       hasImage
         ? `
           <img
-            class="card-image"
+            class="roulette-image"
             src="${item.image}"
             alt="${item.name}"
             draggable="false"
