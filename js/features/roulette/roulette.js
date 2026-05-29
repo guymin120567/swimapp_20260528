@@ -86,6 +86,10 @@ export async function spinAll(){
   }
 }
 
+/* =========================
+   FX BURST (개선 버전)
+========================= */
+
 function burst(type){
 
   const slot =
@@ -93,42 +97,44 @@ function burst(type){
       `.roulette-slot[data-type="${type}"] .roulette-card`
     );
 
-  if(!slot) return;
+  const fx = document.getElementById("fx-layer");
+  if(!slot || !fx) return;
 
   const rect = slot.getBoundingClientRect();
 
-  const colors = ["#a78bfa","#8b5cf6","#7c3aed","#c4b5fd","#ffd700"];
+  const colors = [
+    "#a78bfa",
+    "#8b5cf6",
+    "#7c3aed",
+    "#c4b5fd",
+    "#ffd700"
+  ];
 
-  for(let i=0;i<50;i++){
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height * 0.25; // 🔥 위쪽 기준
+
+  for(let i = 0; i < 45; i++){
 
     const el = document.createElement("div");
     el.className = "confetti";
 
-    // 👉 카드 내부 기준으로 들어가게 변경
-    const x = (Math.random() * rect.width);
-    const y = (Math.random() * rect.height * 0.3);
+    // 시작점: 카드 상단 근처 + 약간 랜덤
+    el.style.left = centerX + (Math.random() - 0.5) * 40 + "px";
+    el.style.top = centerY + (Math.random() * 20) + "px";
 
-    el.style.left = x + "px";
-    el.style.top = y + "px";
-
-    // 🔥 핵심: “위로 튐 + 옆 퍼짐”
-    const dx = (Math.random() - 0.5) * 300;
-    const dy = (Math.random() - 1.2) * 250;
+    // 🔥 핵심 움직임 (위로 튐 + 확산 + 낙하)
+    const dx = (Math.random() - 0.5) * 220;
+    const dy = (Math.random() * 160) + 120;
 
     el.style.setProperty("--dx", dx + "px");
     el.style.setProperty("--dy", dy + "px");
 
-    // 👉 카드 안에서 움직이게
-    slot.appendChild(el);
+    el.style.background =
+      colors[Math.floor(Math.random() * colors.length)];
 
-    // 👉 카드 아래로 “흐르는 느낌” 추가
-    const drift = setInterval(() => {
-      el.style.transform += ` translateY(1.2px)`;
-    }, 16);
+    fx.appendChild(el);
 
-    setTimeout(() => {
-      clearInterval(drift);
-      el.remove();
-    }, 2600);
+    // 안전 제거
+    setTimeout(() => el.remove(), 2200);
   }
 }
