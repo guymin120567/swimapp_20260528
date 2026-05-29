@@ -517,3 +517,39 @@ select{
     opacity:0;
   }
 }
+
+
+@keyframes resultZoomBounce {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+    filter: blur(6px);
+  }
+
+  60% {
+    transform: scale(1.08);
+    opacity: 1;
+    filter: blur(0px);
+  }
+
+  80% {
+    transform: scale(0.98);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 🔥 결과 등장 애니메이션 */
+.roulette-card.result-pop {
+  animation: resultZoomBounce 0.55s cubic-bezier(.2,.9,.2,1);
+}
+
+/* ✨ 글로우 효과 */
+.roulette-card.result-glow {
+  box-shadow:
+    0 0 0 3px rgba(125,211,252,.35),
+    0 0 30px rgba(125,211,252,.35),
+    0 20px 60px rgba(120,170,220,.35);
+}
