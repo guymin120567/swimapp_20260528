@@ -1,0 +1,232 @@
+/* css/features/roulette.css */
+
+/* =========================
+   ROULETTE PAGE
+========================= */
+
+.roulette-page{
+  position:relative;
+  overflow:hidden;
+  border-radius:34px;
+}
+
+.roulette-bg{
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+
+  opacity:.34;
+
+  background-image:url("../../assets/roulette-bg.png");
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+
+  filter:
+    contrast(1.15)
+    brightness(0.92)
+    saturate(1.05);
+}
+
+.roulette-page::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(255,255,255,0.08),
+      rgba(0,0,0,0.10)
+    );
+}
+
+#rouletteContent{
+  position:relative;
+  z-index:1;
+}
+
+/* =========================
+   ROULETTE
+========================= */
+
+.roulette-wrap{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:18px;
+}
+
+.roulette-slot{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+}
+
+.roulette-label{
+  font-size:18px;
+  font-weight:800;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.roulette-card{
+  width:100%;
+  max-width:220px;
+  aspect-ratio:1/1;
+
+  border-radius:28px;
+  overflow:hidden;
+
+  background:var(--card);
+
+  border:1px solid rgba(255,255,255,.7);
+
+  box-shadow:var(--shadow);
+
+  position:relative;
+
+  isolation:isolate;
+}
+
+/* =========================
+   IMAGE
+========================= */
+
+.card-image{
+  position:absolute;
+  inset:0;
+
+  width:100%;
+  height:100%;
+
+  object-fit:cover;
+
+  user-select:none;
+  -webkit-user-drag:none;
+}
+
+/* =========================
+   SPIN FX
+========================= */
+
+.roulette-card.spinning{
+  animation:
+    shakeSpin .15s infinite linear;
+}
+
+.roulette-card.spinning img{
+  filter:
+    blur(1px)
+    brightness(1.1);
+
+  transform:scale(1.03);
+}
+
+@keyframes shakeSpin{
+
+  0%{
+    transform:
+      translate(0,0)
+      scale(1.02);
+  }
+
+  25%{
+    transform:
+      translate(1px,-1px)
+      scale(1.03);
+  }
+
+  50%{
+    transform:
+      translate(-1px,1px)
+      scale(1.02);
+  }
+
+  75%{
+    transform:
+      translate(1px,1px)
+      scale(1.03);
+  }
+
+  100%{
+    transform:
+      translate(0,0)
+      scale(1.02);
+  }
+
+}
+
+/* =========================
+   OVERLAY
+========================= */
+
+.card-overlay{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+
+  padding:14px;
+
+  background:
+    linear-gradient(
+      transparent,
+      rgba(20,50,80,.78)
+    );
+}
+
+.roulette-name{
+  color:white;
+  font-size:15px;
+  font-weight:700;
+  text-align:center;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.spin-btn{
+  width:100%;
+  height:58px;
+
+  margin-top:18px;
+
+  border:none;
+  border-radius:22px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--accent),
+      var(--accent2)
+    );
+
+  color:#174569;
+
+  font-size:17px;
+  font-weight:800;
+
+  cursor:pointer;
+
+  box-shadow:
+    0 10px 24px
+    rgba(125,211,252,.28);
+
+  position:relative;
+  z-index:2;
+
+  transition:
+    transform .18s ease,
+    opacity .18s ease;
+}
+
+.spin-btn:active{
+  transform:scale(.98);
+}
