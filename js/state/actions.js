@@ -23,7 +23,7 @@ export function removeItem(id){
 }
 
 // =========================
-// SELECTION (UI 선택)
+// SELECTION (UI + RESULT 통합)
 // =========================
 
 export function setSelected(type, id){
