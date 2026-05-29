@@ -239,7 +239,8 @@ select{
   max-width:220px;
   aspect-ratio:1 / 1;
   overflow:hidden;
-
+  margin-bottom: 6px;
+  
   border-radius:28px;
   position:relative;
 
@@ -278,8 +279,9 @@ select{
 ========================= */
 
 .spin-btn{
-  width:100%;
-  height:58px;
+  width: 100%;
+  height: 58px;
+
   border:none;
   border-radius:22px;
 
@@ -292,6 +294,9 @@ select{
   cursor:pointer;
 
   box-shadow:0 10px 24px rgba(125,211,252,.28);
+
+  /* 🔥 핵심: 공간 확보 */
+  margin-top: 18px;
 }
 
 /* =========================
@@ -482,6 +487,7 @@ select{
   .roulette-wrap{
     grid-template-columns:1fr 1fr;
     gap:10px;
+    margin-bottom: 12px;
   }
 
   .card-inner{
