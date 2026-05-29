@@ -76,7 +76,6 @@ export async function spinAll(){
     capSlot.classList.remove("spinning");
     swimSlot.classList.remove("spinning");
 
-    // 🔥 핵심: selection으로 통일
     setSelected("cap", finalCap.id);
     setSelected("swim", finalSwim.id);
 
