@@ -264,3 +264,201 @@
   opacity:.5;
   pointer-events:none;
 }
+/* =========================
+   SPIN IMAGE
+========================= */
+
+.spin-image-wrap{
+
+  position:absolute;
+  inset:0;
+
+  overflow:hidden;
+
+  border-radius:inherit;
+
+}
+
+.spinning-image{
+
+  animation:
+    rouletteImageSpin .42s linear infinite;
+
+  filter:
+    brightness(1.06)
+    saturate(1.06);
+
+}
+
+/* =========================
+   SHAKE
+========================= */
+
+.roulette-card.spinning{
+
+  animation:
+    rouletteShake .12s linear infinite;
+
+}
+
+@keyframes rouletteShake{
+
+  0%{
+    transform:
+      translate(0px,0px)
+      scale(1.02);
+  }
+
+  20%{
+    transform:
+      translate(-1px,1px)
+      scale(1.025);
+  }
+
+  40%{
+    transform:
+      translate(1px,-1px)
+      scale(1.03);
+  }
+
+  60%{
+    transform:
+      translate(-1px,-1px)
+      scale(1.025);
+  }
+
+  80%{
+    transform:
+      translate(1px,1px)
+      scale(1.03);
+  }
+
+  100%{
+    transform:
+      translate(0px,0px)
+      scale(1.02);
+  }
+
+}
+
+/* =========================
+   IMAGE MOTION
+========================= */
+
+@keyframes rouletteImageSpin{
+
+  0%{
+    transform:
+      scale(1.05)
+      rotate(-2deg);
+  }
+
+  50%{
+    transform:
+      scale(1.1)
+      rotate(2deg);
+  }
+
+  100%{
+    transform:
+      scale(1.05)
+      rotate(-2deg);
+  }
+
+}
+
+/* =========================
+   SPIN GLOW
+========================= */
+
+.spin-glow{
+
+  position:absolute;
+  inset:-10%;
+
+  border-radius:inherit;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255,255,255,.22),
+      rgba(125,211,252,.14),
+      transparent 72%
+    );
+
+  mix-blend-mode:screen;
+
+  animation:
+    spinGlow 1s linear infinite;
+
+}
+
+@keyframes spinGlow{
+
+  0%{
+    transform:
+      rotate(0deg)
+      scale(1);
+    opacity:.55;
+  }
+
+  50%{
+    transform:
+      rotate(180deg)
+      scale(1.08);
+    opacity:.9;
+  }
+
+  100%{
+    transform:
+      rotate(360deg)
+      scale(1);
+    opacity:.55;
+  }
+
+}
+
+/* =========================
+   WINNER GLOW
+========================= */
+
+.winner-glow{
+
+  position:absolute;
+  inset:-14%;
+
+  border-radius:inherit;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255,255,255,.38),
+      rgba(255,215,0,.18),
+      transparent 72%
+    );
+
+  pointer-events:none;
+
+  animation:
+    winnerGlow 1.6s ease-in-out infinite;
+
+}
+
+@keyframes winnerGlow{
+
+  0%{
+    opacity:.4;
+    transform:scale(1);
+  }
+
+  50%{
+    opacity:1;
+    transform:scale(1.08);
+  }
+
+  100%{
+    opacity:.4;
+    transform:scale(1);
+  }
+
+}
