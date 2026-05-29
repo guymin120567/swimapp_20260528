@@ -28,9 +28,22 @@ export function renderCoverflow(){
 
   bindSpinEvents();
 
-  requestAnimationFrame(
-    bindDrag
-  );
+  // =========================
+  // DRAG BIND ONCE
+  // =========================
+
+  if(
+    !window.__dragBound
+  ){
+
+    requestAnimationFrame(
+      bindDrag
+    );
+
+    window.__dragBound =
+      true;
+
+  }
 
 }
 
@@ -45,7 +58,9 @@ function renderType(type){
       `.coverflow[data-type="${type}"]`
     );
 
-  if(!target) return;
+  if(!target){
+    return;
+  }
 
   const state =
     getState();
@@ -106,7 +121,10 @@ function renderType(type){
 
     `).join("");
 
-  // 선택 카드 중앙 정렬
+  // =========================
+  // CENTER ACTIVE
+  // =========================
+
   requestAnimationFrame(()=>{
 
     const active =
@@ -166,7 +184,6 @@ function bindSelect(){
           const id =
             card.dataset.id;
 
-          // state sync
           setSelected(
             type,
             id
@@ -233,13 +250,20 @@ function startSpin(){
     let phase =
       "accelerate";
 
-    const maxSpeed = 28;
+    const maxSpeed =
+      28;
 
-    const accel = 0.8;
+    const accel =
+      0.8;
 
-    const decel = 0.96;
+    const decel =
+      0.96;
 
-    const tick = () => {
+    const tick = ()=>{
+
+      // =========================
+      // ACCEL
+      // =========================
 
       if(
         phase === "accelerate"
@@ -261,6 +285,10 @@ function startSpin(){
 
       }
 
+      // =========================
+      // CRUISE
+      // =========================
+
       else if(
         phase === "cruise"
       ){
@@ -276,25 +304,40 @@ function startSpin(){
 
       }
 
+      // =========================
+      // DECEL
+      // =========================
+
       else if(
         phase === "decelerate"
       ){
 
         velocity *= decel;
 
-        if(velocity < 8){
+        if(
+          velocity < 8
+        ){
+
           velocity *= 0.92;
+
         }
 
-        if(velocity < 0.6){
+        if(
+          velocity < 0.6
+        ){
+
           velocity = 0;
+
         }
 
       }
 
-      flow.scrollLeft += velocity;
+      flow.scrollLeft +=
+        velocity;
 
-      if(velocity > 0){
+      if(
+        velocity > 0
+      ){
 
         spinRAF =
           requestAnimationFrame(
@@ -340,7 +383,9 @@ function stopSpin(){
 
       ];
 
-      if(!cards.length){
+      if(
+        !cards.length
+      ){
         return;
       }
 
@@ -348,7 +393,8 @@ function stopSpin(){
         flow.scrollLeft +
         flow.clientWidth / 2;
 
-      let closest = null;
+      let closest =
+        null;
 
       let minDist =
         Infinity;
@@ -363,24 +409,30 @@ function stopSpin(){
 
         const dist =
           Math.abs(
-            center - cardCenter
+            center -
+            cardCenter
           );
 
-        if(dist < minDist){
+        if(
+          dist < minDist
+        ){
 
-          minDist = dist;
+          minDist =
+            dist;
 
-          closest = card;
+          closest =
+            card;
 
         }
 
       }
 
-      if(!closest){
+      if(
+        !closest
+      ){
         return;
       }
 
-      // state sync
       setSelected(
         closest.dataset.type,
         closest.dataset.id
@@ -412,7 +464,7 @@ function centerCard(
 
   wrap.scrollTo({
 
-    left: target,
+    left:target,
 
     behavior:
       smooth
