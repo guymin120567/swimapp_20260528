@@ -12,11 +12,11 @@ import {
   bindDrag
 } from "./drag.js";
 
-let spinRAF = null;
+let spinRAF = [];
 
-// =========================
-// RENDER
-// =========================
+/* =========================
+   RENDER
+========================= */
 
 export function renderCoverflow(){
 
@@ -28,28 +28,17 @@ export function renderCoverflow(){
 
   bindSpinEvents();
 
-  // =========================
-  // DRAG BIND ONCE
-  // =========================
+  requestAnimationFrame(()=>{
 
-  if(
-    !window.__dragBound
-  ){
+    bindDrag();
 
-    requestAnimationFrame(
-      bindDrag
-    );
-
-    window.__dragBound =
-      true;
-
-  }
+  });
 
 }
 
-// =========================
-// TYPE
-// =========================
+/* =========================
+   TYPE
+========================= */
 
 function renderType(type){
 
@@ -75,6 +64,23 @@ function renderType(type){
     type === "cap"
       ? state.selection?.capId
       : state.selection?.swimId;
+
+  /* =========================
+     EMPTY FIX
+  ========================= */
+
+  if(!items.length){
+
+    target.innerHTML = `
+
+      <div class="empty-coverflow">
+        아직 아이템이 없습니다
+      </div>
+
+    `;
+
+    return;
+  }
 
   target.innerHTML =
     items.map(item => `
@@ -121,10 +127,6 @@ function renderType(type){
 
     `).join("");
 
-  // =========================
-  // CENTER ACTIVE
-  // =========================
-
   requestAnimationFrame(()=>{
 
     const active =
@@ -146,9 +148,9 @@ function renderType(type){
 
 }
 
-// =========================
-// CLICK
-// =========================
+/* =========================
+   CLICK
+========================= */
 
 function bindSelect(){
 
@@ -205,9 +207,9 @@ function bindSelect(){
 
 }
 
-// =========================
-// SPIN EVENTS
-// =========================
+/* =========================
+   SPIN EVENTS
+========================= */
 
 function bindSpinEvents(){
 
@@ -232,11 +234,13 @@ function bindSpinEvents(){
 
 }
 
-// =========================
-// START SPIN
-// =========================
+/* =========================
+   START SPIN
+========================= */
 
 function startSpin(){
+
+  stopSpin();
 
   const flows =
     document.querySelectorAll(
@@ -247,127 +251,63 @@ function startSpin(){
 
     let velocity = 0;
 
-    let phase =
-      "accelerate";
+    let raf = null;
 
     const maxSpeed =
-      28;
+      38;
 
-    const accel =
-      0.8;
+    function tick(){
 
-    const decel =
-      0.96;
-
-    const tick = ()=>{
-
-      // =========================
-      // ACCEL
-      // =========================
+      velocity += 0.9;
 
       if(
-        phase === "accelerate"
+        velocity > maxSpeed
       ){
 
-        velocity += accel;
-
-        if(
-          velocity >= maxSpeed
-        ){
-
-          velocity =
-            maxSpeed;
-
-          phase =
-            "cruise";
-
-        }
-
-      }
-
-      // =========================
-      // CRUISE
-      // =========================
-
-      else if(
-        phase === "cruise"
-      ){
-
-        if(
-          Math.random() < 0.02
-        ){
-
-          phase =
-            "decelerate";
-
-        }
-
-      }
-
-      // =========================
-      // DECEL
-      // =========================
-
-      else if(
-        phase === "decelerate"
-      ){
-
-        velocity *= decel;
-
-        if(
-          velocity < 8
-        ){
-
-          velocity *= 0.92;
-
-        }
-
-        if(
-          velocity < 0.6
-        ){
-
-          velocity = 0;
-
-        }
+        velocity =
+          maxSpeed;
 
       }
 
       flow.scrollLeft +=
         velocity;
 
-      if(
-        velocity > 0
-      ){
+      raf =
+        requestAnimationFrame(
+          tick
+        );
 
-        spinRAF =
-          requestAnimationFrame(
-            tick
-          );
+    }
 
-      }
-
-    };
-
-    spinRAF =
+    raf =
       requestAnimationFrame(
         tick
       );
+
+    spinRAF.push({
+      flow,
+      raf
+    });
 
   });
 
 }
 
-// =========================
-// STOP
-// =========================
+/* =========================
+   STOP
+========================= */
 
 function stopSpin(){
 
-  cancelAnimationFrame(
-    spinRAF
-  );
+  spinRAF.forEach(item => {
 
-  spinRAF = null;
+    cancelAnimationFrame(
+      item.raf
+    );
+
+  });
+
+  spinRAF = [];
 
   document
     .querySelectorAll(
@@ -399,9 +339,7 @@ function stopSpin(){
       let minDist =
         Infinity;
 
-      for(
-        const card of cards
-      ){
+      cards.forEach(card => {
 
         const cardCenter =
           card.offsetLeft +
@@ -425,11 +363,9 @@ function stopSpin(){
 
         }
 
-      }
+      });
 
-      if(
-        !closest
-      ){
+      if(!closest){
         return;
       }
 
@@ -447,9 +383,9 @@ function stopSpin(){
 
 }
 
-// =========================
-// CENTER
-// =========================
+/* =========================
+   CENTER
+========================= */
 
 function centerCard(
   wrap,
