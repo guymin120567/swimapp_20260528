@@ -228,8 +228,31 @@ select{
 
   border:1px solid rgba(255,255,255,.7);
   isolation:isolate;
+  position: relative;
+  overflow: hidden;
+}
+.roulette-card img {
+  transition: transform .12s ease, filter .12s ease;
 }
 
+/* 🔥 스핀 중 흔들림 느낌 */
+.spinning img {
+  filter: blur(1px) brightness(1.1);
+  transform: scale(1.03);
+}
+
+/* 살짝 흔들림 느낌 */
+@keyframes shakeSpin {
+  0%   { transform: translate(0,0) scale(1.02); }
+  25%  { transform: translate(1px,-1px) scale(1.03); }
+  50%  { transform: translate(-1px,1px) scale(1.02); }
+  75%  { transform: translate(1px,1px) scale(1.03); }
+  100% { transform: translate(0,0) scale(1.02); }
+}
+
+.roulette-card.spinning {
+  animation: shakeSpin 0.15s infinite linear;
+}
 /* =========================
    SPIN
 ========================= */
