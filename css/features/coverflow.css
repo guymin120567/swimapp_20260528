@@ -4,24 +4,25 @@
 
 .coverflow{
 
-  position:relative;
-
   display:flex;
-  align-items:center;
-
-  gap:0;
 
   overflow-x:auto;
   overflow-y:visible;
 
-  padding:
-    40px 42vw 54px;
+  min-height:320px;
 
-  scroll-behavior:smooth;
+  padding:
+    18px 34vw 52px;
+
+  scroll-snap-type:none;
 
   scrollbar-width:none;
 
-  -ms-overflow-style:none;
+  -webkit-overflow-scrolling:touch;
+
+  align-items:center;
+
+  gap:0;
 
 }
 
@@ -33,157 +34,86 @@
    CARD
 ========================= */
 
-.item-card{
-
-  position:relative;
+.cover-card{
 
   flex:0 0 auto;
 
-  width:180px;
+  position:relative;
 
-  margin-left:-74px;
+  margin-left:-58px;
 
-  border-radius:32px;
-
-  overflow:hidden;
-
-  transition:
-    transform .28s ease,
-    opacity .28s ease,
-    filter .28s ease,
-    z-index .28s ease;
-
-  opacity:.32;
-
-  filter:
-    blur(2px)
-    saturate(.7);
+  opacity:.28;
 
   transform:
     scale(.72);
 
-  z-index:1;
-
-  pointer-events:none;
-
-}
-
-.item-card:first-child{
-  margin-left:0;
-}
-
-.item-card.ready{
   transition:
     transform .32s cubic-bezier(.22,1,.36,1),
     opacity .32s ease,
     filter .32s ease;
-}
 
-/* =========================
-   DEPTH
-========================= */
-
-.item-card.depth-0{
-
-  transform:
-    scale(1);
-
-  opacity:1;
-
-  filter:none;
-
-  z-index:10;
-
-  pointer-events:auto;
-
-}
-
-.item-card.depth-1{
-
-  transform:
-    scale(.86);
-
-  opacity:.72;
-
-  filter:
-    blur(.8px);
-
-  z-index:5;
-
-}
-
-.item-card.depth-2{
-
-  transform:
-    scale(.72);
-
-  opacity:.34;
+  will-change:
+    transform,
+    opacity;
 
   filter:
     blur(2px);
 
   z-index:1;
 
+  scroll-snap-align:center;
+
+}
+
+.cover-card:first-child{
+  margin-left:0;
 }
 
 /* =========================
    ACTIVE
 ========================= */
 
-.item-card.active{
+.cover-card.active{
 
-  box-shadow:
-    0 22px 44px rgba(
-      80,
-      140,
-      255,
-      .22
-    );
+  opacity:1;
 
-}
+  z-index:10;
 
-/* =========================
-   IMAGE
-========================= */
+  filter:none;
 
-.item-image{
-
-  width:100%;
-  aspect-ratio:1 / 1.2;
-
-  object-fit:cover;
-
-  display:block;
+  transform:
+    scale(1);
 
 }
 
 /* =========================
-   LABEL
+   DEPTH
 ========================= */
 
-.item-name{
+.cover-card.depth-1{
 
-  position:absolute;
+  opacity:.72;
 
-  left:0;
-  right:0;
-  bottom:0;
+  filter:
+    blur(.8px);
 
-  padding:
-    14px 12px;
+  transform:
+    scale(.86);
 
-  text-align:center;
+  z-index:5;
 
-  font-size:14px;
-  font-weight:700;
+}
 
-  color:#fff;
+.cover-card.depth-2{
 
-  background:
-    linear-gradient(
-      to top,
-      rgba(0,0,0,.58),
-      rgba(0,0,0,0)
-    );
+  opacity:.28;
+
+  filter:
+    blur(2px);
+
+  transform:
+    scale(.72);
+
+  z-index:1;
 
 }
