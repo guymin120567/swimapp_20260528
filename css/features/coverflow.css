@@ -1,24 +1,28 @@
-/* css/features/coverflow.css */
-
 /* =========================
    COVERFLOW
 ========================= */
 
 .coverflow{
+
+  position:relative;
+
   display:flex;
+  align-items:center;
+
+  gap:0;
 
   overflow-x:auto;
-  overflow-y:hidden;
+  overflow-y:visible;
 
-  min-height:320px;
+  padding:
+    40px 42vw 54px;
 
-  padding:18px 34px 52px;
-
-  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
 
   scrollbar-width:none;
 
-  -webkit-overflow-scrolling:touch;
+  -ms-overflow-style:none;
+
 }
 
 .coverflow::-webkit-scrollbar{
@@ -29,120 +33,157 @@
    CARD
 ========================= */
 
-.cover-card{
+.item-card{
+
+  position:relative;
+
   flex:0 0 auto;
 
-  scroll-snap-align:center;
+  width:180px;
 
-  opacity:.55;
+  margin-left:-74px;
+
+  border-radius:32px;
+
+  overflow:hidden;
+
+  transition:
+    transform .28s ease,
+    opacity .28s ease,
+    filter .28s ease,
+    z-index .28s ease;
+
+  opacity:.32;
+
+  filter:
+    blur(2px)
+    saturate(.7);
+
+  transform:
+    scale(.72);
+
+  z-index:1;
+
+  pointer-events:none;
+
+}
+
+.item-card:first-child{
+  margin-left:0;
+}
+
+.item-card.ready{
+  transition:
+    transform .32s cubic-bezier(.22,1,.36,1),
+    opacity .32s ease,
+    filter .32s ease;
+}
+
+/* =========================
+   DEPTH
+========================= */
+
+.item-card.depth-0{
+
+  transform:
+    scale(1);
+
+  opacity:1;
+
+  filter:none;
+
+  z-index:10;
+
+  pointer-events:auto;
+
+}
+
+.item-card.depth-1{
 
   transform:
     scale(.86);
 
-  transition:
-    transform .3s ease,
-    opacity .3s ease;
+  opacity:.72;
 
-  will-change:
-    transform,
-    opacity;
+  filter:
+    blur(.8px);
+
+  z-index:5;
+
 }
 
-.cover-card.active{
-  opacity:1;
-  z-index:10;
+.item-card.depth-2{
 
   transform:
-    scale(1);
+    scale(.72);
+
+  opacity:.34;
+
+  filter:
+    blur(2px);
+
+  z-index:1;
+
 }
 
 /* =========================
-   INNER
+   ACTIVE
 ========================= */
 
-.card-inner{
-  position:relative;
-
-  width:180px;
-
-  aspect-ratio:1/1;
-
-  border-radius:28px;
-
-  overflow:hidden;
-
-  background:white;
-
-  border:
-    1px solid
-    rgba(255,255,255,.92);
+.item-card.active{
 
   box-shadow:
-    0 14px 34px
-    rgba(120,170,210,.16);
+    0 22px 44px rgba(
+      80,
+      140,
+      255,
+      .22
+    );
+
 }
 
 /* =========================
    IMAGE
 ========================= */
 
-.card-image{
-  position:absolute;
-  inset:0;
+.item-image{
 
   width:100%;
-  height:100%;
+  aspect-ratio:1 / 1.2;
 
   object-fit:cover;
 
-  user-select:none;
-  -webkit-user-drag:none;
+  display:block;
+
 }
 
 /* =========================
-   OVERLAY
+   LABEL
 ========================= */
 
-.card-overlay{
+.item-name{
+
   position:absolute;
+
   left:0;
   right:0;
   bottom:0;
 
-  padding:14px;
+  padding:
+    14px 12px;
 
-  background:
-    linear-gradient(
-      transparent,
-      rgba(20,50,80,.78)
-    );
-}
-
-.card-title{
-  color:white;
-  font-size:15px;
-  font-weight:700;
   text-align:center;
-}
 
-/* =========================
-   PLACEHOLDER
-========================= */
+  font-size:14px;
+  font-weight:700;
 
-.card-placeholder{
-  position:absolute;
-  inset:0;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-size:42px;
+  color:#fff;
 
   background:
     linear-gradient(
-      180deg,
-      #f8fbff,
-      #dcefff
+      to top,
+      rgba(0,0,0,.58),
+      rgba(0,0,0,0)
     );
+
 }
