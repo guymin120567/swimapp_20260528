@@ -21,25 +21,26 @@ export async function spinAll(){
 
   if(!capSlot || !swimSlot) return;
 
+  capSlot.classList.add("spinning");
+  swimSlot.classList.add("spinning");
+
   const capImg = capSlot.querySelector("img");
   const swimImg = swimSlot.querySelector("img");
 
-  let speed = 50; // 초기 속도 (ms)
   let ticks = 0;
+  const maxTicks = 24;
 
-  const maxTicks = 25;
+  let speed = 60; // 시작 속도 (ms)
 
-  const interval = setInterval(() => {
+  const run = () => {
 
-    ticks++;
-
-    // 🎰 랜덤 이미지 계속 변경
     const cap =
       caps[Math.floor(Math.random() * caps.length)];
 
     const swim =
       swims[Math.floor(Math.random() * swims.length)];
 
+    // 🎰 이미지 교체
     if(capImg){
       capImg.src = cap.image;
     } else {
@@ -52,22 +53,24 @@ export async function spinAll(){
       swimSlot.innerHTML = `<img class="card-image" src="${swim.image}" />`;
     }
 
+    ticks++;
+
     // 🔥 easing (점점 느려짐)
-    speed *= 1.08;
+    speed *= 1.12;
 
-    clearInterval(interval);
+    if(ticks < maxTicks){
 
-    setTimeout(() => {
-      if(ticks < maxTicks){
-        interval = setInterval(arguments.callee, speed);
-      } else {
-        finishSpin(caps, swims);
-      }
-    }, speed);
+      setTimeout(run, speed);
 
-  }, speed);
+    } else {
 
-  function finishSpin(caps, swims){
+      finish(caps, swims, capSlot, swimSlot);
+    }
+  };
+
+  run();
+
+  function finish(caps, swims, capSlot, swimSlot){
 
     const finalCap =
       caps[Math.floor(Math.random() * caps.length)];
@@ -89,6 +92,9 @@ export async function spinAll(){
         <div class="roulette-name">${finalSwim.name}</div>
       </div>
     `;
+
+    capSlot.classList.remove("spinning");
+    swimSlot.classList.remove("spinning");
 
     setResult("capId", finalCap.id);
     setResult("swimId", finalSwim.id);
