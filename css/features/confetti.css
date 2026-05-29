@@ -1,67 +1,48 @@
-/* css/features/confetti.css */
-
 #fx-layer{
-
   position:fixed;
-
   inset:0;
 
-  overflow:hidden;
+  z-index:999999;
 
   pointer-events:none;
 
-  z-index:99999;
-
+  overflow:hidden;
 }
 
 .confetti{
-
-  position:fixed;
+  position:absolute;
 
   width:10px;
   height:16px;
 
   border-radius:3px;
 
-  opacity:1;
-
   will-change:
     transform,
     opacity;
-
-  transform:
-    translate3d(0,0,0);
 
   animation:
     confettiBurst 2.8s
     cubic-bezier(.12,.8,.22,1)
     forwards;
-
 }
-
-/* =========================
-   MOTION
-========================= */
 
 @keyframes confettiBurst{
 
   0%{
-
     transform:
       translate3d(0,0,0)
       scale(.4)
       rotate(0deg);
 
     opacity:0;
-
   }
 
   8%{
-
     transform:
       translate3d(
         calc(var(--dx) * .18),
-        calc(var(--dy) * -.28),
+        calc(var(--lift) * -1),
         0
       )
       scale(1)
@@ -70,15 +51,13 @@
       );
 
     opacity:1;
-
   }
 
   22%{
-
     transform:
       translate3d(
         calc(var(--dx) * .52),
-        calc(var(--dy) * -.42),
+        calc(var(--lift) * -.72),
         0
       )
       scale(1)
@@ -87,11 +66,9 @@
       );
 
     opacity:1;
-
   }
 
   100%{
-
     transform:
       translate3d(
         var(--dx),
@@ -104,7 +81,6 @@
       );
 
     opacity:0;
-
   }
 
 }
