@@ -408,22 +408,37 @@ button,input,select{ font:inherit; }
 
 .confetti{
   position:absolute;
-  width:8px;
-  height:10px;
+  width:7px;
+  height:9px;
   border-radius:2px;
 
-  animation:confettiBurst 2.4s ease-out forwards;
+  /* 핵심: 살짝 위에서 시작 */
+  transform: translate(0,0);
+
+  animation: confettiBurst 1.8s cubic-bezier(.2,.8,.2,1) forwards;
+  will-change: transform, opacity;
 }
 
 @keyframes confettiBurst{
   0%{
-    transform: translate(0,0) rotate(0deg);
+    transform:
+      translate(0,0)
+      translateY(-10px)
+      rotate(0deg);
+    opacity:1;
+  }
+
+  30%{
+    transform:
+      translate(calc(var(--dx) * 0.3), -60px)
+      rotate(180deg);
     opacity:1;
   }
 
   100%{
     transform:
       translate(var(--dx), var(--dy))
+      translateY(140px)
       rotate(720deg);
     opacity:0;
   }
