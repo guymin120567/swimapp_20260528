@@ -373,12 +373,15 @@ function burst(type){
     const spread =
       (Math.random() - 0.5);
 
-    const dx =
-      spread * 420;
+const dx =
+  spread * (
+    280 +
+    Math.random() * 240
+  );
 
-    const dy =
-      220 +
-      Math.random() * 260;
+const dy =
+  340 +
+  Math.random() * 380;
 
     el.style.setProperty(
       "--dx",
