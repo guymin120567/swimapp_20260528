@@ -115,3 +115,16 @@
   z-index:1;
 
 }
+.empty-coverflow{
+
+  width:100%;
+
+  padding:42px 18px;
+
+  text-align:center;
+
+  font-size:15px;
+
+  color:#6b8aa1;
+
+}
