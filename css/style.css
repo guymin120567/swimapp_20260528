@@ -117,7 +117,7 @@ select{
 }
 
 /* =========================
-   ROULETTE BG
+   ROULETTE PAGE
 ========================= */
 
 .roulette-page{
@@ -140,28 +140,27 @@ select{
   background-position:center;
   background-repeat:no-repeat;
 
-  /* 핵심: blur 제거 + 대비 강화 */
-  filter: contrast(1.15) brightness(0.92) saturate(1.05);
+  filter:contrast(1.15) brightness(0.92) saturate(1.05);
 }
 
-/* 콘텐츠 */
-#rouletteContent{
-  position:relative;
-  z-index:1;
-}
+/* overlay */
+.roulette-page::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
 
-.roulette-page::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-
-  background: radial-gradient(
+  background:radial-gradient(
     circle at center,
     rgba(255,255,255,0.08),
     rgba(0,0,0,0.10)
   );
+}
+
+#rouletteContent{
+  position:relative;
+  z-index:1;
 }
 
 /* =========================
@@ -215,10 +214,10 @@ select{
    ROULETTE
 ========================= */
 
-.roulette-wrap {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 18px;
+.roulette-wrap{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:18px;
 }
 
 .roulette-slot{
@@ -233,54 +232,44 @@ select{
   font-weight:800;
 }
 
-/* 🔥 정사각형 통일 */
+/* 카드 */
 .roulette-card{
   width:100%;
   max-width:220px;
-  aspect-ratio:1 / 1;
-  overflow:hidden;
-  margin-bottom: 6px;
-  
+  aspect-ratio:1/1;
+
   border-radius:28px;
-  position:relative;
+  overflow:hidden;
 
   background:var(--card);
   box-shadow:var(--shadow);
-
   border:1px solid rgba(255,255,255,.7);
-  isolation:isolate;
-  position: relative;
-  overflow: hidden;
-}
-.roulette-card img {
-  transition: transform .12s ease, filter .12s ease;
 }
 
-/* 🔥 스핀 중 흔들림 느낌 */
-.spinning img {
-  filter: blur(1px) brightness(1.1);
-  transform: scale(1.03);
+/* 스핀 효과 */
+.roulette-card.spinning img{
+  filter:blur(1px) brightness(1.1);
+  transform:scale(1.03);
 }
 
-/* 살짝 흔들림 느낌 */
-@keyframes shakeSpin {
-  0%   { transform: translate(0,0) scale(1.02); }
-  25%  { transform: translate(1px,-1px) scale(1.03); }
-  50%  { transform: translate(-1px,1px) scale(1.02); }
-  75%  { transform: translate(1px,1px) scale(1.03); }
-  100% { transform: translate(0,0) scale(1.02); }
+/* 흔들림 */
+@keyframes shakeSpin{
+  0%{transform:translate(0,0) scale(1.02);}
+  25%{transform:translate(1px,-1px) scale(1.03);}
+  50%{transform:translate(-1px,1px) scale(1.02);}
+  75%{transform:translate(1px,1px) scale(1.03);}
+  100%{transform:translate(0,0) scale(1.02);}
 }
 
-.roulette-card.spinning {
-  animation: shakeSpin 0.15s infinite linear;
+.roulette-card.spinning{
+  animation:shakeSpin .15s infinite linear;
 }
-/* =========================
-   SPIN
-========================= */
 
+/* SPIN 버튼 */
 .spin-btn{
-  width: 100%;
-  height: 58px;
+  width:100%;
+  height:58px;
+  margin-top:18px;
 
   border:none;
   border-radius:22px;
@@ -294,9 +283,6 @@ select{
   cursor:pointer;
 
   box-shadow:0 10px 24px rgba(125,211,252,.28);
-
-  /* 🔥 핵심: 공간 확보 */
-  margin-top: 18px;
 }
 
 /* =========================
@@ -327,12 +313,9 @@ select{
 
 .cover-card{
   flex:0 0 auto;
-
-  /* ❌ margin overlap 제거 */
   margin-left:0;
 
   cursor:grab;
-
   scroll-snap-align:center;
 
   opacity:.55;
@@ -341,7 +324,6 @@ select{
   transition:.3s ease;
 }
 
-/* 🔥 중심 카드 */
 .cover-card.active{
   z-index:10;
   opacity:1;
@@ -361,7 +343,7 @@ select{
   position:relative;
 
   width:180px;
-  aspect-ratio:1 / 1;
+  aspect-ratio:1/1;
 
   border-radius:28px;
   overflow:hidden;
@@ -374,10 +356,7 @@ select{
   transition:transform .32s ease, box-shadow .32s ease;
 }
 
-/* =========================
-   IMAGE
-========================= */
-
+/* 이미지 */
 .card-image,
 .item-thumb-image{
   position:absolute;
@@ -389,10 +368,7 @@ select{
   object-position:center;
 }
 
-/* =========================
-   OVERLAY
-========================= */
-
+/* overlay */
 .card-overlay{
   position:absolute;
   left:0;
@@ -487,17 +463,17 @@ select{
   .roulette-wrap{
     grid-template-columns:1fr 1fr;
     gap:10px;
-    margin-bottom: 12px;
+    margin-bottom:12px;
   }
 
   .card-inner{
     width:140px;
   }
 
-.coverflow{
-  gap:16px;
-  padding:18px 34px 52px;
-}
+  .coverflow{
+    gap:16px;
+    padding:18px 34px 52px;
+  }
 
   .roulette-page{
     border-radius:24px;
@@ -506,11 +482,17 @@ select{
   .splash-image{
     width:260px;
   }
-}#fx-layer{
+}
+
+/* =========================
+   FX LAYER
+========================= */
+
+#fx-layer{
   position:fixed;
   inset:0;
   pointer-events:none;
-  z-index:99999;
+  z-index:999999;
 }
 
 .confetti{
@@ -518,12 +500,13 @@ select{
   width:8px;
   height:10px;
   border-radius:2px;
-  animation: confettiBurst 2.4s ease-out forwards;
+
+  animation:confettiBurst 2.4s ease-out forwards;
 }
 
 @keyframes confettiBurst{
   0%{
-    transform: translate(0,0) rotate(0deg);
+    transform:translate(0,0) rotate(0deg);
     opacity:1;
   }
   100%{
