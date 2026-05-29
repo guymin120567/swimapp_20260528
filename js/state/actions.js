@@ -1,7 +1,4 @@
-import {
-  getState,
-  setState
-} from "./state.js";
+import { getState, setState } from "./state.js";
 
 // =========================
 // ITEMS
@@ -11,13 +8,8 @@ export function addItem(item){
 
   const state = getState();
 
-  const items =
-    Array.isArray(state.items)
-      ? state.items
-      : [];
-
   setState({
-    items: [...items, item]
+    items: [...(state.items || []), item]
   });
 }
 
@@ -25,35 +17,24 @@ export function removeItem(id){
 
   const state = getState();
 
-  const items =
-    Array.isArray(state.items)
-      ? state.items
-      : [];
-
   setState({
-    items: items.filter(item => item.id !== id)
+    items: (state.items || []).filter(i => i.id !== id)
   });
 }
 
 // =========================
-// SELECTION (UI STATE ONLY)
+// SELECTION (UI 선택)
 // =========================
 
 export function setSelected(type, id){
 
   const state = getState();
 
-  const selection = {
-    ...(state.selection || {})
-  };
-
-  if(type === "cap"){
-    selection.capId = id;
-  }
-
-  if(type === "swim"){
-    selection.swimId = id;
-  }
-
-  setState({ selection });
+  setState({
+    selection: {
+      ...(state.selection || {}),
+      ...(type === "cap" ? { capId: id } : {}),
+      ...(type === "swim" ? { swimId: id } : {})
+    }
+  });
 }
