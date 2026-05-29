@@ -260,12 +260,21 @@ function updateSlot(
 
   slot.innerHTML = `
 
-    <img
-      class="card-image"
-      src="${item.image || ""}"
-      alt="${item.name}"
-      draggable="false"
-    />
+    <div class="spin-image-wrap">
+
+      <img
+        class="
+          card-image
+          spinning-image
+        "
+        src="${item.image || ""}"
+        alt="${item.name}"
+        draggable="false"
+      />
+
+      <div class="spin-glow"></div>
+
+    </div>
 
   `;
 
@@ -288,6 +297,8 @@ function renderFinal(
       alt="${item.name}"
       draggable="false"
     />
+
+    <div class="winner-glow"></div>
 
     <div class="card-overlay">
 
