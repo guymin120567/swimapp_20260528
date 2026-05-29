@@ -41,7 +41,7 @@ export function initController(){
   let saveTimer = null;
 
   // =========================
-  // RENDER APP
+  // RENDER
   // =========================
 
   function renderApp(){
@@ -83,7 +83,7 @@ export function initController(){
       saved || defaultState;
 
     // =========================
-    // OLD DATA MIGRATION
+    // OLD MIGRATION
     // =========================
 
     if(
@@ -92,7 +92,7 @@ export function initController(){
 
       normalized = {
 
-        items: [
+        items:[
 
           ...(normalized.data.caps || [])
             .map(item=>({
@@ -123,6 +123,7 @@ export function initController(){
             capId:null,
 
             swimId:null
+
           },
 
         ui:
@@ -133,8 +134,11 @@ export function initController(){
             activeItemId:null,
 
             isSpinning:false
+
           }
+
       };
+
     }
 
     // =========================
@@ -157,7 +161,6 @@ export function initController(){
 
     subscribe(()=>{
 
-      // render
       renderApp();
 
       // debounce save
@@ -177,18 +180,12 @@ export function initController(){
     });
 
     // =========================
-    // APPLY STATE
+    // APPLY
     // =========================
 
     setState(
       normalized
     );
-
-    // =========================
-    // FIRST RENDER
-    // =========================
-
-    renderApp();
 
     console.log(
       "BOOT DONE"
@@ -201,4 +198,5 @@ export function initController(){
     boot
 
   };
+
 }
