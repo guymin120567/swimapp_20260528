@@ -126,22 +126,42 @@ select{
   border-radius:34px;
 }
 
+/* 🔥 배경 */
 .roulette-bg{
   position:absolute;
   inset:0;
   z-index:0;
   pointer-events:none;
-  opacity:.16;
+
+  opacity:.34;
+
   background-image:url("../assets/roulette-bg.png");
   background-size:cover;
   background-position:center;
   background-repeat:no-repeat;
-  filter:blur(2px);
+
+  /* 핵심: blur 제거 + 대비 강화 */
+  filter: contrast(1.15) brightness(0.92) saturate(1.05);
 }
 
+/* 콘텐츠 */
 #rouletteContent{
   position:relative;
   z-index:1;
+}
+
+.roulette-page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+
+  background: radial-gradient(
+    circle at center,
+    rgba(255,255,255,0.08),
+    rgba(0,0,0,0.10)
+  );
 }
 
 /* =========================
