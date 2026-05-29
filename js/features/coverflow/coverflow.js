@@ -191,6 +191,26 @@ function bindSelect(){
             id
           );
 
+          // =========================
+          // FORCE ACTIVE UPDATE
+          // =========================
+
+          wrap
+            .querySelectorAll(
+              ".cover-card"
+            )
+            .forEach(c => {
+
+              c.classList.remove(
+                "active"
+              );
+
+            });
+
+          card.classList.add(
+            "active"
+          );
+
           requestAnimationFrame(()=>{
 
             centerCard(
