@@ -393,6 +393,15 @@ const dy =
       `${dy}px`
     );
 
+    const lift =
+  120 +
+  Math.random() * 180;
+
+el.style.setProperty(
+  "--lift",
+  `${lift}px`
+);
+    
     el.style.setProperty(
       "--rot",
       `${Math.random() * 1080}deg`
