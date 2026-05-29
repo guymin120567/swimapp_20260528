@@ -3,40 +3,98 @@
 
 <head>
 
+  <!-- =========================
+       META
+  ========================== -->
+
   <meta charset="UTF-8" />
 
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  <meta
+    name="viewport"
+    content="
+      width=device-width,
+      initial-scale=1.0,
+      viewport-fit=cover
+    "
   />
 
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <!-- =========================
+       PWA
+  ========================== -->
 
-  <meta name="theme-color" content="#0f172a" />
+  <meta
+    name="mobile-web-app-capable"
+    content="yes"
+  />
 
-  <title>Swim App</title>
+  <meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+  />
 
-  <link rel="stylesheet" href="./css/style.css?v=5" />
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+  />
+
+  <meta
+    name="theme-color"
+    content="#0f172a"
+  />
+
+  <!-- =========================
+       TITLE
+  ========================== -->
+
+  <title>
+    Swim App
+  </title>
+
+  <!-- =========================
+       CSS
+  ========================== -->
+
+  <link
+    rel="stylesheet"
+    href="./css/style.css?v=6"
+  />
 
 </head>
 
 <body>
 
   <!-- =========================
+       FX LAYER
+  ========================== -->
+
+  <div id="fx-layer"></div>
+
+  <!-- =========================
        SPLASH
   ========================== -->
-<div id="fx-layer"></div>
-  <div id="splash" class="splash">
 
+  <div
+    id="splash"
+    class="splash"
+  >
+
+    <!-- BG -->
     <div class="splash-bg"></div>
 
+    <!-- CONTENT -->
     <div class="splash-inner">
 
-      <img class="splash-image" src="./assets/splash.png" />
+      <img
+        class="splash-image"
+        src="./assets/splash.png"
+        alt="Swim App Splash"
+        draggable="false"
+      />
 
-      <!-- 🔥 로딩 텍스트 (이미지 위로 올림) -->
-      <div id="loadingText" class="splash-loading">
+      <div
+        id="loadingText"
+        class="splash-loading"
+      >
         로딩중...
       </div>
 
@@ -44,10 +102,20 @@
 
   </div>
 
-  <!-- APP -->
+  <!-- =========================
+       APP ROOT
+  ========================== -->
+
   <main id="app"></main>
 
-  <script type="module" src="./js/app.js?v=5"></script>
+  <!-- =========================
+       APP SCRIPT
+  ========================== -->
+
+  <script
+    type="module"
+    src="./js/app.js?v=6"
+  ></script>
 
 </body>
 
