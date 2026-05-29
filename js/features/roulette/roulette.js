@@ -5,7 +5,8 @@ import {
 } from "../../state/state.js";
 
 import {
-  setSelected
+  setSelected,
+  setSpinning
 } from "../../state/actions.js";
 
 // =========================
@@ -17,7 +18,7 @@ export async function spinAll(){
   const state =
     getState();
 
-  // spinning guard
+  // guard
   if(
     state.ui?.isSpinning
   ){
@@ -41,10 +42,6 @@ export async function spinAll(){
     return;
   }
 
-  // =========================
-  // ELEMENTS
-  // =========================
-
   const capSlot =
     document.querySelector(
       '.roulette-slot[data-type="cap"] .roulette-card'
@@ -62,9 +59,8 @@ export async function spinAll(){
     return;
   }
 
-  // =========================
-  // START FX
-  // =========================
+  // spinning state
+  setSpinning(true);
 
   capSlot.classList.add(
     "spinning"
@@ -80,17 +76,13 @@ export async function spinAll(){
     )
   );
 
-  // =========================
-  // LOOP
-  // =========================
-
   let ticks = 0;
 
   const maxTicks = 16;
 
   let speed = 45;
 
-  const run = () => {
+  const run = ()=>{
 
     const cap =
       caps[
@@ -171,7 +163,6 @@ export async function spinAll(){
       "spinning"
     );
 
-    // state sync
     setSelected(
       "cap",
       finalCap.id
@@ -185,6 +176,8 @@ export async function spinAll(){
     burst("cap");
 
     burst("swim");
+
+    setSpinning(false);
 
     window.dispatchEvent(
       new CustomEvent(
@@ -256,7 +249,7 @@ function burst(type){
 
   const slot =
     document.querySelector(
-      `.roulette-slot[data-type="${type}"] .roulette-card`
+      \`.roulette-slot[data-type="\${type}"] .roulette-card\`
     );
 
   const fx =
