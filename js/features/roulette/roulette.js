@@ -29,9 +29,8 @@ export async function spinAll(){
 
   let ticks = 0;
 
-  // 🔥 스핀 시간 단축 핵심
-  const maxTicks = 16;   // 기존 24 → 16 (짧아짐)
-  let speed = 45;        // 기존 60 → 45 (빠른 시작)
+  const maxTicks = 16;
+  let speed = 45;
 
   const run = () => {
 
@@ -41,7 +40,6 @@ export async function spinAll(){
     const swim =
       swims[Math.floor(Math.random() * swims.length)];
 
-    // 이미지 변경
     if(capImg){
       capImg.src = cap.image;
     } else {
@@ -55,8 +53,6 @@ export async function spinAll(){
     }
 
     ticks++;
-
-    // 🔥 easing
     speed *= 1.10;
 
     if(ticks < maxTicks){
@@ -95,6 +91,9 @@ export async function spinAll(){
 
     setResult("capId", finalCap.id);
     setResult("swimId", finalSwim.id);
+
+    burst("cap");
+    burst("swim");
 
     window.dispatchEvent(new CustomEvent("spin-end"));
   }
