@@ -98,3 +98,48 @@ export async function spinAll(){
     window.dispatchEvent(new CustomEvent("spin-end"));
   }
 }
+
+function burst(type){
+
+  const slot =
+    document.querySelector(
+      `.roulette-slot[data-type="${type}"] .roulette-card`
+    );
+
+  if(!slot) return;
+
+  const rect = slot.getBoundingClientRect();
+  const fx = document.getElementById("fx-layer");
+
+  if(!fx) return;
+
+  const x = rect.left + rect.width / 2;
+  const y = rect.top + rect.height / 2;
+
+  const colors = [
+    "#a78bfa",
+    "#8b5cf6",
+    "#7c3aed",
+    "#c4b5fd",
+    "#6d28d9"
+  ];
+
+  for(let i=0;i<40;i++){
+
+    const el = document.createElement("div");
+    el.className = "confetti";
+
+    el.style.left = x + "px";
+    el.style.top = y + "px";
+
+    el.style.setProperty("--dx", (Math.random()-0.5)*180 + "px");
+    el.style.setProperty("--dy", (Math.random()*200) + 100 + "px");
+
+    el.style.background =
+      colors[Math.floor(Math.random() * colors.length)];
+
+    fx.appendChild(el);
+
+    setTimeout(() => el.remove(), 2400);
+  }
+}
