@@ -1,15 +1,12 @@
 import { getState } from "../../state/state.js";
-import { setResult } from "../../state/actions.js";
+import { setSelected } from "../../state/actions.js";
 
 export async function spinAll(){
 
   const state = getState();
 
-  const caps =
-    state.items.filter(i => i.type === "cap");
-
-  const swims =
-    state.items.filter(i => i.type === "swim");
+  const caps = state.items.filter(i => i.type === "cap");
+  const swims = state.items.filter(i => i.type === "swim");
 
   if(!caps.length || !swims.length) return;
 
@@ -28,17 +25,13 @@ export async function spinAll(){
   const swimImg = swimSlot.querySelector("img");
 
   let ticks = 0;
-
   const maxTicks = 16;
   let speed = 45;
 
   const run = () => {
 
-    const cap =
-      caps[Math.floor(Math.random() * caps.length)];
-
-    const swim =
-      swims[Math.floor(Math.random() * swims.length)];
+    const cap = caps[Math.floor(Math.random() * caps.length)];
+    const swim = swims[Math.floor(Math.random() * swims.length)];
 
     if(capImg){
       capImg.src = cap.image;
@@ -58,19 +51,13 @@ export async function spinAll(){
     if(ticks < maxTicks){
       setTimeout(run, speed);
     } else {
-      finish(caps, swims, capSlot, swimSlot);
+      finish(cap, swim);
     }
   };
 
   run();
 
-  function finish(caps, swims, capSlot, swimSlot){
-
-    const finalCap =
-      caps[Math.floor(Math.random() * caps.length)];
-
-    const finalSwim =
-      swims[Math.floor(Math.random() * swims.length)];
+  function finish(finalCap, finalSwim){
 
     capSlot.innerHTML = `
       <img class="card-image" src="${finalCap.image}" />
@@ -89,8 +76,9 @@ export async function spinAll(){
     capSlot.classList.remove("spinning");
     swimSlot.classList.remove("spinning");
 
-    setResult("capId", finalCap.id);
-    setResult("swimId", finalSwim.id);
+    // 🔥 핵심: selection으로 통일
+    setSelected("cap", finalCap.id);
+    setSelected("swim", finalSwim.id);
 
     burst("cap");
     burst("swim");
@@ -116,13 +104,7 @@ function burst(type){
   const x = rect.left + rect.width / 2;
   const y = rect.top + rect.height / 2;
 
-  const colors = [
-    "#a78bfa",
-    "#8b5cf6",
-    "#7c3aed",
-    "#c4b5fd",
-    "#6d28d9"
-  ];
+  const colors = ["#a78bfa","#8b5cf6","#7c3aed","#c4b5fd","#6d28d9"];
 
   for(let i=0;i<40;i++){
 
