@@ -71,52 +71,7 @@ export function renderLayout(){
             ></div>
 
           </div>
-
-          <!-- ADD -->
-
-          <div class="block add-block">
-
-            <div class="section-title">
-              아이템 추가
-            </div>
-
-            <div class="input-area">
-
-              <select id="itemType">
-
-                <option value="cap">
-                  수모
-                </option>
-
-                <option value="swim">
-                  수영복
-                </option>
-
-              </select>
-
-              <input
-                id="itemText"
-                type="text"
-                placeholder="이름 입력"
-              />
-
-              <input
-                id="itemImage"
-                type="file"
-                accept="image/*"
-              />
-
-              <button
-                class="spin-btn"
-                data-action="add"
-              >
-                추가하기
-              </button>
-
-            </div>
-
-          </div>
-
+          
         </section>
 
         <!-- =====================
