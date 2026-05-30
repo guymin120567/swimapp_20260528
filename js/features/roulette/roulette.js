@@ -1,131 +1,481 @@
-// js/state/actions.js
+// js/features/roulette/roulette.js
 
 import {
-  getState,
-  setState
-} from "./state.js";
+  getState
+} from "../../state/state.js";
+
+import {
+  setSelected,
+  setSpinning
+} from "../../state/actions.js";
 
 // =========================
-// ITEMS
+// SPIN
 // =========================
 
-export function addItem(item){
+export async function spinAll(){
 
   const state =
     getState();
 
-  setState({
+  if(
+    state.ui?.isSpinning
+  ){
+    return;
+  }
 
-    items:[
-      ...(state.items || []),
-      item
-    ]
+  const caps =
+    state.items.filter(
+      i => i.type === "cap"
+    );
 
-  });
+  const swims =
+    state.items.filter(
+      i => i.type === "swim"
+    );
+
+ if(
+  caps.length < 2
+){
+
+  alert(
+    "수모를 최소 2개 이상 등록해주세요."
+  );
+
+  return;
 
 }
 
-export function removeItem(id){
+if(
+  swims.length < 2
+){
 
-  const state =
-    getState();
+  alert(
+    "수영복을 최소 2개 이상 등록해주세요."
+  );
 
-  const nextItems =
-    (state.items || [])
-      .filter(
-        i => i.id !== id
+  return;
+
+}
+
+  const capSlot =
+    document.querySelector(
+      '.roulette-slot[data-type="cap"] .roulette-card'
+    );
+
+  const swimSlot =
+    document.querySelector(
+      '.roulette-slot[data-type="swim"] .roulette-card'
+    );
+
+  if(
+    !capSlot ||
+    !swimSlot
+  ){
+    return;
+  }
+
+  setSpinning(true);
+
+  const spinBtn =
+    document.querySelector(
+      "#rouletteSection .spin-btn"
+    );
+
+  if(spinBtn){
+    spinBtn.disabled = true;
+  }
+
+  capSlot.classList.remove(
+    "winner"
+  );
+
+  swimSlot.classList.remove(
+    "winner"
+  );
+
+  capSlot.classList.add(
+    "spinning"
+  );
+
+  swimSlot.classList.add(
+    "spinning"
+  );
+
+  window.dispatchEvent(
+    new CustomEvent(
+      "spin-start"
+    )
+  );
+
+  let ticks = 0;
+
+  const maxTicks = 30;
+
+  let speed = 38;
+
+  let finalCap =
+    caps[0];
+
+  let finalSwim =
+    swims[0];
+
+  const run = ()=>{
+
+    finalCap =
+      caps[
+        Math.floor(
+          Math.random() *
+          caps.length
+        )
+      ];
+
+    finalSwim =
+      swims[
+        Math.floor(
+          Math.random() *
+          swims.length
+        )
+      ];
+
+    updateSlot(
+      capSlot,
+      finalCap
+    );
+
+    updateSlot(
+      swimSlot,
+      finalSwim
+    );
+
+    ticks++;
+
+    if(ticks < 10){
+
+      speed *= 1.05;
+
+    }else if(
+      ticks < 18
+    ){
+
+      speed *= 1.11;
+
+    }else{
+
+      speed *= 1.18;
+
+    }
+
+    if(
+      ticks < maxTicks
+    ){
+
+      setTimeout(
+        run,
+        speed
       );
 
-  const nextSelection = {
+    }else{
 
-    ...(state.selection || {})
+      finish(
+        finalCap,
+        finalSwim
+      );
+
+    }
 
   };
 
-  if(
-    nextSelection.capId === id
+  run();
+
+  function finish(
+    finalCap,
+    finalSwim
   ){
 
-    const firstCap =
-      nextItems.find(
-        i => i.type === "cap"
+    renderFinal(
+      capSlot,
+      finalCap
+    );
+
+    renderFinal(
+      swimSlot,
+      finalSwim
+    );
+
+    capSlot.classList.remove(
+      "spinning"
+    );
+
+    swimSlot.classList.remove(
+      "spinning"
+    );
+
+    capSlot.classList.add(
+      "winner"
+    );
+
+    swimSlot.classList.add(
+      "winner"
+    );
+
+    setSelected(
+      "cap",
+      finalCap.id
+    );
+
+    setSelected(
+      "swim",
+      finalSwim.id
+    );
+
+    burst("cap");
+
+    burst("swim");
+
+    setTimeout(()=>{
+
+      setSpinning(false);
+
+      if(spinBtn){
+        spinBtn.disabled = false;
+      }
+
+      window.dispatchEvent(
+        new CustomEvent(
+          "spin-stop"
+        )
       );
 
-    nextSelection.capId =
-      firstCap?.id || null;
+    }, 500);
 
   }
-
-  if(
-    nextSelection.swimId === id
-  ){
-
-    const firstSwim =
-      nextItems.find(
-        i => i.type === "swim"
-      );
-
-    nextSelection.swimId =
-      firstSwim?.id || null;
-
-  }
-
-  setState({
-
-    items:nextItems,
-
-    selection:
-      nextSelection
-
-  });
 
 }
 
 // =========================
-// SELECTION
+// UPDATE SLOT
 // =========================
 
-export function setSelected(type,id){
+function updateSlot(
+  slot,
+  item
+){
 
-  const state =
-    getState();
+  const hasImage =
+    item.image &&
+    item.image.trim() !== "";
 
-  setState({
+  slot.innerHTML = `
 
-    selection:{
+    <div class="spin-image-wrap">
 
-      ...(state.selection || {}),
+      ${
+        hasImage
+          ? `
+            <img
+              class="
+                roulette-image
+                spinning-image
+              "
+              src="${item.image}"
+              alt="${item.name}"
+              draggable="false"
+            />
+          `
+          : `
+            <div class="roulette-placeholder">
+              🏊
+            </div>
+          `
+      }
 
-      ...(type === "cap"
-        ? { capId:id }
-        : {}),
+      <div class="spin-glow"></div>
 
-      ...(type === "swim"
-        ? { swimId:id }
-        : {})
+    </div>
 
-    }
-
-  });
+  `;
 
 }
 
 // =========================
-// SPINNING
+// FINAL
 // =========================
 
-export function setSpinning(value){
+function renderFinal(
+  slot,
+  item
+){
 
-  const state =
-    getState();
+  const hasImage =
+    item.image &&
+    item.image.trim() !== "";
 
-  setState({
+  slot.innerHTML = `
 
-    ui:{
-      ...(state.ui || {}),
-      isSpinning:value
+    ${
+      hasImage
+        ? `
+          <img
+            class="roulette-image"
+            src="${item.image}"
+            alt="${item.name}"
+            draggable="false"
+          />
+        `
+        : `
+          <div class="roulette-placeholder">
+            🏊
+          </div>
+        `
     }
 
-  });
+    <div class="winner-glow"></div>
+
+    <div class="card-overlay">
+
+      <div class="roulette-name">
+        ${item.name}
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+// =========================
+// CONFETTI
+// =========================
+
+function burst(type){
+
+  const slot =
+    document.querySelector(
+      `.roulette-slot[data-type="${type}"] .roulette-card`
+    );
+
+  const fx =
+    document.getElementById(
+      "fx-layer"
+    );
+
+  if(
+    !slot ||
+    !fx
+  ){
+    return;
+  }
+
+  const rect =
+    slot.getBoundingClientRect();
+
+  const colors = [
+
+    "#a78bfa",
+    "#8b5cf6",
+    "#7c3aed",
+    "#c4b5fd",
+    "#ffd700"
+
+  ];
+
+  const centerX =
+    rect.left +
+    rect.width / 2;
+
+  const centerY =
+    rect.top +
+    rect.height * 0.32;
+
+  const amount =
+    window.innerWidth < 768
+      ? 55
+      : 90;
+
+  for(
+    let i = 0;
+    i < amount;
+    i++
+  ){
+
+    const el =
+      document.createElement(
+        "div"
+      );
+
+    el.className =
+      "confetti";
+
+    el.style.left =
+      centerX + "px";
+
+    el.style.top =
+      centerY + "px";
+
+    const spread =
+      (Math.random() - 0.5);
+
+    const dx =
+      spread * (
+        280 +
+        Math.random() * 240
+      );
+
+    const dy =
+      340 +
+      Math.random() * 380;
+
+    el.style.setProperty(
+      "--dx",
+      `${dx}px`
+    );
+
+    el.style.setProperty(
+      "--dy",
+      `${dy}px`
+    );
+
+    const lift =
+      120 +
+      Math.random() * 180;
+
+    el.style.setProperty(
+      "--lift",
+      `${lift}px`
+    );
+
+    el.style.setProperty(
+      "--rot",
+      `${Math.random() * 1080}deg`
+    );
+
+    el.style.background =
+      colors[
+        Math.floor(
+          Math.random() *
+          colors.length
+        )
+      ];
+
+    el.style.width =
+      6 +
+      Math.random() * 6 +
+      "px";
+
+    el.style.height =
+      8 +
+      Math.random() * 8 +
+      "px";
+
+    fx.appendChild(el);
+
+    setTimeout(()=>{
+
+      el.remove();
+
+    },2600);
+
+  }
 
 }
