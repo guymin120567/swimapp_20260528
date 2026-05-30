@@ -44,31 +44,64 @@ export function renderLayout(){
 
           <!-- CAP -->
 
-          <div class="block">
+<div class="block">
 
-            <div class="section-title">
-              수모 리스트
-            </div>
+  <div class="section-header">
 
-            <div
-              class="coverflow"
-              data-type="cap"
-            ></div>
+    <div class="section-title">
+      수모 리스트
+    </div>
 
-          </div>
+    <button
+      class="add-mini-btn"
+      data-action="open-add"
+      data-type="cap"
+    >
+      +
+    </button>
+
+  </div>
+
+  <div
+    class="coverflow"
+    data-type="cap"
+  ></div>
+
+</div>
 
           <!-- SWIM -->
+<div class="block">
 
-          <div class="block">
+  <div class="section-header">
 
-            <div class="section-title">
+    <div class="section-title">
               수영복 리스트
             </div>
 
-            <div
-              class="coverflow"
-              data-type="swim"
-            ></div>
+            <div class="block">
+
+  <div class="section-header">
+
+    <div class="section-title">
+      수영복 리스트
+    </div>
+
+    <button
+      class="add-mini-btn"
+      data-action="open-add"
+      data-type="swim"
+    >
+      +
+    </button>
+
+  </div>
+
+  <div
+    class="coverflow"
+    data-type="swim"
+  ></div>
+
+</div></div>
 
           </div>
           
