@@ -30,13 +30,52 @@ export function removeItem(id){
   const state =
     getState();
 
+  const nextItems =
+    (state.items || [])
+      .filter(
+        i => i.id !== id
+      );
+
+  const nextSelection = {
+
+    ...(state.selection || {})
+
+  };
+
+  if(
+    nextSelection.capId === id
+  ){
+
+    const firstCap =
+      nextItems.find(
+        i => i.type === "cap"
+      );
+
+    nextSelection.capId =
+      firstCap?.id || null;
+
+  }
+
+  if(
+    nextSelection.swimId === id
+  ){
+
+    const firstSwim =
+      nextItems.find(
+        i => i.type === "swim"
+      );
+
+    nextSelection.swimId =
+      firstSwim?.id || null;
+
+  }
+
   setState({
 
-    items:
-      (state.items || [])
-        .filter(
-          i => i.id !== id
-        )
+    items:nextItems,
+
+    selection:
+      nextSelection
 
   });
 
