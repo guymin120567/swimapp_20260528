@@ -97,6 +97,13 @@ function renderType(type){
 
         <div class="card-inner">
 
+          <button
+    class="delete-btn"
+    data-action="delete"
+    data-id="${item.id}"
+  >
+    ×
+  </button>
           ${
             item.image
               ? `
@@ -172,6 +179,28 @@ function bindSelect(){
         "click",
         e => {
 
+          const deleteBtn =
+  e.target.closest(
+    ".delete-btn"
+  );
+
+if(deleteBtn){
+
+  const ok =
+    confirm(
+      "삭제하시겠습니까?"
+    );
+
+  if(!ok){
+    return;
+  }
+
+  removeItem(
+    deleteBtn.dataset.id
+  );
+
+  return;
+}
           const card =
             e.target.closest(
               ".cover-card"
