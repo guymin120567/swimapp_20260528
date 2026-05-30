@@ -18,7 +18,7 @@
   padding:
     6px 18vw 18px;
 
-  min-height:180px;
+  min-height:140px;
 
   scrollbar-width:none;
 
@@ -60,7 +60,7 @@
 
   position:relative;
 
-  width:92px;
+  width:108px;
 
   aspect-ratio:1/1;
 
@@ -189,7 +189,7 @@
   right:0;
   bottom:0;
 
-  padding:6px;
+  padding:3px 4px;
 
   background:
     linear-gradient(
@@ -255,5 +255,41 @@
   font-size:13px;
 
   color:#6b8aa1;
+
+}
+/* =========================
+   DELETEBTN
+========================= */
+
+.delete-btn{
+
+  position:absolute;
+
+  top:4px;
+  right:4px;
+
+  width:22px;
+  height:22px;
+
+  border:none;
+
+  border-radius:50%;
+
+  background:
+    rgba(0,0,0,.55);
+
+  color:#fff;
+
+  font-size:13px;
+
+  font-weight:700;
+
+  cursor:pointer;
+
+  z-index:50;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
 
 }
