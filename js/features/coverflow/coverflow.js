@@ -5,7 +5,8 @@ import {
 } from "../../state/state.js";
 
 import {
-  setSelected
+  setSelected,
+  removeItem
 } from "../../state/actions.js";
 
 import {
