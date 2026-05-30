@@ -40,10 +40,6 @@ export function initController(){
 
   let saveTimer = null;
 
-  // =========================
-  // RENDER
-  // =========================
-
   function renderApp(){
 
     renderRoulette();
@@ -52,19 +48,11 @@ export function initController(){
 
   }
 
-  // =========================
-  // BOOT
-  // =========================
-
   async function boot(){
 
     console.log(
       "BOOT START"
     );
-
-    // =========================
-    // LAYOUT
-    // =========================
 
     renderLayout();
 
@@ -72,19 +60,11 @@ export function initController(){
 
     bindGlobal();
 
-    // =========================
-    // LOAD
-    // =========================
-
     const saved =
       await loadState();
 
     let normalized =
       saved || defaultState;
-
-    // =========================
-    // OLD MIGRATION
-    // =========================
 
     if(
       normalized?.data
@@ -141,10 +121,6 @@ export function initController(){
 
     }
 
-    // =========================
-    // SAFE ITEMS
-    // =========================
-
     if(
       !Array.isArray(
         normalized.items
@@ -156,14 +132,55 @@ export function initController(){
     }
 
     // =========================
-    // SUBSCRIBE
+    // DEFAULT SELECTION
     // =========================
+
+    const caps =
+      normalized.items.filter(
+        i => i.type === "cap"
+      );
+
+    const swims =
+      normalized.items.filter(
+        i => i.type === "swim"
+      );
+
+    if(
+      !normalized.selection?.capId &&
+      caps.length
+    ){
+
+      normalized.selection = {
+
+        ...(normalized.selection || {}),
+
+        capId:
+          caps[0].id
+
+      };
+
+    }
+
+    if(
+      !normalized.selection?.swimId &&
+      swims.length
+    ){
+
+      normalized.selection = {
+
+        ...(normalized.selection || {}),
+
+        swimId:
+          swims[0].id
+
+      };
+
+    }
 
     subscribe(()=>{
 
       renderApp();
 
-      // debounce save
       clearTimeout(
         saveTimer
       );
@@ -178,10 +195,6 @@ export function initController(){
         },200);
 
     });
-
-    // =========================
-    // APPLY
-    // =========================
 
     setState(
       normalized
