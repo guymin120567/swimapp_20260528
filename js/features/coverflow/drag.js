@@ -84,6 +84,40 @@ export function bindDrag(){
     );
 
     /* =========================
+   TOUCH START
+========================= */
+
+wrap.addEventListener(
+  "touchstart",
+  e => {
+
+    if(
+      wrap._isProgrammatic
+    ){
+      return;
+    }
+
+    isDown = true;
+
+    wrap.classList.add(
+      "dragging"
+    );
+
+    startX =
+      e.touches[0].pageX;
+
+    lastX =
+      startX;
+
+    scrollLeft =
+      wrap.scrollLeft;
+
+  },
+  { passive:true }
+);
+    
+
+    /* =========================
        MOVE
     ========================= */
 
@@ -120,6 +154,39 @@ export function bindDrag(){
       }
     );
 
+    wrap.addEventListener(
+  "touchmove",
+  e => {
+
+    if(!isDown){
+      return;
+    }
+
+    const x =
+      e.touches[0].pageX;
+
+    const walk =
+      (x - startX) * 1.08;
+
+    velocity =
+      x - lastX;
+
+    lastX = x;
+
+    wrap.scrollLeft =
+      scrollLeft - walk;
+
+    requestAnimationFrame(()=>{
+
+      updateDepth(wrap);
+
+    });
+
+  },
+  { passive:true }
+);
+
+    
     /* =========================
        END
     ========================= */
@@ -168,6 +235,27 @@ export function bindDrag(){
       }
     );
 
+    window.addEventListener(
+  "touchend",
+  ()=>{
+
+    if(!isDown){
+      return;
+    }
+
+    isDown = false;
+
+    wrap.classList.remove(
+      "dragging"
+    );
+
+    inertia(
+      wrap,
+      velocity
+    );
+
+  }
+);
     /* =========================
        SCROLL
     ========================= */
