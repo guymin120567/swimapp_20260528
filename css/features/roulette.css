@@ -28,12 +28,12 @@
 
   flex-direction:column;
 
-  gap:26px;
+  gap:14px;
 
   padding:
-    22px
     18px
-    120px;
+    18px
+    110px;
 
 }
 
@@ -45,7 +45,9 @@
 
   position:relative;
 
-  width:100%;
+  width:min(100%, 280px);
+
+  margin:0 auto;
 
 }
 
