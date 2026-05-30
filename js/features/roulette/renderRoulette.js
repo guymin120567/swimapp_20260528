@@ -61,7 +61,7 @@ export function renderRoulette(){
 
       </div>
 
-      <button class="spin-btn" data-action="spin">SPIN</button>
+      <button class="spin-btn" data-action="spin">오늘 뭐 입지 ? </button>
 
     </div>
   `;
