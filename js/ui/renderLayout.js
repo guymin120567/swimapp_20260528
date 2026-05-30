@@ -15,6 +15,45 @@ export function renderLayout(){
 
     <div class="container">
 
+<div
+  id="addModal"
+  class="add-modal"
+  hidden
+>
+
+  <div
+    class="add-modal-backdrop"
+    data-action="close-add"
+  ></div>
+
+  <div class="add-modal-sheet">
+
+    <div class="section-title">
+      아이템 추가
+    </div>
+
+    <input
+      id="itemText"
+      type="text"
+      placeholder="이름 입력"
+    />
+
+    <input
+      id="itemImage"
+      type="file"
+      accept="image/*"
+    />
+
+    <button
+      class="spin-btn"
+      data-action="add"
+    >
+      추가하기
+    </button>
+
+  </div>
+
+</div>
       <main class="main-content">
 
         <!-- =====================
