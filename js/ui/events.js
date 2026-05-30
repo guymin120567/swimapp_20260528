@@ -99,6 +99,41 @@ async function handleClick(e){
 
   }
 
+  if(
+  action === "open-add"
+){
+
+  const modal =
+    document.getElementById(
+      "addModal"
+    );
+
+  const type =
+    e.target.dataset.type;
+
+  modal.hidden = false;
+
+  modal.dataset.type =
+    type;
+
+  return;
+
+}
+if(
+  action === "close-add"
+){
+
+  const modal =
+    document.getElementById(
+      "addModal"
+    );
+
+  modal.hidden = true;
+
+  return;
+
+}
+  
 }
 
 // =========================
@@ -107,10 +142,13 @@ async function handleClick(e){
 
 async function handleAdd(){
 
-  const type =
-    document.getElementById(
-      "itemType"
-    )?.value;
+  const modal =
+  document.getElementById(
+    "addModal"
+  );
+
+const type =
+  modal.dataset.type;
 
   const text =
     document.getElementById(
@@ -164,5 +202,5 @@ async function handleAdd(){
     imageInput.value = "";
 
   }
-
+modal.hidden = true;
 }
